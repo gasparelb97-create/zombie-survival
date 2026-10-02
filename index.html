@@ -545,7 +545,31 @@ body.building #fireBtn::after{content:'✔ PIAZZA'!important;font-size:14px!impo
 
 body.wpk #joyBase{opacity:0!important}
 #weaponInfo{left:calc(var(--sal) + 196px)!important}
+/* v4.1.2 viewport fit + scrollable screens */
+:root{--vcut:0px;--vh:100vh;--sab:calc(max(env(safe-area-inset-bottom,0px),calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px))) + var(--vcut,0px))}
+#c{bottom:auto!important;height:calc(100% - var(--vcut,0px))!important}
+#hud{bottom:var(--vcut,0px)}
+.overlay{bottom:var(--vcut,0px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;align-items:flex-start}
+.overlay>*{margin-top:auto;margin-bottom:auto}
+#shopScreen>*{margin-top:0;margin-bottom:0}
+.sheet,.card{touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#shopList{touch-action:pan-x pan-y}
+.shortH .overlay{padding:8px}
+.shortH .sheet{padding:clamp(8px,2.6vh,16px) clamp(12px,3vh,18px);border-radius:14px}
+.shortH .sheet h2{font-size:clamp(18px,5.6vh,26px);margin:0 0 4px}
+.shortH .bigScore{font-size:clamp(30px,10vh,46px)}
+.tinyH .overlay{padding:4px}
+.tinyH .sheet{font-size:13px}
+#payChat{position:fixed;z-index:61;left:50%;transform:translateX(-50%);top:calc(52px + var(--sat));display:none;padding:9px 14px;border-radius:999px;border:1px solid rgba(120,200,255,.45);background:rgba(18,30,46,.96);color:#dff3ff;font:600 14px/1.2 -apple-system,Roboto,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.5);touch-action:manipulation}
+#payChat.show{display:block}
+.shopV #shopList{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));grid-auto-columns:auto;overflow-y:auto;overflow-x:hidden;align-content:start}
+.shopV .sthumb{flex-basis:64px;height:64px}
+.shopV #shopList{grid-auto-rows:max-content}
+.shopV .sbody{flex:0 0 auto}
+.shopV .sthumb{flex:0 0 64px!important;height:64px!important}
+.shopV .sbtns{flex-wrap:wrap}.shopV .sbtns .bStar{flex:1 1 100%}
 </style>
+<script>if(/^https?:$/.test(location.protocol)&&!(window.Telegram&&window.Telegram.WebApp))document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');</script>
 </head>
 <body class="inmenu">
 <canvas id="c"></canvas>
@@ -921,7 +945,7 @@ const damp=(a,b,k,dt)=>a+(b-a)*(1-Math.exp(-k*dt));
 const TG={W:null};
 function tgVer(v){try{return TG.W&&TG.W.isVersionAtLeast&&TG.W.isVersionAtLeast(v);}catch(e){return false;}}
 function tgFull(){const W=TG.W;try{if(W&&tgVer('8.0')&&W.requestFullscreen&&!W.isFullscreen)W.requestFullscreen();}catch(e){}}
-function tgInit(){const W=window.Telegram&&window.Telegram.WebApp;if(!W)return;TG.W=W;try{W.ready();W.expand();if(W.disableVerticalSwipes)W.disableVerticalSwipes();if(tgVer('6.1')){W.setHeaderColor('#0b0d12');W.setBackgroundColor('#0b0d12');}if(tgVer('7.10')&&W.setBottomBarColor)W.setBottomBarColor('#0b0d12');}catch(e){}
+function tgInit(){const W=window.Telegram&&window.Telegram.WebApp;if(!W||TG.W===W||!(W.initData||(W.platform&&W.platform!=='unknown')))return;TG.W=W;try{W.ready();W.expand();if(W.disableVerticalSwipes)W.disableVerticalSwipes();if(tgVer('6.1')){W.setHeaderColor('#0b0d12');W.setBackgroundColor('#0b0d12');}if(tgVer('7.10')&&W.setBottomBarColor)W.setBottomBarColor('#0b0d12');}catch(e){}
   setTimeout(()=>{try{window.__zcTG&&window.__zcTG();}catch(e){}},0);tgFull();for(const ev of ['viewportChanged','fullscreenChanged','safeAreaChanged','contentSafeAreaChanged'])try{W.onEvent(ev,()=>setTimeout(()=>window.__zcResize&&window.__zcResize(),30));}catch(e){}
   setTimeout(()=>window.__zcResize&&window.__zcResize(),120);}
 try{if(window.Telegram&&window.Telegram.WebApp)tgInit();
@@ -1543,7 +1567,7 @@ function placeJoyBase(x,y){joyBase.style.left=x+'px';joyBase.style.top=y+'px';}
 function homeJoy(){const sl=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sal'))||0;placeJoyBase(Math.min(Math.max(100+sl,VW()*.13+sl),118+sl),VH()-164-(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sab'))||0));joyKnob.style.transform='';}
 homeJoy();
 function resetTouchState(){joy.id=look.id=fireT.id=null;joy.x=joy.y=0;homeJoy();firing=false;$('fireBtn').classList.remove('on');}
-const pd=e=>{if(e.cancelable&&!(e.target&&e.target.closest&&e.target.closest('.scroll')))e.preventDefault();};
+const pd=e=>{if(e.cancelable&&!(e.target&&e.target.closest&&e.target.closest('.scroll,#payChat')))e.preventDefault();};
 $('joyZone').addEventListener('touchstart',e=>{pd(e);if(game.state!=='play'||joy.id!==null)return;const t=e.changedTouches[0];joy.id=t.identifier;joy.cx=t.clientX;joy.cy=t.clientY;placeJoyBase(t.clientX,t.clientY);},{passive:false});
 $('lookZone').addEventListener('touchstart',e=>{pd(e);if(game.state!=='play'||look.id!==null)return;const t=e.changedTouches[0];look.id=t.identifier;look.lx=t.clientX;look.ly=t.clientY;},{passive:false});
 $('fireBtn').addEventListener('touchstart',e=>{pd(e);if(game.state!=='play')return;const t=e.changedTouches[0];fireT.id=t.identifier;fireT.lx=t.clientX;fireT.ly=t.clientY;firing=true;triggerHeld=false;$('fireBtn').classList.add('on');},{passive:false});
@@ -1551,7 +1575,7 @@ function tapBtn(id,fn){const el=$(id);el.addEventListener('touchstart',e=>{pd(e)
 tapBtn('pickBtn',()=>{if(!tryPick())toast('Niente da usare qui vicino',900);});tapBtn('craftBtn',openCraft);tapBtn('swapBtn',nextWeapon);
 tapBtn('reloadBtn',()=>{const w=WEAPONS[curW];if(w.melee)toast('Il coltello non si ricarica',800);else if(!startReload()&&res[w.id]<=0&&mag[w.id]<w.mag)toast('Niente munizioni di riserva',900);});
 const LOOK_S=.0052;
-document.addEventListener('touchmove',e=>{pd(e);if(game.state!=='play')return;for(const t of e.changedTouches){
+document.addEventListener('touchmove',e=>{if(game.state==='play'||!(e.target&&e.target.closest&&e.target.closest('.overlay')))pd(e);if(game.state!=='play')return;for(const t of e.changedTouches){
   if(t.identifier===joy.id){let dx=t.clientX-joy.cx,dy=t.clientY-joy.cy;const d=Math.hypot(dx,dy);if(d>JR){dx*=JR/d;dy*=JR/d;}joy.x=dx/JR;joy.y=dy/JR;joyKnob.style.transform='translate('+dx+'px,'+dy+'px)';}
   else if(t.identifier===look.id||t.identifier===fireT.id){const L=t.identifier===look.id?look:fireT;player.tYaw-=(t.clientX-L.lx)*LOOK_S*SENS*ZK();player.tPitch-=(t.clientY-L.ly)*LOOK_S*SENS*ZK();L.lx=t.clientX;L.ly=t.clientY;clampPitch();}}},{passive:false});
 function touchEnd(e){for(const t of e.changedTouches){if(t.identifier===joy.id){joy.id=null;joy.x=joy.y=0;homeJoy();}if(t.identifier===look.id)look.id=null;if(t.identifier===fireT.id){fireT.id=null;firing=false;$('fireBtn').classList.remove('on');}}}
@@ -1752,7 +1776,7 @@ function renderThumbs(){if(THUMBS)return THUMBS;THUMBS={};try{
 
 // ---------- shop ----------
 let shopTab='armi';
-function starsOK(id){return !!(TG.W&&INVOICE_LINKS[id]&&((TG.W.openInvoice&&tgVer('6.1'))||TG.W.openTelegramLink));}
+function starsOK(id){return !!INVOICE_LINKS[id];}
 function adsOn(){return !!(AD_CONFIG&&AD_CONFIG.blockId);}
 function wBars(w){const r=w.bars?[['Danno',w.bars[0]],['Cadenza',w.bars[1]],['Precisione',w.bars[2]],['Caricatore',w.bars[3]]]:[['Danno',Math.min(1,Math.sqrt(w.dmg*w.pellets/130))],['Cadenza',Math.min(1,(1/w.rate)/14)],['Precisione',clamp(1-w.spread/.075,.06,1)],['Caricatore',Math.min(1,w.mag/40)]];
   return r.map(([l,v])=>'<div class="sbar"><span>'+l+'</span><i><b style="width:'+Math.round(v*100)+'%"></b></i></div>').join('');}
@@ -2763,6 +2787,69 @@ $('craftTabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(
 let wiT=0,wiLast=-2;function wiUpdate(dt){if(curW!==wiLast){wiLast=curW;wiT=1.5;}wiT-=dt;const w=WEAPONS[curW];const el=$('weaponInfo');const gone=wiT<=0&&(!w||w.melee||w.tool),slim=wiT<=0&&!gone;
   if(el.classList.contains('gone')!==gone)el.classList.toggle('gone',gone);if(el.classList.contains('slim')!==slim)el.classList.toggle('slim',slim);
   const ic=w&&w.tool?({axe:'🪓',pick:'⛏️',hammer:'🔨'})[w.tool]:'';document.body.classList.toggle('tool',!!ic);if(ic&&$('fireBtn').dataset.ic!==ic)$('fireBtn').dataset.ic=ic;}
+
+// ======================= v4.1.2 hotfix: Telegram late-init, robust taps, Stars fallback, viewport fit =======================
+const TG_BOT='Zombie_SurvivalGame_bot',GRANT_SALT='zsg-grant-v412-k7Qp';
+function tgLive(){const W=window.Telegram&&window.Telegram.WebApp;return W&&(W.initData||(W.platform&&W.platform!=='unknown'))?W:null;}
+function slog(){try{window.__DBG&&window.__DBG.log&&window.__DBG.log('shop',Array.from(arguments).join(' '));}catch(e){}}
+// SDK may arrive late (async load / slow network): keep trying to init for ~12s
+(function(){let n=0;const iv=setInterval(()=>{n++;if(TG.W){clearInterval(iv);return;}if(tgLive()){try{tgInit();}catch(e){}if(TG.W){slog('tg late init',n*250+'ms');try{if(!$('shopScreen').classList.contains('hidden'))renderShop();}catch(e){}}}if(n>48)clearInterval(iv);},250);})();
+// small edge button: "Paga in chat" (bot sends a native invoice in the chat)
+let pcTO=null;
+function payChatOffer(id){let b=$('payChat');if(!b){b=document.createElement('button');b.id='payChat';document.body.appendChild(b);
+  const go=e=>{if(e){e.preventDefault();e.stopPropagation();}const pid=b.dataset.id;const link='https://t.me/'+TG_BOT+'?start=buy_'+pid;slog('pay in chat',pid);
+    const W=TG.W||tgLive();try{if(W&&W.openTelegramLink){W.openTelegramLink(link);try{W.close&&setTimeout(()=>{},0);}catch(_){}}else location.href=link;}catch(_){try{location.href=link;}catch(__){}}hidePayChat();};
+  b.addEventListener('click',go);b.addEventListener('touchend',e=>{if(e.cancelable)go(e);},{passive:false});}
+  b.dataset.id=id;b.innerHTML='💬 Problemi? <b>Paga in chat</b>';b.classList.add('show');clearTimeout(pcTO);pcTO=setTimeout(hidePayChat,25000);}
+function hidePayChat(){const b=$('payChat');if(b)b.classList.remove('show');}
+// Stars purchase — never silent
+starBuy=function(id){const url=INVOICE_LINKS[id];let W=TG.W||tgLive();if(W&&!TG.W){try{tgInit();}catch(e){}}
+  slog('buy',id,'url='+(url?'ok':'MISSING'),'W='+(W?1:0),'ver='+(W&&W.version),'plat='+(W&&W.platform));
+  if(!url){mtoast('Articolo non disponibile al momento',2200);return;}
+  const now=Date.now();if(invBusy.id===id&&now-invBusy.t<1500)return;invBusy={t:now,id};
+  if(!W){mtoast('⭐ Apro il pagamento in Telegram…',2200);payChatOffer(id);setTimeout(()=>{try{location.href=url;}catch(e){}},150);return;}
+  let got=false;const to=setTimeout(()=>{if(!got){slog('no callback 4s',id);payChatOffer(id);}},4000);
+  const cb=st=>{got=true;clearTimeout(to);invBusy.t=0;slog('cb',id,st);
+    if(st==='paid'){grant(id);hidePayChat();}else if(st==='failed'){mtoast('Pagamento non riuscito',2200);payChatOffer(id);}else if(st==='pending')mtoast('⏳ Pagamento in elaborazione…',2200);else hidePayChat();};
+  mtoast('⭐ Apro il pagamento…',1600);
+  const canInv=W.openInvoice&&(!W.isVersionAtLeast||W.isVersionAtLeast('6.1'));
+  if(canInv){try{W.openInvoice(url,cb);return;}catch(e){slog('openInvoice threw',e&&e.message);}}
+  clearTimeout(to);invBusy.t=0;
+  try{if(W.openTelegramLink){W.openTelegramLink(url);slog('openTelegramLink');payChatOffer(id);return;}}catch(e){slog('openTelegramLink threw',e&&e.message);}
+  payChatOffer(id);try{location.href=url;}catch(e){}};
+// robust taps on shop / tabs / dialogs (real phones: touch -> click can get lost)
+function fastTap(el,sel){if(!el)return;let sx=0,sy=0,st=0,mv=false;
+  el.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;st=Date.now();mv=false;},{passive:true});
+  el.addEventListener('touchmove',e=>{const t=e.changedTouches[0];if(Math.hypot(t.clientX-sx,t.clientY-sy)>12)mv=true;},{passive:true});
+  el.addEventListener('touchend',e=>{if(mv||Date.now()-st>900)return;const t=e.changedTouches[0];const tg=document.elementFromPoint(t.clientX,t.clientY)||e.target;
+    const b=tg&&tg.closest&&tg.closest(sel);if(!b||!el.contains(b)||b.disabled)return;if(e.cancelable)e.preventDefault();b.__tt=Date.now();b.click();},{passive:false});
+  el.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest(sel);if(b&&e.isTrusted&&b.__tt&&Date.now()-b.__tt<700){e.stopImmediatePropagation();e.preventDefault();}},true);}
+fastTap($('shopList'),'button');fastTap($('shopTabs'),'button,.tab,[data-tab]');fastTap($('dlgBtns'),'button');
+// purchase completed in chat -> bot sends a web_app button with &grant=<id>.<r8>.<sig8>
+function verifyGrant(raw){const m=/^([a-z0-9_]{2,24})\.([A-Za-z0-9]{8})\.([0-9a-fA-F]{8})$/.exec(String(raw||'').trim());if(!m||!INVOICE_LINKS[m[1]])return null;
+  return sha256hex(GRANT_SALT+m[1]+'.'+m[2]).slice(0,8)===m[3].toLowerCase()?{id:m[1],key:m[1]+'.'+m[2]}:null;}
+function grantCheck(raw){if(!raw)return;try{URLQ.delete('grant');const q=URLQ.toString();history.replaceState(null,'',location.pathname+(q?'?'+q:'')+location.hash);}catch(e){}
+  const v=verifyGrant(raw);slog('grant link',raw,v?'ok':'INVALID');if(!v){mtoast('Link acquisto non valido',2400);return;}
+  const used=LS.get('zc_grants',[]);if(used.includes(v.key)){mtoast('✅ Acquisto già accreditato',2400);return;}
+  let done=false;const fin=cu=>{if(done)return;done=true;if(cu&&cu.includes(v.key)){used.push(v.key);LS.set('zc_grants',used.slice(-200));mtoast('✅ Acquisto già accreditato',2400);return;}
+    used.push(v.key);LS.set('zc_grants',used.slice(-200));grant(v.id);try{play('buy');}catch(e){}mtoast('✅ Acquisto accreditato: '+itemName(v.id),3200);
+    if(cloudOK())try{TG.W.CloudStorage.setItem('zc_grants',JSON.stringify((cu||[]).concat([v.key]).slice(-60)),()=>{});}catch(e){}};
+  if(cloudOK()){setTimeout(()=>fin(null),2500);try{TG.W.CloudStorage.getItem('zc_grants',(err,val)=>{let a=[];try{a=JSON.parse(val||'[]')||[];}catch(e){}fin(Array.isArray(a)?a:[]);});}catch(e){fin(null);}}else fin(null);}
+setTimeout(()=>grantCheck(URLQ.get('grant')),900);
+// viewport fit: real visible height (Telegram bars / Android nav bar / stale innerHeight after rotation)
+function fitVP(){const de=document.documentElement,lh=window.innerHeight||de.clientHeight;let vh=lh;
+  try{if(window.visualViewport&&visualViewport.height>150)vh=Math.min(vh,visualViewport.height);}catch(e){}
+  try{const W=TG.W;if(W&&!W.isFullscreen&&W.viewportStableHeight>150)vh=Math.min(vh,W.viewportStableHeight);}catch(e){}
+  const cut=Math.max(0,Math.min(240,Math.round(lh-vh)));de.style.setProperty('--vcut',cut+'px');de.style.setProperty('--vh',Math.round(vh)+'px');
+  de.classList.toggle('shortH',vh<=400);de.classList.toggle('tinyH',vh<=340);de.classList.toggle('shopV',vh<358&&innerWidth>vh);
+  try{const pt=$('portrait');if(pt&&window.matchMedia&&!matchMedia('(orientation:portrait)').matches)pt.style.display='';}catch(e){}}
+let fitT=[];function refit(){fitVP();try{window.__zcResize&&window.__zcResize();}catch(e){}}
+function refitBurst(){refit();for(const t of fitT)clearTimeout(t);fitT=[100,300,600,1000].map(t=>setTimeout(refit,t));}
+addEventListener('resize',refitBurst);addEventListener('orientationchange',refitBurst);
+try{visualViewport.addEventListener('resize',refitBurst);}catch(e){}try{screen.orientation.addEventListener('change',refitBurst);}catch(e){}
+(function(){let n=0;const iv=setInterval(()=>{if(TG.W){clearInterval(iv);for(const ev of ['viewportChanged','fullscreenChanged','safeAreaChanged','contentSafeAreaChanged'])try{TG.W.onEvent(ev,refitBurst);}catch(e){}refitBurst();}if(++n>60)clearInterval(iv);},250);})();
+fitVP();window.__zcFit=fitVP;
+// ======================= end v4.1.2 hotfix =======================
 
 // ======================= end v4 module =======================
 
