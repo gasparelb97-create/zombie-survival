@@ -2618,7 +2618,7 @@ function svTarget(z){const P=z.g.position;if(z.flee){const dx=P.x-player.pos.x,d
   if(z.wx===undefined||Math.hypot(P.x-z.wx,P.z-z.wz)<1.6||(z.stuck||0)>.3&&Math.random()<.05){const n=SV.phase==='night'&&Math.random()<.35;wanderPt(z,n?player.pos.x+rand(-25,25):P.x,n?player.pos.z+rand(-25,25):P.z,n?10:18);}
   z.tgtKind='point';return _st.set(z.wx,0,z.wz);}
 let baseWarnT=-99;
-function zAttackHit(z,d,sc){const V=z.V;if(z.tgtPiece&&z.tgtPiece.alive&&pieceDist(z.tgtPiece,z.g.position.x,z.g.position.z)<V.reach*sc+.3){damagePiece(z.tgtPiece,(V.dmg*.6+2+SV.day*.5)*DIFF().dmg*(V.heavy?2:1));if(PDEF[z.tgtPiece.type]&&PDEF[z.tgtPiece.type].spike&&z.alive)flameDmg(z,14);
+function zAttackHit(z,d,sc){const V=z.V,tp=z.tgtPiece;if(tp&&tp.alive&&pieceDist(tp,z.g.position.x,z.g.position.z)<V.reach*sc+.3){const spk=!!(PDEF[tp.type]&&PDEF[tp.type].spike);damagePiece(tp,(V.dmg*.6+2+SV.day*.5)*DIFF().dmg*(V.heavy?2:1));if(spk&&z.alive)flameDmg(z,14);
     if(game.time-baseWarnT>25){baseWarnT=game.time;toast('🏠 La base è sotto attacco!',2200);play('warn');}return;}
   const dp=Math.hypot(z.g.position.x-player.pos.x,z.g.position.z-player.pos.z);if(dp<V.reach*sc+.45)hurt((V.dmg+(SV.on?Math.min(10,SV.day):game.wave))*DIFF().dmg);}
 // ---- interactions (E / ✋ button) ----
@@ -2788,7 +2788,7 @@ let wiT=0,wiLast=-2;function wiUpdate(dt){if(curW!==wiLast){wiLast=curW;wiT=1.5;
   if(el.classList.contains('gone')!==gone)el.classList.toggle('gone',gone);if(el.classList.contains('slim')!==slim)el.classList.toggle('slim',slim);
   const ic=w&&w.tool?({axe:'🪓',pick:'⛏️',hammer:'🔨'})[w.tool]:'';document.body.classList.toggle('tool',!!ic);if(ic&&$('fireBtn').dataset.ic!==ic)$('fireBtn').dataset.ic=ic;}
 
-// ======================= v4.1.2 hotfix: Telegram late-init, robust taps, Stars fallback, viewport fit =======================
+// ======================= v4.1.3 hotfix: Telegram late-init, robust taps, Stars fallback, viewport fit =======================
 const TG_BOT='Zombie_SurvivalGame_bot',GRANT_SALT='zsg-grant-v412-k7Qp';
 function tgLive(){const W=window.Telegram&&window.Telegram.WebApp;return W&&(W.initData||(W.platform&&W.platform!=='unknown'))?W:null;}
 function slog(){try{window.__DBG&&window.__DBG.log&&window.__DBG.log('shop',Array.from(arguments).join(' '));}catch(e){}}
@@ -2796,27 +2796,21 @@ function slog(){try{window.__DBG&&window.__DBG.log&&window.__DBG.log('shop',Arra
 (function(){let n=0;const iv=setInterval(()=>{n++;if(TG.W){clearInterval(iv);return;}if(tgLive()){try{tgInit();}catch(e){}if(TG.W){slog('tg late init',n*250+'ms');try{if(!$('shopScreen').classList.contains('hidden'))renderShop();}catch(e){}}}if(n>48)clearInterval(iv);},250);})();
 // small edge button: "Paga in chat" (bot sends a native invoice in the chat)
 let pcTO=null;
-function payChatOffer(id){let b=$('payChat');if(!b){b=document.createElement('button');b.id='payChat';document.body.appendChild(b);
-  const go=e=>{if(e){e.preventDefault();e.stopPropagation();}const pid=b.dataset.id;const link='https://t.me/'+TG_BOT+'?start=buy_'+pid;slog('pay in chat',pid);
-    const W=TG.W||tgLive();try{if(W&&W.openTelegramLink){W.openTelegramLink(link);try{W.close&&setTimeout(()=>{},0);}catch(_){}}else location.href=link;}catch(_){try{location.href=link;}catch(__){}}hidePayChat();};
-  b.addEventListener('click',go);b.addEventListener('touchend',e=>{if(e.cancelable)go(e);},{passive:false});}
-  b.dataset.id=id;b.innerHTML='💬 Problemi? <b>Paga in chat</b>';b.classList.add('show');clearTimeout(pcTO);pcTO=setTimeout(hidePayChat,25000);}
+function payChatOffer(id){slog('payChat disabled',id);}
 function hidePayChat(){const b=$('payChat');if(b)b.classList.remove('show');}
-// Stars purchase — never silent
+// Stars purchase (4.1.3): ALWAYS inside the game via openInvoice; never silent, never redirects to chat
 starBuy=function(id){const url=INVOICE_LINKS[id];let W=TG.W||tgLive();if(W&&!TG.W){try{tgInit();}catch(e){}}
-  slog('buy',id,'url='+(url?'ok':'MISSING'),'W='+(W?1:0),'ver='+(W&&W.version),'plat='+(W&&W.platform));
-  if(!url){mtoast('Articolo non disponibile al momento',2200);return;}
-  const now=Date.now();if(invBusy.id===id&&now-invBusy.t<1500)return;invBusy={t:now,id};
-  if(!W){mtoast('⭐ Apro il pagamento in Telegram…',2200);payChatOffer(id);setTimeout(()=>{try{location.href=url;}catch(e){}},150);return;}
-  let got=false;const to=setTimeout(()=>{if(!got){slog('no callback 4s',id);payChatOffer(id);}},4000);
+  const has=!!(W&&W.openInvoice),ver=W&&W.version,okv=!!(W&&(!W.isVersionAtLeast||W.isVersionAtLeast('6.1')));
+  slog('buy',id,'url='+(url?'ok':'MISSING'),'W='+(W?1:0),'ver='+ver,'plat='+(W&&W.platform),'openInvoice='+(has?1:0),'v6.1='+(okv?1:0),'full='+(W&&W.isFullscreen?1:0));
+  if(!url){mtoast('Articolo non disponibile al momento',2400);return;}
+  if(!W){mtoast('Il pagamento con ⭐ Stelle funziona solo aprendo il gioco dal bot in Telegram',3200);slog('no Telegram.WebApp');return;}
+  if(!has||!okv){mtoast('Aggiorna Telegram per pagare con le ⭐ Stelle (versione '+(ver||'?')+')',3200);slog('openInvoice unavailable');return;}
+  const now=Date.now();if(invBusy.id===id&&now-invBusy.t<1500){slog('busy',id);return;}invBusy={t:now,id};
+  let got=false;const to=setTimeout(()=>{if(!got)slog('no callback 4s (sheet may still be open)',id);},4000);
   const cb=st=>{got=true;clearTimeout(to);invBusy.t=0;slog('cb',id,st);
-    if(st==='paid'){grant(id);hidePayChat();}else if(st==='failed'){mtoast('Pagamento non riuscito',2200);payChatOffer(id);}else if(st==='pending')mtoast('⏳ Pagamento in elaborazione…',2200);else hidePayChat();};
+    if(st==='paid')grant(id);else if(st==='failed')mtoast('Pagamento non riuscito',2200);else if(st==='pending')mtoast('⏳ Pagamento in elaborazione…',2200);else if(st==='cancelled')mtoast('Pagamento annullato',1400);};
   mtoast('⭐ Apro il pagamento…',1600);
-  const canInv=W.openInvoice&&(!W.isVersionAtLeast||W.isVersionAtLeast('6.1'));
-  if(canInv){try{W.openInvoice(url,cb);return;}catch(e){slog('openInvoice threw',e&&e.message);}}
-  clearTimeout(to);invBusy.t=0;
-  try{if(W.openTelegramLink){W.openTelegramLink(url);slog('openTelegramLink');payChatOffer(id);return;}}catch(e){slog('openTelegramLink threw',e&&e.message);}
-  payChatOffer(id);try{location.href=url;}catch(e){}};
+  try{W.openInvoice(url,cb);slog('openInvoice called',id);}catch(e){clearTimeout(to);invBusy.t=0;slog('openInvoice threw',e&&e.message);mtoast('Pagamento non disponibile: '+((e&&e.message)||'errore'),3200);}};
 // robust taps on shop / tabs / dialogs (real phones: touch -> click can get lost)
 function fastTap(el,sel){if(!el)return;let sx=0,sy=0,st=0,mv=false;
   el.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;st=Date.now();mv=false;},{passive:true});
@@ -2824,7 +2818,30 @@ function fastTap(el,sel){if(!el)return;let sx=0,sy=0,st=0,mv=false;
   el.addEventListener('touchend',e=>{if(mv||Date.now()-st>900)return;const t=e.changedTouches[0];const tg=document.elementFromPoint(t.clientX,t.clientY)||e.target;
     const b=tg&&tg.closest&&tg.closest(sel);if(!b||!el.contains(b)||b.disabled)return;if(e.cancelable)e.preventDefault();b.__tt=Date.now();b.click();},{passive:false});
   el.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest(sel);if(b&&e.isTrusted&&b.__tt&&Date.now()-b.__tt<700){e.stopImmediatePropagation();e.preventDefault();}},true);}
-fastTap($('shopList'),'button');fastTap($('shopTabs'),'button,.tab,[data-tab]');fastTap($('dlgBtns'),'button');
+// v4.1.3: robust taps on shop / tabs / dialog buttons. Window-level CAPTURE listeners (nothing can stop them first),
+// fire on pointerup (or touchend) on the same button within 24 px / 800 ms (measured with event timestamps, immune to main-thread stalls),
+// plus click as fallback; duplicate suppression; every tap logged to the owner debug overlay.
+const TAP_SEL='#shopList button,#shopTabs .tab,#dlgBtns button';
+let tapDown=null,tapLast={k:'',t:0};
+function tDesc(e){if(!e)return 'null';return (e.tagName||'?').toLowerCase()+(e.id?'#'+e.id:'')+(e.className&&typeof e.className==='string'?'.'+e.className.trim().split(/\s+/).slice(0,2).join('.'):'')+(e.dataset&&e.dataset.buy?'[buy='+e.dataset.buy+']':'');}
+function tapBtnAt(x,y,t){let b=t&&t.closest?t.closest(TAP_SEL):null;if(!b){const ef=document.elementFromPoint(x,y);b=ef&&ef.closest?ef.closest(TAP_SEL):null;}return b&&!b.disabled?b:null;}
+function tapKey(b){return (b.dataset.buy||'')+'|'+(b.dataset.m||'')+'|'+(b.dataset.t||'')+'|'+(b.textContent||'').slice(0,24);}
+function tapFire(b,via){const k=tapKey(b),now=performance.now();if(tapLast.k===k&&now-tapLast.t<700){slog('tap dup',via,k);return;}tapLast={k,t:now};slog('tap FIRE',via,tDesc(b));
+  if(b.closest('#shopList')&&b.dataset.buy){try{buy(b.dataset.buy,b.dataset.m);}catch(e){slog('buy threw',e&&e.message);mtoast('Errore: '+(e&&e.message),2500);}return;}
+  b.__syn=1;try{b.click();}finally{b.__syn=0;}}
+function tapOpen(){return !$('shopScreen').classList.contains('hidden')||!$('dlgScreen').classList.contains('hidden');}
+function tapStart(x,y,t,ts,via){if(!tapOpen())return;const b=tapBtnAt(x,y,t);tapDown={x,y,ts,b,via};slog('tap down',via,Math.round(x)+','+Math.round(y),'t='+tDesc(t),'efp='+tDesc(document.elementFromPoint(x,y)),'btn='+(b?tDesc(b):'-'));}
+function tapEnd(x,y,t,ts,via){if(!tapDown||!tapOpen()){tapDown=null;return;}const d=tapDown;tapDown=null;const b=tapBtnAt(x,y,null)||d.b;const mv=Math.hypot(x-d.x,y-d.y),dt=ts-d.ts;
+  slog('tap up',via,'mv='+Math.round(mv),'dt='+Math.round(dt),'btn='+(b?tDesc(b):'-'));if(!b||b!==d.b&&!(d.b&&tapKey(d.b)===tapKey(b)))return;if(mv>24||dt>800)return;tapFire(b,via);}
+addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;tapStart(e.clientX,e.clientY,e.target,e.timeStamp,'ptr');},true);
+addEventListener('pointerup',e=>{tapEnd(e.clientX,e.clientY,e.target,e.timeStamp,'ptr');},true);
+addEventListener('pointercancel',e=>{if(tapDown&&tapDown.via==='ptr')slog('tap pointercancel');},true);
+addEventListener('touchstart',e=>{if(tapDown&&tapDown.via==='ptr')return;const t=e.changedTouches[0];if(t)tapStart(t.clientX,t.clientY,e.target,e.timeStamp,'touch');},{capture:true,passive:true});
+addEventListener('touchend',e=>{const t=e.changedTouches[0];if(!t)return;if(tapDown)tapEnd(t.clientX,t.clientY,e.target,e.timeStamp,tapDown.via==='ptr'?'touch2':'touch');},{capture:true,passive:true});
+addEventListener('click',e=>{if(!tapOpen())return;const b=e.target&&e.target.closest?e.target.closest(TAP_SEL):null;if(!b||b.__syn)return;
+  if(!e.isTrusted)return;const k=tapKey(b);if(tapLast.k===k&&performance.now()-tapLast.t<700){e.stopImmediatePropagation();e.preventDefault();return;}
+  e.stopImmediatePropagation();e.preventDefault();tapFire(b,'click');},true);
+
 // purchase completed in chat -> bot sends a web_app button with &grant=<id>.<r8>.<sig8>
 function verifyGrant(raw){const m=/^([a-z0-9_]{2,24})\.([A-Za-z0-9]{8})\.([0-9a-fA-F]{8})$/.exec(String(raw||'').trim());if(!m||!INVOICE_LINKS[m[1]])return null;
   return sha256hex(GRANT_SALT+m[1]+'.'+m[2]).slice(0,8)===m[3].toLowerCase()?{id:m[1],key:m[1]+'.'+m[2]}:null;}
