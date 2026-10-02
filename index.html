@@ -2823,7 +2823,7 @@ let wiT=0,wiLast=-2;function wiUpdate(dt){if(curW!==wiLast){wiLast=curW;wiT=1.5;
   if(el.classList.contains('gone')!==gone)el.classList.toggle('gone',gone);if(el.classList.contains('slim')!==slim)el.classList.toggle('slim',slim);
   const ic=w&&w.tool?({axe:'🪓',pick:'⛏️',hammer:'🔨'})[w.tool]:'';document.body.classList.toggle('tool',!!ic);if(ic&&$('fireBtn').dataset.ic!==ic)$('fireBtn').dataset.ic=ic;}
 
-// ======================= v4.1.4 hotfix: Telegram late-init, robust taps, Stars fallback, viewport fit =======================
+// ======================= v4.1.5 hotfix: Telegram late-init, robust taps, Stars fallback, viewport fit =======================
 const TG_BOT='Zombie_SurvivalGame_bot',GRANT_SALT='zsg-grant-v412-k7Qp';
 function tgLive(){const W=window.Telegram&&window.Telegram.WebApp;return W&&(W.initData||(W.platform&&W.platform!=='unknown'))?W:null;}
 function slog(){try{window.__DBG&&window.__DBG.log&&window.__DBG.log('shop',Array.from(arguments).join(' '));}catch(e){}}
@@ -2906,6 +2906,34 @@ function shopFit(){const L=$('shopList'),S=$('shopScreen');if(!L||S.classList.co
   try{new ResizeObserver(()=>shopFit()).observe($('shopList'));}catch(e){}
   new MutationObserver(()=>{tgSafe();requestAnimationFrame(shopFit);}).observe($('shopScreen'),{attributes:true,attributeFilter:['class']});
   addEventListener('resize',()=>setTimeout(shopFit,80));})();
+// 4.1.5: one-time welcome gift +20 💎 (new AND existing players, once). Flag in localStorage + Telegram CloudStorage (survives reinstall/clear).
+(function(){const FLAG='zc_gift20',AMT=20;if(LS.get(FLAG,0))return;
+  const css=document.createElement('style');css.textContent=
+  '#gift415{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;background:rgba(4,6,12,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:calc(10px + var(--sat)) calc(12px + var(--sar)) calc(10px + var(--sab)) calc(12px + var(--sal));opacity:0;transition:opacity .25s}'+
+  '#gift415.on{opacity:1}#gift415 .gBox{position:relative;width:min(340px,92vw);max-height:100%;overflow:hidden;text-align:center;border-radius:20px;padding:18px 18px 16px;background:linear-gradient(180deg,#1d2a44,#121827);border:1px solid rgba(111,214,255,.45);box-shadow:0 0 40px rgba(63,162,255,.35),0 12px 30px rgba(0,0,0,.5);transform:scale(.7);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}'+
+  '#gift415.on .gBox{transform:scale(1)}#gift415 .gIco{font-size:clamp(40px,11vh,64px);line-height:1.1;animation:g415b 1.4s ease-in-out infinite}'+
+  '#gift415 h2{margin:6px 0 2px;font-family:"ZRaj",sans-serif;font-size:clamp(18px,5.2vh,24px);color:#fff}#gift415 .gAmt{font-family:"ZRaj",sans-serif;font-weight:700;font-size:clamp(28px,9vh,44px);color:#bff0ff;text-shadow:0 0 18px rgba(111,214,255,.7)}'+
+  '#gift415 .gSub{font-size:13px;opacity:.75;margin:2px 0 12px}#gift415 button{width:100%;min-height:48px;border:0;border-radius:14px;font-size:18px;font-weight:800;color:#2a1600;background:linear-gradient(135deg,#ffd34a,#ff9a1f);box-shadow:0 4px 0 #b05a00;touch-action:manipulation}'+
+  '#gift415 .gFly{position:absolute;left:50%;top:42%;font-size:22px;pointer-events:none;animation:g415f 1.3s ease-out forwards}'+
+  '@keyframes g415b{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(4deg)}}'+
+  '@keyframes g415f{0%{transform:translate(-50%,-50%) scale(.4);opacity:0}15%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1);opacity:0}}';
+  document.head.appendChild(css);
+  let shown=false;
+  function show(){if(shown)return;shown=true;LS.set(FLAG,1);try{if(cloudOK())TG.W.CloudStorage.setItem(FLAG,'1',()=>{});}catch(e){}
+    addGems(AMT,true);try{play('buy');}catch(e){}slog&&slog('gift +'+AMT+' granted');
+    const d=document.createElement('div');d.id='gift415';d.innerHTML='<div class="gBox"><div class="gIco">🎁</div><h2>Regalo di benvenuto</h2><div class="gAmt">+'+AMT+' 💎</div><div class="gSub">Già accreditati sul tuo profilo. Buona caccia!</div><button id="giftOk">Grazie!</button></div>';
+    document.body.appendChild(d);const box=d.querySelector('.gBox');
+    for(let i=0;i<14;i++){const f=document.createElement('span');f.className='gFly';f.textContent='💎';const a=Math.random()*Math.PI*2,r=60+Math.random()*90;f.style.setProperty('--dx',Math.cos(a)*r+'px');f.style.setProperty('--dy',Math.sin(a)*r+'px');f.style.animationDelay=(i*.05)+'s';box.appendChild(f);}
+    requestAnimationFrame(()=>d.classList.add('on'));
+    let closed=false;const close=()=>{if(closed)return;closed=true;d.classList.remove('on');setTimeout(()=>d.remove(),260);try{play('ui');}catch(e){}refreshGems();};
+    onTap('giftOk',close);d.addEventListener('pointerup',e=>{if(e.target.id==='giftOk')close();});}
+  function ready(){return game.state==='menu'&&['shopScreen','dlgScreen','prizeScreen'].every(id=>!$(id)||$(id).classList.contains('hidden'));}
+  let tries=0;function check(){if(LS.get(FLAG,0))return;if(!ready()){if(++tries<120)setTimeout(check,1000);return;}
+    // already received on another device / before a reinstall?
+    let done=false;const go=v=>{if(done)return;done=true;if(v==='1'){LS.set(FLAG,1);return;}show();};
+    try{if(cloudOK()){TG.W.CloudStorage.getItem(FLAG,(err,v)=>go(err?null:v));setTimeout(()=>go(null),2500);return;}}catch(e){}go(null);}
+  setTimeout(check,1800);
+  window.__gift415={show,FLAG};})();
 // shop usable in portrait even mid-run: hide the rotate overlay while the shop / a dialog is open
 (function(){const sync=()=>document.body.classList.toggle('shopOpen',tapOpen());const mo=new MutationObserver(sync);for(const id of ['shopScreen','dlgScreen'])mo.observe($(id),{attributes:true,attributeFilter:['class']});sync();})();
 
