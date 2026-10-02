@@ -288,6 +288,38 @@ body.inmenu #pauseBtn{display:none}
 .rk.ph{opacity:.55}.rk.ph .nm{font-style:italic}
 
 #mtoast{position:fixed;z-index:60;left:50%;top:calc(14px + var(--sat));transform:translateX(-50%);background:rgba(20,24,32,.95);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:8px 16px;font-family:ZRaj,sans-serif;font-weight:700;font-size:15px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+/* ---- hotfix home layout (portrait/landscape) ---- */
+.mBtn{overflow:hidden}
+.mBtn>span:not(.ic):not(.gemc){flex:1 1 auto;min-width:0}
+.mBtn b,.mBtn small{overflow:hidden;text-overflow:ellipsis}
+.mBtn .ic,.mBtn .gemc{flex:0 0 auto}
+.diffSeg button{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menuRow .mBtn b{white-space:nowrap}
+.ztitle{white-space:nowrap}
+.menuRow .mBtn{gap:4px;padding-left:6px;padding-right:6px}
+.menuRow .mBtn b{font-size:13px;letter-spacing:0}
+.menuRow .mBtn .ic{width:20px;font-size:18px}
+@media (orientation:portrait){
+ #startScreen .menuL{left:0;right:0;width:auto!important;align-items:center;justify-content:flex-end;gap:clamp(6px,1.2vh,10px);
+  padding:calc(14px + var(--sat)) calc(14px + var(--sar)) calc(22px + var(--sab)) calc(14px + var(--sal))}
+ #startScreen .menuL>*{width:min(92vw,420px)!important;max-width:100%!important;box-sizing:border-box;flex-shrink:0}
+ #startScreen .ztitle{text-align:center;font-size:clamp(28px,10vw,58px)!important;letter-spacing:1px}
+ #startScreen .ztitle span{letter-spacing:2px}
+ #startScreen .ztag{text-align:center;font-size:clamp(12px,3.4vw,14px)}
+ #startScreen .menuFoot{text-align:center}
+ .mBtn.zombie{justify-content:center}
+ .diffSeg button{font-size:clamp(11px,3.5vw,14px);letter-spacing:.3px}
+ .menuRow{display:grid!important;grid-template-columns:1fr 1fr 48px 48px;gap:8px}
+ .menuRow:has(> .mBtn:only-child){grid-template-columns:1fr}
+ .menuRow .mBtn{width:100%;max-width:none;justify-content:center}
+ .mBtn.icon{padding:7px 0!important}
+}
+@media (orientation:portrait) and (max-height:700px){#startScreen .ztag{display:none}#startScreen .ztitle{font-size:clamp(26px,9vw,46px)!important}}
+@media (orientation:landscape) and (max-height:430px){
+ #startScreen .menuL{justify-content:safe center;padding-top:calc(10px + var(--sat))}
+ #startScreen .menuL>*{flex-shrink:0}
+ #startScreen .ztitle{font-size:clamp(28px,9.5vh,52px)}
+}
 </style>
 </head>
 <body class="inmenu">
