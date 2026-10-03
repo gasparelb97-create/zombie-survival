@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-03c",
+  "rev": "2026-10-03d",
   "upcoming": [
     {
       "icon": "🌄",
@@ -31,6 +31,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.2.3",
+      "date": "3 ott",
+      "items": [
+        "Livello, monete e missioni ora in alto, accanto a Chiudi",
+        "Il contatore delle missioni non trema più",
+        "Avvio del menu più leggero: anteprime armi già pronte"
+      ]
+    },
     {
       "ver": "4.2.2",
       "date": "3 ott",
