@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04i",
+ "rev": "2026-10-04j",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,17 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.6",
+   "date": "4 ott",
+   "items": [
+    "⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti",
+    "📜 Le liste non tornano più in cima da sole dopo lo scorrimento",
+    "📱 In verticale compare subito la schermata «Ruota il telefono»",
+    "💎 Avviso chiaro quando non hai abbastanza gemme",
+    "🛒 Apertura delle schede del negozio più veloce"
+   ]
+  },
   {
    "ver": "4.3.5",
    "date": "4 ott",
