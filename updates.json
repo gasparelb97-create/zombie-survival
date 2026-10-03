@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04j",
+ "rev": "2026-10-04k",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.7",
+   "date": "4 ott",
+   "items": [
+    "🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare",
+    "🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio",
+    "🧱 Nessun danno attraverso muri, porte e finestre chiuse"
+   ]
+  },
   {
    "ver": "4.3.6",
    "date": "4 ott",
