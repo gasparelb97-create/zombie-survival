@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04k",
+ "rev": "2026-10-04l",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,13 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.8",
+   "date": "4 ott",
+   "items": [
+    "📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"
+   ]
+  },
   {
    "ver": "4.3.7",
    "date": "4 ott",
