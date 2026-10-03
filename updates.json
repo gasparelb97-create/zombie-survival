@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04h",
+ "rev": "2026-10-04i",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,14 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.5",
+   "date": "4 ott",
+   "items": [
+    "⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve",
+    "🏠 Anteprima di costruzione più leggera"
+   ]
+  },
   {
    "ver": "4.3.4",
    "date": "4 ott",
