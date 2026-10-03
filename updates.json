@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04f",
+ "rev": "2026-10-04g",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,16 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.3",
+   "date": "4 ott",
+   "items": [
+    "⚡ Più fluido sui telefoni: la risoluzione si adatta subito quando la grafica rallenta",
+    "🔊 Audio più leggero: meno suoni sovrapposti, meno scatti",
+    "🧟 Gli zombie bloccati trovano un'altra strada (anche dalla porta aperta)",
+    "🎒 Zaino più in alto e su due colonne: ogni slot dell'equipaggiamento ha il suo spazio"
+   ]
+  },
   {
    "ver": "4.3.2",
    "date": "4 ott",
