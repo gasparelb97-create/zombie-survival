@@ -858,6 +858,37 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 <script>if(/^https?:$/.test(location.protocol)&&!(window.Telegram&&window.Telegram.WebApp))document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');</script>
 </head>
 <body class="inmenu">
+<div id="ld431" role="progressbar" aria-label="Caricamento" aria-valuemin="0" aria-valuemax="100"><style>
+#ld431{position:fixed;inset:0;z-index:2147482000;display:flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:none;
+  padding:calc(var(--sat,0px) + 10px) calc(var(--sar,0px) + 16px) calc(var(--sab,0px) + 10px) calc(var(--sal,0px) + 16px);box-sizing:border-box;
+  background:radial-gradient(120% 90% at 50% 0%,#24344f 0%,#121a2a 55%,#080b12 100%);color:#e9f1ff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  opacity:1;transition:opacity .38s ease;overflow:hidden;contain:strict}
+#ld431.ldOff{opacity:0;pointer-events:none}
+#ld431.ldGone{display:none}
+#ld431 .ldSnow,#ld431 .ldSnow2{position:absolute;left:0;right:0;top:-100%;height:200%;pointer-events:none;will-change:transform;
+  background-image:radial-gradient(2px 2px at 20px 30px,#fff,transparent),radial-gradient(2px 2px at 140px 80px,#fff,transparent),radial-gradient(1.5px 1.5px at 90px 150px,#dbe8ff,transparent),radial-gradient(2.5px 2.5px at 200px 20px,#fff,transparent),radial-gradient(1.5px 1.5px at 260px 120px,#fff,transparent);
+  background-size:300px 200px;opacity:.55;animation:ld431snow 9s linear infinite}
+#ld431 .ldSnow2{background-size:220px 160px;opacity:.3;animation-duration:14s}
+@keyframes ld431snow{from{transform:translateY(0)}to{transform:translateY(50%)}}
+#ld431 .ldCard{position:relative;width:min(440px,100%);text-align:center}
+#ld431 .ldT{font-weight:900;letter-spacing:.14em;font-size:clamp(20px,5.2vmin,30px);text-shadow:0 2px 0 #0a0f18,0 0 18px rgba(150,190,255,.35)}
+#ld431 .ldT b{color:#ff6b4a}
+#ld431 .ldS{margin:4px 0 14px;font-size:12px;opacity:.7;letter-spacing:.08em}
+#ld431 .ldBar{position:relative;height:12px;border-radius:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
+#ld431 .ldFill{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(.04);will-change:transform;transition:transform .55s cubic-bezier(.22,.8,.3,1);
+  background:linear-gradient(90deg,#7fb2ff,#d9ecff 60%,#ffffff);border-radius:7px}
+#ld431 .ldShine{position:absolute;top:0;bottom:0;width:40%;left:-40%;will-change:transform;animation:ld431shine 1.4s ease-in-out infinite;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
+@keyframes ld431shine{from{transform:translateX(0)}to{transform:translateX(350%)}}
+#ld431 .ldRow{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;opacity:.8}
+#ld431 .ldTip{margin-top:12px;font-size:13px;line-height:1.35;opacity:.9;min-height:2.7em;transition:opacity .3s}
+@media (max-height:300px){#ld431 .ldS{margin-bottom:8px}#ld431 .ldTip{margin-top:6px}}
+</style><i class="ldSnow"></i><i class="ldSnow2"></i>
+<div class="ldCard"><div class="ldT">ZOMBIE <b>SURVIVAL</b></div><div class="ldS">❄️ inverno senza fine</div>
+<div class="ldBar"><i class="ldFill"></i><i class="ldShine"></i></div>
+<div class="ldRow"><span class="ldStep">Avvio…</span><span class="ldPct">0%</span></div>
+<div class="ldTip">💡 Di notte gli zombie sono più forti: costruisci muri e accendi un fuoco prima del tramonto.</div></div></div>
+
 <canvas id="c"></canvas>
 <div id="vig"></div>
 <div id="dmg"></div>
@@ -1083,7 +1114,7 @@ function countLights(g){var t=now();if(t-lightCache.t<1000)return lightCache;lig
   try{g.scene.traverse(function(o){if(o.isLight){tot++;if(o.visible&&o.intensity>0){n++;var k=o.type.replace('Light','');names[k]=(names[k]||0)+1;}}});}catch(e){}
   lightCache.n=n;lightCache.tot=tot;lightCache.list=Object.keys(names).map(function(k){return k+'×'+names[k];}).join(' ');return lightCache;}
 function state(){var g=G();if(!g)return null;var o={};try{
-  var SV=g.SV,gm=g.game,p=g.player;o.stato=gm.state;o.modo=SV.on?'survival':'ondate';o.fase=SV.phase;o.giorno=SV.day;
+  var SV=g.SV,gm=g.game,p=g.player;o.stato=gm.state;o.modo=SV.on?'survival':(gm.state==='menu'?'survival (menu)':'survival (non avviata)');o.fase=SV.phase;o.giorno=SV.day;
   var c=SV.clock||0;o.orologio=Math.floor(c)+'s/720';o.fasePct=Math.round((SV.pt||0)*100);
   var mins=Math.floor(c/720*1440+360)%1440;o.ora=('0'+Math.floor(mins/60)).slice(-2)+':'+('0'+(mins%60)).slice(-2)+'*';
   o.orda=SV.plan?SV.plan.length:(SV.horde||0);o.ondata=gm.wave;o.uccisi=gm.kills;
@@ -1108,10 +1139,11 @@ function stats(){var n=D.fn,a=[],sum=0,cs=0,rs=0;for(var i=0;i<n;i++){var v=D.fr
 function sysObj(){var o={};SYS.forEach(function(k){o[k]=+D.sys[k].toFixed(2);});return o;}
 function report(){var m=performance.memory,s=stats();return {v:VER,app:(window.GAME_VER||''),quando:new Date().toISOString(),durata_s:Math.round((now()-D.start)/1000),perf:s,sistemi:sysOn?sysObj():'non agganciati',
   stato:state(),memoria:m?{usataMB:+(m.usedJSHeapSize/1048576).toFixed(1),totMB:+(m.totalJSHeapSize/1048576).toFixed(1),limiteMB:Math.round(m.jsHeapSizeLimit/1048576),trend:D.heap.slice(-30)}:'non disponibile',
-  device:device(),contestoPerso:D.ctxLost,errori:D.errors.slice(),ultimiFrame:Array.prototype.slice.call(D.frames,0,D.fn).map(function(v){return Math.round(v*10)/10;})};}
+  device:device(),fluidita:(function(){try{return window.__fl431?window.__fl431.rep():null;}catch(e){return null;}})(),contestoPerso:D.ctxLost,errori:D.errors.slice(),ultimiFrame:Array.prototype.slice.call(D.frames,0,D.fn).map(function(v){return Math.round(v*10)/10;})};}
 function summary(){var r=report(),s=r.perf,st=r.stato||{},e=r.errori;var L=['🐞 Zombie debug '+VER+' '+new Date().toLocaleString('it-IT'),
   'FPS '+s.fps+' · media '+s.avg+'ms · p95 '+s.p95+' · peggiore '+s.worst+'ms · >50ms: '+s.long50,
   'CPU/frame '+s.cpu+'ms (render '+s.render+' / update '+s.update+')'+(sysOn?' · '+SYS.map(function(k){return k+' '+r.sistemi[k];}).join(' '):''),
+  (function(){try{var f=window.__fl431&&window.__fl431.rep();return f?'Render PR '+f.pixelRatio+' (cap '+f.capQualita+' x scala '+f.scala+', '+f.buffer+') · '+f.hz+'Hz · target '+f.fpsTarget+' ('+f.fpsScelta+') · frame persi '+f.framePersiPct+'%':'';}catch(e){return '';}})(),
   st.gl?'GL draw '+st.gl.draw+' tri '+st.gl.tri+' geo '+st.gl.geo+' tex '+st.gl.tex+' prog '+st.gl.prog:'',
   'Stato '+st.stato+' '+st.fase+' g'+st.giorno+' zombie '+st.zombie+' orda '+st.orda+' luci '+st.luci+' torcia '+st.torcia,
   'Audio '+(st.audio&&st.audio.stato)+' '+(st.audio&&st.audio.sr||'')+'Hz src '+(st.audio&&st.audio.sorgenti),
@@ -1911,8 +1943,8 @@ function startGame(load){curPendR=null;if(typeof load!=='boolean')load=!!svLoadD
   for(const id of ['startScreen','overScreen','soonScreen','pauseScreen','shopScreen','rankScreen','helpScreen','dlgScreen'])$(id).classList.add('hidden');resetGame();svEnter(load);game.state='play';last=performance.now();lockPointer();setTimeout(()=>{renderThumbsIdle(()=>{wbSig='';try{hud4();}catch(e){}});wbSig='';hud4();},80);}
 function showMenu(){svExit();game.state='menu';$('pauseScreen').classList.add('hidden');slamRing.visible=false;$('bossBar').style.display='none';hideBanner();$('lowhp').style.opacity=0;document.body.classList.add('inmenu');$('overScreen').classList.add('hidden');$('startScreen').classList.remove('hidden');for(const z of zombies){z.alive=false;z.g.visible=false;}showBest();}
 function onTap(id,fn){const el=$(id);let tt=0;el.addEventListener('touchend',e=>{pd(e);if(drag43(e))return;tt=Date.now();fn();},{passive:false});el.addEventListener('click',()=>{if(Date.now()-tt>600)fn();});}
-onTap('btnZombie',startGame);onTap('btnOnline',()=>{audioInit();$('soonScreen').classList.remove('hidden');});onTap('soonBack',()=>$('soonScreen').classList.add('hidden'));
-onTap('restartBtn',startGame);onTap('btnHelp',()=>$('helpScreen').classList.remove('hidden'));onTap('helpBack',()=>$('helpScreen').classList.add('hidden'));
+onTap('btnZombie',()=>startGame());onTap('btnOnline',()=>{audioInit();$('soonScreen').classList.remove('hidden');});onTap('soonBack',()=>$('soonScreen').classList.add('hidden'));
+onTap('restartBtn',()=>startGame());onTap('btnHelp',()=>$('helpScreen').classList.remove('hidden'));onTap('helpBack',()=>$('helpScreen').classList.add('hidden'));
 function hurt(n){if(game.state!=='play')return;n*=(EQ.armor?.75:1)*(1-ST42.a/100);player.hp-=n;player.lastHit=game.time;const d=$('dmg');d.style.opacity=1;setTimeout(()=>d.style.opacity=0,200);play('hurt');fx.shake+=.9;fx.recoilP-=.03;
   if(SET.vib&&navigator.vibrate)try{navigator.vibrate(70);}catch(e){}updateHUD();if(player.hp<=0){player.hp=0;updateHUD();gameOver();}}
 
@@ -3672,7 +3704,7 @@ function warmShaders42(tag){if(!renderer||!renderer.compile)return;const t0=perf
     pfLog('warm423',tag,'total='+ms+'ms','newProg='+np,'split='+n,'slices='+slices,'maxSlice='+Math.round(maxSl)+'ms','par='+(PF42.par?1:0));};
   _idle42(step,600);}
 const _idle42=window.requestIdleCallback?(f,t)=>requestIdleCallback(f,{timeout:t||1500}):(f,t)=>setTimeout(()=>f({timeRemaining:()=>8,didTimeout:true}),Math.min(t||200,200));
-setTimeout(()=>_idle42(()=>warmShaders42('menu'),2500),1200);
+setTimeout(()=>_idle42(()=>{if(!(window.__ld431&&__ld431.menuW))warmShaders42('menu');},2500),1200);
 const _startGame42=startGame;startGame=function(){const r=_startGame42.apply(this,arguments);setTimeout(()=>_idle42(()=>warmShaders42('play'),1200),700);return r;};
 TICK42.push(dt=>{PF42.syncT-=dt;if(PF42.syncT<=0){PF42.syncT=.25;if(PF42.split.length)syncMats42();}});
 // (d) music pre-render built in small idle-time chunks (graph building was one long task per theme)
@@ -3715,12 +3747,14 @@ window.__tg42=TG42;
 // ---- v4.2 safe layout: landscape-only + Telegram insets on every screen ----
 const SAFE42={cls:'',dbg:''};
 let safe42Pr=null;
-function safe42Px(n){if(n==='--sat'||n==='--sab'||n==='--sal'||n==='--sar'){if(!safe42Pr){safe42Pr=document.createElement('div');safe42Pr.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none';document.body.appendChild(safe42Pr);}
+const SPX431={};let SPX431t=0;addEventListener('resize',()=>{SPX431t=0;});try{visualViewport.addEventListener('resize',()=>{SPX431t=0;});}catch(e){}
+function safe42Px(n){const t=performance.now();if(t-SPX431t>700){for(const k in SPX431)delete SPX431[k];SPX431t=t;}if(n in SPX431)return SPX431[n];return SPX431[n]=safe42PxRaw(n);}
+function safe42PxRaw(n){if(n==='--sat'||n==='--sab'||n==='--sal'||n==='--sar'){if(!safe42Pr){safe42Pr=document.createElement('div');safe42Pr.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none';document.body.appendChild(safe42Pr);}
     safe42Pr.style.height='var('+n+',0px)';return safe42Pr.getBoundingClientRect().height||0;}
   const v=getComputedStyle(document.documentElement).getPropertyValue(n);return parseFloat(v)||0;}
 // quests chip: out of #hud (z 5) so the joystick zone (#controls z 6) never covers it
 {const q=document.getElementById('quest42');if(q&&q.parentNode!==document.body)document.body.appendChild(q);}
-function safe42Fit(){const de=document.documentElement,b=document.body;if(!b)return;
+function safe42Fit(){SPX431t=0;const de=document.documentElement,b=document.body;if(!b)return;
   const sat=safe42Px('--sat'),sab=safe42Px('--sab'),ct=safe42Px('--tg-content-safe-area-inset-top');
   let vh=innerHeight;try{if(window.visualViewport&&visualViewport.height>150)vh=Math.min(vh,visualViewport.height);}catch(e){}
   const avail=vh-sat-sab,land=innerWidth>innerHeight;
@@ -3839,7 +3873,7 @@ window.__econ42={dps42,bestCoinDps,W_TUNE,SVC42,svcBuy,hint42,hintTarget,COS42,g
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
 
 // ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
-const NEWS421_FB={"rev":"2026-10-04b","upcoming":[{"icon":"⚔️","title":"Arena PvP 1v1 e 3v3","desc":"Sfida altri sopravvissuti in duelli e squadre.","eta":"Prossimamente","tone":"later"}],"recent":[{"ver":"4.3","date":"4 ott","items":["🎯 Armi rifatte in 3D: canne, mirini, calcio e caricatori dettagliati, materiali metallo/legno e accenti per rarità","Animazioni nuove: fiammata con luce, bossoli, rinculo, ricarica col caricatore, minigun che gira, fiamme e plasma","🌄 Grafica nuova: ombre vere di sole e luna, texture per neve, legno, mattoni, asfalto e corteccia, nebbia e luci più belle","Zombie più dettagliati con movimenti più fluidi, più neve, impronte, sangue e scintille","🎨 Impostazioni → Grafica Bassa / Media / Alta: la tua scelta resta salvata","🏗️ Nuove costruzioni: torre di guardia, torretta automatica, banco da lavoro, generatore, faro, recinto elettrico, punte, imposte, raccoglitore d'acqua e arredi","Menu Costruisci diviso in Muri, Difesa, Utilità e Decorazioni","Anteprima 3D che ruota nel Negozio (Prova)","🎒 Zaino e orologio del giorno ora in alto a destra, accanto ai pulsanti di Telegram","Più spazio libero sullo schermo durante la partita","Liste del Negozio e delle Novità: scorrono sempre trascinando col dito","Avvio partita e Negozio più fluidi: niente blocchi al primo frame","Due tocchi rapidi di fila non vengono più persi"]},{"ver":"4.2.3","date":"3 ott","items":["Livello, monete e missioni ora in alto, accanto a Chiudi","Il contatore delle missioni non trema più","Avvio del menu più leggero: anteprime armi già pronte"]},{"ver":"4.2.2","date":"3 ott","items":["Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito","Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili","In partita livello, monete e missioni stanno insieme in alto al centro","Menu più reattivo all'avvio (meno blocchi)"]},{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
+const NEWS421_FB={"rev":"2026-10-04e","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.1","date":"4 ott","items":["⚡ Gioco più fluido (meno scatti, fps stabili)","🐞 Correzione bug","Schermata di caricamento: niente blocchi nel menu e all'inizio della partita","Negozio: tocca un'arma o un equipaggiamento per la scheda con statistiche, confronto e anteprima 3D","Negozio: le etichette non coprono più le immagini, la lista resta dov'era e le schede rispondono meglio al tocco","Nuova opzione 🎯 FPS in Impostazioni: Auto / 60 / Max","Risoluzione adattiva e ombre più leggere: si abbassa un poco solo quando serve"]},{"ver":"4.3","date":"4 ott","items":["🎯 Armi rifatte in 3D: canne, mirini, calcio e caricatori dettagliati, materiali metallo/legno e accenti per rarità","Animazioni nuove: fiammata con luce, bossoli, rinculo, ricarica col caricatore, minigun che gira, fiamme e plasma","🌄 Grafica nuova: ombre vere di sole e luna, texture per neve, legno, mattoni, asfalto e corteccia, nebbia e luci più belle","Zombie più dettagliati con movimenti più fluidi, più neve, impronte, sangue e scintille","🎨 Impostazioni → Grafica Bassa / Media / Alta: la tua scelta resta salvata","🏗️ Nuove costruzioni: torre di guardia, torretta automatica, banco da lavoro, generatore, faro, recinto elettrico, punte, imposte, raccoglitore d'acqua e arredi","Menu Costruisci diviso in Muri, Difesa, Utilità e Decorazioni","Anteprima 3D che ruota nel Negozio (Prova)","🎒 Zaino e orologio del giorno ora in alto a destra, accanto ai pulsanti di Telegram","Più spazio libero sullo schermo durante la partita","Liste del Negozio e delle Novità: scorrono sempre trascinando col dito","Avvio partita e Negozio più fluidi: niente blocchi al primo frame","Due tocchi rapidi di fila non vengono più persi"]},{"ver":"4.2.3","date":"3 ott","items":["Livello, monete e missioni ora in alto, accanto a Chiudi","Il contatore delle missioni non trema più","Avvio del menu più leggero: anteprime armi già pronte"]},{"ver":"4.2.2","date":"3 ott","items":["Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito","Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili","In partita livello, monete e missioni stanno insieme in alto al centro","Menu più reattivo all'avvio (meno blocchi)"]},{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
 let NEWS421=NEWS421_FB;const NEWS421_K='zc_news_seen';
 function news421Esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function news421Dot(){const b=document.getElementById('newsBtn');if(!b)return;let seen='';try{seen=localStorage.getItem(NEWS421_K)||'';}catch(e){}b.classList.toggle('new',!!NEWS421.rev&&seen!==NEWS421.rev);}
@@ -4470,7 +4504,7 @@ function shadow43(q){const sc=sun.shadow.camera;if(sun.shadow.map){sun.shadow.ma
 function shadowTick43(){if(!GHI())return;const q=GQ(),h=q==='alta'?24:19,tex=2*h/sun.shadow.mapSize.x;SUN43.frame++;
   const px=Math.round(camera.position.x/tex)*tex,pz=Math.round(camera.position.z/tex)*tex;sun.target.position.set(px,0,pz);sun.position.set(px+SUN43.dir.x*90,SUN43.dir.y*90,pz+SUN43.dir.z*90);
   pShadow43.position.set(player.pos.x,.85,player.pos.z);pShadow43.visible=game.state==='play';
-  if(q==='alta'||SUN43.frame%2===0)renderer.shadowMap.needsUpdate=true;}
+  if(SUN43.frame%(q==='alta'?2:3)===0)renderer.shadowMap.needsUpdate=true;}// 4.3.1: map + matrix stay consistent between updates (world-space correct)
 // moonlight: on Media/Alta the night keeps a soft blue key light so shadows stay readable
 const _al43=applyLight;applyLight=function(){_al43();if(!GHI())return;const nf=nightF();if(nf>0){sun.intensity=Math.max(sun.intensity,.26*nf);sun.color.setHex(0xe6edff).lerp(_moonC43,nf);}else sun.color.setHex(0xe6edff);};
 const _moonC43=new T.Color(0x9cb4ff);
@@ -4739,7 +4773,7 @@ function warmQ43(){const Q=[],seen=new Set();const add=(root,cam,sc)=>root.trave
 const TXU43=new WeakSet();
 warmShaders42=function(tag){if(!renderer||!renderer.compile)return;const my=++W43.run,t0=performance.now(),p0=renderer.info.programs.length;let n=0;
   try{n=fixMats42(scene)+fixMats42(vmScene);}catch(e){}
-  tagW43=tag;const Q=warmQ43(),pend=[],txq=[];let k=0,slices=0,maxSl=0;
+  tagW43=tag;const Q=warmQ43(),pend=[],txq=[];let k=0,slices=0,maxSl=0;W43.prog=()=>[k,Q.length,pend.length+txq.length];
   let made=0;const step=()=>{if(my!==W43.run)return;const s0=performance.now();slices++;made=0;
     if(txq.length){const tx=txq.shift();const c0=performance.now();try{if(!renderer.properties.get(tx).__webglTexture)renderer.initTexture(tx);}catch(e){}const dd=performance.now()-c0;if(dd>(W43.slowMs||0)){W43.slowMs=dd;W43.slow='tex '+((tx.image&&tx.image.width)||0)+'x'+((tx.image&&tx.image.height)||0);}}
     else if(pend.length){const pr=pend.shift();try{if(pr.isReady&&!pr.isReady())pend.push(pr);}catch(e){}const dd=performance.now()-s0;if(dd>(W43.slowMs||0)){W43.slowMs=dd;W43.slow='link '+(pr.name||pr.cacheKey&&pr.cacheKey.slice(0,80));}}
@@ -4748,7 +4782,7 @@ warmShaders42=function(tag){if(!renderer||!renderer.compile)return;const my=++W4
       const kids=o.children;o.children=[];const rtw=sc===TS43;if(rtw)renderer.setRenderTarget(WRT43);const c0=performance.now();try{renderer.compile(o,cam,sc);}catch(e){}if(rtw)renderer.setRenderTarget(null);o.children=kids;try{if(renderer.initTexture&&rtw)for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m)for(const tk of ['map','normalMap','bumpMap','roughnessMap','metalnessMap','emissiveMap','alphaMap']){const tx=m[tk];if(tx&&!TXU43.has(tx)){TXU43.add(tx);if(!renderer.properties.get(tx).__webglTexture)txq.push(tx);}}}catch(e){}const dd=performance.now()-c0;if(dd>(W43.slowMs||0)){W43.slowMs=dd;W43.slow='compile '+(o.type)+' '+(o.name||'')+' '+(Array.isArray(o.material)?'arr':o.material.type)+' '+(sc===vmScene?'vm':sc===TS43?'thumb':'world');}
       const L=renderer.info.programs;if(PF42.par)for(let i=before;i<L.length;i++)pend.push(L[i]);if(L.length>before){made=1;break;}if(performance.now()-s0>6)break;}
     maxSl=Math.max(maxSl,performance.now()-s0);
-    if(k<Q.length||pend.length||txq.length){if(made&&!PF42.par)setTimeout(()=>_idle42(step,1200),150);else if(pend.length)setTimeout(step,16);else _idle42(step,400);return;}
+    if(k<Q.length||pend.length||txq.length){const ld=window.__ld431&&__ld431.on;if(made&&!PF42.par)setTimeout(()=>_idle42(step,1200),ld?0:150);else if(pend.length)setTimeout(step,ld?4:16);else _idle42(step,400);return;}
     _idle42(()=>thumbs43(),1500);
     const ms=Math.round(performance.now()-t0),np=renderer.info.programs.length-p0;PF42.warm++;PF42.log.push([tag,ms,np,n,slices,Math.round(maxSl),Math.round(t0)]);W43.log.push({tag,ms,np,slices,maxSl:Math.round(maxSl),items:Q.length});
     pfLog('warm',tag,'total='+ms+'ms','newProg='+np,'items='+Q.length,'slices='+slices,'maxSlice='+Math.round(maxSl)+'ms');};
@@ -4824,7 +4858,7 @@ TH43.cbs=[];
 if(typeof renderThumbsIdle==='function')renderThumbsIdle=function(cb){if(THUMBS&&!TH43.stale){if(cb)cb();return;}if(cb)TH43.cbs.push(cb);thumbs43();};
 if(typeof thumbsPartial422==='function')thumbsPartial422=function(){if(!THUMBS||TH43.stale){const P=pre43();if(P){TH43.job++;TH43.busy=false;THUMBS=null;TH43.stale=false;thumbs43();return THUMBS||P;}}return (TH43.busy&&TH43.ctx)?TH43.ctx.out:(THUMBS||{});};
 if(typeof thumbOne422==='function')thumbOne422=function(){};
-window.GAME_VER='4.3';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3');}catch(e){}
+window.GAME_VER='4.3.1';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.1');}catch(e){}
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;
 setTimeout(()=>{try{Object.assign(window.__game,{GFX43,gfxSet43,W43,TH43,VM,vmScene,vmCam,warmShaders42,thumbs43});}catch(e){}},0);
@@ -4837,24 +4871,263 @@ setTimeout(()=>{try{Object.assign(window.__game,{GFX43,gfxSet43,W43,TH43,VM,vmSc
 for(let i=0;i<12;i++)makePickup('wood');for(let i=0;i<10;i++)makePickup('metal');for(let i=0;i<7;i++)makePickup('elec');
 equip(0,true);updateHUD();showBest();
 renderer.shadowMap.needsUpdate=true; // bake static shadows once
+// ======================= 4.3.1 smoothness (fluidità): resolution per quality + dynamic scaling, frame cap, far culling =======================
+// Phones with dpr 3 and 90/120 Hz panels: the old adaptive PR only dropped below ~43 fps and climbed back to 2.0 whenever frames were
+// under 14.5 ms, so on a 90 Hz panel it always sat at 2.0 (1582x720) and missed ~1 vsync in 8. Here:
+//  - pixel ratio cap per quality (touch: Bassa 1.0 / Media 1.35 / Alta 1.75; desktop 1 / 1.5 / 2), never above devicePixelRatio
+//  - render scale (levels 1 / .84 / .7 / floor 0.8|0.9|1.05 px per CSS px) driven by MISSED VSYNCS (interval > 1.5 x display period) on rAF timestamps:
+//    >5% missed in a 2 s window -> one level down (max every 4 s); 10 s clean -> one level up (max every 8 s); a raise that causes misses locks
+//    raising for 45 s; a drop that did not reduce misses marks the frame CPU-bound (no further drops: Auto goes to 60 instead)
+//  - frame cap: Auto / 60 / Max (Impostazioni + Pausa). Auto switches to 60 when >5% of frames still miss at the lowest scale (8 s)
+//  - objects fully inside the fog (view depth beyond fog.far + radius, low on the horizon) are not drawn
+const FL431={cap:LS.get('zc_fps431','auto'),period:0,per:[],hz:0,scale:1,lastDraw:0,win:{n:0,miss:0,t:0},clean:0,lockUp:0,lastRes:0,raised:0,
+  auto60:false,aw:{n:0,miss:0,t:0},tot:{n:0,miss:0},recent:[],prCap:1,prEff:1,hidden:[],cand:null,candT:0};
+function fl431Caps(){const q=(typeof GFX43!=='undefined'&&GFX43.q)||'media',dpr=window.devicePixelRatio||1;
+  const cap=Math.min(dpr,(isTouch?{bassa:1,media:1.35,alta:1.75}[q]:{bassa:1,media:1.5,alta:2}[q])||1.35);const floor=Math.min(cap,{bassa:.8,media:.9,alta:1.05}[q]||.9);
+  return {cap,min:floor/cap};}// floors: never blurrier than 0.8 / 0.9 / 1.05 px per CSS px
+function fl431Apply(force){const c=fl431Caps();FL431.prCap=c.cap;FL431.scale=Math.max(c.min,Math.min(1,FL431.scale));
+  const pr=Math.max(.5,Math.round(c.cap*FL431.scale*100)/100);if(force||Math.abs(pr-curPR)>.004){curPR=pr;_pPR=1;FL431.lastRes=performance.now();}FL431.prEff=pr;}
+function fl431CapMs(){const c=FL431.cap==='60'||(FL431.cap==='auto'&&FL431.auto60)?60:0;return c&&FL431.period&&FL431.period<14.5?1000/c:0;}
+// returns true when this rAF callback must be skipped (frame cap); keeps an even cadence (accumulator, not "time since last")
+FL431.skip=function(now){const iv=now-(FL431.lastRaf||now);FL431.lastRaf=now;if(iv>4&&iv<60){const P=FL431.per;P.push(iv);if(P.length>=120){const s=P.slice().sort((a,b)=>a-b),m=Math.max(6.5,Math.min(34,s[40])),pl=game.state==='play'||game.state==='craft';if(!FL431.period||!pl||m<FL431.period)FL431.period=m;FL431.hz=Math.round(1000/FL431.period);P.length=0;}}
+  const cm=fl431CapMs();if(!cm){FL431.lastDraw=now;return false;}
+  if(now-FL431.lastDraw<cm-FL431.period*.5)return true;FL431.lastDraw=(now-FL431.lastDraw>cm*2)?now:FL431.lastDraw+cm;return false;};
+FL431.tick=function(raw,now){if(!(raw>0&&raw<400))return;
+  // display period: 1/3-percentile of the last 120 rAF intervals (measured in FL431.skip; in play it may only go down, so a
+  //  loaded GPU can't fake a lower refresh rate)
+  if(!FL431.period)return;
+  if(game.state!=='play'&&game.state!=='craft')return;
+  const cm=fl431CapMs(),budget=cm||FL431.period,miss=raw>budget+FL431.period*.5;
+  FL431.recent.push(Math.round(raw*10)/10);if(FL431.recent.length>120)FL431.recent.shift();
+  const w=FL431.win;w.n++;if(miss)w.miss++;w.t+=raw;FL431.tot.n++;if(miss)FL431.tot.miss++;const a=FL431.aw;a.n++;if(miss)a.miss++;a.t+=raw;
+  // every resize re-allocates the drawing buffer (a 30-80 ms task on phones), so: few discrete levels, slow to change, and stop
+  // dropping when a drop did not reduce misses (CPU-bound frame: resolution is not the bottleneck)
+  if(w.t>=2000){const pct=w.miss/w.n,c=fl431Caps(),L=fl431Levels(c),i=fl431Lvl(L);
+    if(FL431.chk&&now-FL431.chk.t<5000){if(pct>FL431.chk.pct*.8&&pct>.04)FL431.cpuBound=true;FL431.chk=null;}
+    if(pct>.05){if(FL431.raised&&now-FL431.raised<6000)FL431.lockUp=now+45000;FL431.clean=0;
+      if(!FL431.cpuBound&&i<L.length-1&&now-FL431.lastRes>4000){FL431.chk={t:now,pct};FL431.scale=L[i+1];fl431Apply();}}
+    else if(pct<.01){FL431.clean++;if(FL431.clean>=5&&now>FL431.lockUp&&i>0&&now-FL431.lastRes>8000){FL431.scale=L[i-1];FL431.raised=now;FL431.clean=0;FL431.cpuBound=false;fl431Apply();}}
+    else FL431.clean=0;
+    FL431.win={n:0,miss:0,t:0};}
+  if(a.t>=8000){const pct=a.miss/a.n,c=fl431Caps();if(FL431.cap==='auto'&&!FL431.auto60&&FL431.period<14.5&&pct>.05&&(FL431.scale<=c.min+.05||FL431.cpuBound)){FL431.auto60=true;FL431.lastDraw=now;try{slog&&slog('fps auto -> 60, miss',Math.round(pct*100)+'%');}catch(e){}}
+    FL431.aw={n:0,miss:0,t:0};}};
+function fl431Levels(c){const L=[1];for(const v of [.84,.7])if(v>c.min+.03)L.push(v);if(c.min<1)L.push(+c.min.toFixed(3));return L;}
+function fl431Lvl(L){let b=0,bd=9;for(let i=0;i<L.length;i++){const d=Math.abs(L[i]-FL431.scale);if(d<bd){bd=d;b=i;}}return b;}
+FL431.set=function(v){if(!['auto','60','max'].includes(v))return;FL431.cap=v;LS.set('zc_fps431',v);if(v!=='auto')FL431.auto60=false;FL431.win={n:0,miss:0,t:0};FL431.aw={n:0,miss:0,t:0};fl431Sync();};
+FL431.rep=function(){const c=fl431Caps(),t=FL431.tot,dpr=window.devicePixelRatio||1;let buf='';try{buf=renderer.domElement.width+'x'+renderer.domElement.height;}catch(e){}
+  return {pixelRatio:FL431.prEff,dpr,capQualita:c.cap,scala:+FL431.scale.toFixed(2),buffer:buf,hz:FL431.hz,periodoMs:+(FL431.period||0).toFixed(2),
+    fpsTarget:fl431CapMs()?60:'max',fpsScelta:FL431.cap+(FL431.auto60?'→60':''),cpuBound:!!FL431.cpuBound,framePersiPct:t.n?+(t.miss/t.n*100).toFixed(1):0,frame:t.n,nascostiNebbia:FL431.hidden.length};};
+// ---- far culling: top-level objects fully inside the fog and low on the horizon are skipped for this frame ----
+const _flB=new T.Box3(),_flS=new T.Sphere(),_flF=new T.Vector3();
+function fl431Cand(){const L=[];for(const o of scene.children){if(o.isLight||o.isCamera||o===sky||o===ground||o===road||!o.visible)continue;if(o.frustumCulled===false)continue;
+    let nofog=false,big=false;o.traverse(x=>{const m=x.material;if(m&&(Array.isArray(m)?m.some(y=>y.fog===false):m.fog===false))nofog=true;if(x.isInstancedMesh||x.isPoints||x.isLine)big=true;});if(nofog||big)continue;
+    let c,r;if(o.isMesh&&!o.children.length){if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();_flS.copy(o.geometry.boundingSphere);o.updateMatrixWorld();_flS.applyMatrix4(o.matrixWorld);c=_flS.center.clone().sub(o.position);r=_flS.radius;}
+    else{_flB.setFromObject(o);if(_flB.isEmpty())continue;_flB.getBoundingSphere(_flS);c=_flS.center.clone().sub(o.position);r=_flS.radius+.5;}
+    if(r>30)continue;L.push([o,c,r]);}return L;}
+FL431.cullPre=function(){const H=FL431.hidden;H.length=0;if(!scene.fog||(game.state!=='play'&&game.state!=='craft'))return;const now=performance.now();
+  if(!FL431.cand||now-FL431.candT>4000){FL431.cand=fl431Cand();FL431.candT=now;}
+  // fog uses VIEW DEPTH (not distance): an object at the screen edge is fogged much less than one straight ahead
+  const cp=camera.position,far=scene.fog.far+6,f=camera.getWorldDirection(_flF);for(const e of FL431.cand){const o=e[0];if(!o.visible||o.parent!==scene)continue;const p=o.position,cx=p.x+e[1].x-cp.x,cz=p.z+e[1].z-cp.z,cy=p.y+e[1].y;
+    const d=cx*f.x+(cy-cp.y)*f.y+cz*f.z-e[2];if(d<far)continue;const top=cy+e[2]-cp.y;if(top>d*.06)continue;o.visible=false;H.push(o);}};
+FL431.cullPost=function(){const H=FL431.hidden;for(let i=0;i<H.length;i++)H[i].visible=true;};
+// ---- settings row: 🎯 FPS Auto / 60 / Max ----
+function fl431Row(id){const d=document.createElement('div');d.className='toggle gfx43 fps431';d.id=id;
+  d.innerHTML='🎯 FPS <span class="seg43">'+[['auto','Auto'],['60','60'],['max','Max']].map(([k,l])=>'<button data-fq="'+k+'">'+l+'</button>').join('')+'</span>';
+  d.addEventListener('click',e=>{const b=e.target.closest('button[data-fq]');if(!b)return;FL431.set(b.dataset.fq);mtoast('🎯 FPS: '+(b.dataset.fq==='auto'?'Auto (60 se lo schermo perde frame)':b.dataset.fq==='60'?'60 fissi · più regolare':'Massimi'),1800);});return d;}
+function fl431Sync(){for(const b of document.querySelectorAll('.fps431 button[data-fq]'))b.classList.toggle('on',b.dataset.fq===FL431.cap);}
+{try{for(const id of ['gfxRowH','gfxRowP']){const g=document.getElementById(id);if(g&&g.parentNode)g.parentNode.insertBefore(fl431Row(id.replace('gfx','fps')),g.nextSibling);}fl431Sync();}catch(e){console.error(e);}}
+try{gfxOn43(()=>{FL431.scale=1;FL431.lockUp=0;FL431.cpuBound=false;FL431.chk=null;FL431.cand=null;fl431Apply(true);});}catch(e){}
+fl431Apply(true);
+FL431.apply=fl431Apply;window.__fl431=FL431;
+// ---- 4.3.1 late static merge: ~180 props were added after mergeStatics() ran (trail decals, textured walls/roofs, barrels, bushes,
+//      far hills...) and each cost a draw call (plus one in the shadow pass). Merged here once, in the menu, per material / shadow flags /
+//      26 m cell (cells keep frustum culling useful). Only top-level meshes that did not move or change visibility for ~3 s and are not
+//      referenced by game objects (lamps, pickups, pieces, loot, zombies...) are merged; the originals stay in solids[] for raycasts.
+const MG431={done:0,merged:0,groups:0,snap:null};
+function mg431Refs(){const R=new Set();const add=v=>{if(v&&v.isObject3D)R.add(v);};const scan=a=>{try{for(const e of a||[]){if(!e)continue;add(e);if(typeof e==='object')for(const k in e){const v=e[k];add(v);if(v&&typeof v==='object'&&!v.isObject3D&&!Array.isArray(v))for(const k2 in v)add(v[k2]);}}}catch(e){}};
+  for(const n of ['lamps','pickups','drops','PIECES','LOOT','zombies','NODES','POOL','PROJ','nades','chests','FL43'])try{scan((0,eval)('typeof '+n+'!=="undefined"?'+n+':null'));}catch(e){}
+  for(const o of [ground,road,sky,typeof sunDisc!=='undefined'?sunDisc:null,typeof muzGlow43!=='undefined'?muzGlow43:null,typeof beam43!=='undefined'?beam43:null,typeof pShadow43!=='undefined'?pShadow43:null,typeof snow2!=='undefined'?snow2:null,typeof slamRing!=='undefined'?slamRing:null])add(o);
+  return R;}
+function mg431Cands(){const L=[];for(const o of scene.children){if(!o.isMesh||o.children.length||o.isInstancedMesh||o.isSkinnedMesh||!o.visible)continue;const m=o.material;if(!m||Array.isArray(m)||m.vertexColors||m.blending!==T.NormalBlending||o.userData.dyn)continue;
+    const g=o.geometry;if(!g||!g.attributes.position||!g.attributes.normal||g.morphAttributes.position)continue;L.push(o);}return L;}
+function mg431Sig(o){o.updateMatrix();return o.matrix.elements.map(v=>v.toFixed(4)).join(',')+(o.visible?1:0);}
+function mg431Snap(){const M=new Map();for(const o of mg431Cands())M.set(o,mg431Sig(o));MG431.snap=M;}
+function mg431Run(){if(MG431.done)return;MG431.done=1;const t0=performance.now();try{const R=mg431Refs(),S=MG431.snap||new Map();scene.updateMatrixWorld(true);const _p=new T.Vector3();const groups=new Map();
+    for(const o of mg431Cands()){if(R.has(o)||!S.has(o)||S.get(o)!==mg431Sig(o))continue;if(o.matrixWorld.determinant()<0){MG431.mirrored=(MG431.mirrored||0)+1;continue;}_p.setFromMatrixPosition(o.matrixWorld);
+      const m=o.material,key=m.uuid+'|'+(o.castShadow?1:0)+(o.receiveShadow?1:0)+'|'+(o.renderOrder|0)+'|'+Math.floor((_p.x+130)/26)+':'+Math.floor((_p.z+130)/26);let g=groups.get(key);if(!g){g={m,cast:o.castShadow,recv:o.receiveShadow,ro:o.renderOrder|0,list:[]};groups.set(key,g);}g.list.push(o);}
+        for(const g0 of groups.values()){if(g0.list.length<2)continue;let n=0;const gs=g0.list.map(o=>{const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();g.applyMatrix4(o.matrixWorld);n+=g.attributes.position.count;return g;});
+      const P=new Float32Array(n*3),N=new Float32Array(n*3),U=new Float32Array(n*2);let off=0;
+      for(const g of gs){P.set(g.attributes.position.array,off*3);N.set(g.attributes.normal.array,off*3);if(g.attributes.uv)U.set(g.attributes.uv.array,off*2);off+=g.attributes.position.count;g.dispose();}
+      const bg=new T.BufferGeometry();bg.setAttribute('position',new T.BufferAttribute(P,3));bg.setAttribute('normal',new T.BufferAttribute(N,3));bg.setAttribute('uv',new T.BufferAttribute(U,2));bg.computeBoundingSphere();
+      const mm=new T.Mesh(bg,g0.m);mm.castShadow=g0.cast;mm.receiveShadow=g0.recv;mm.renderOrder=g0.ro;mm.matrixAutoUpdate=false;mm.updateMatrix();mm.userData.mg431=1;scene.add(mm);
+      // the originals stay in solids[] (matrixWorld frozen): shots/projectiles keep raycasting small per-object bounds instead of
+      // testing every triangle of a 26 m chunk (3.6x slower per ray) and hit exactly what they hit before
+      for(const o of g0.list){scene.remove(o);MG431.merged++;}MG431.groups++;}
+    FL431.cand=null;renderer.shadowMap.needsUpdate=true;
+  }catch(e){console.error('merge431',e);}MG431.ms=Math.round(performance.now()-t0);try{slog&&slog('merge431',MG431.merged,'meshes ->',MG431.groups,'draws',MG431.ms+'ms');}catch(e){}}
+setTimeout(mg431Snap,500);setTimeout(()=>{if(game.state==='menu'||game.state==='over')mg431Run();else{const iv=setInterval(()=>{if(game.state!=='play'&&game.state!=='craft'){clearInterval(iv);mg431Run();}},1000);}},2200);
+MG431.solids=()=>solids;window.__mg431=MG431;
+// ---- 4.3.1 loading screen: shader / mesh / texture warm-up and first-match preparation run behind it ----
+//      Startup: menu shader warm (W43), late merge (MG431) and GPU upload warm (UP424) are driven back-to-back while it is shown.
+//      First match: startGame() runs, then the loop holds for a few frames that draw the real play view (all directions, every
+//      owned weapon, the zombie pool) to the canvas behind the overlay, so the first visible frames compile/upload nothing.
+//      The bar is compositor-driven (transform transition + shimmer), monotonic, fed by real step counts.
+const LD431={p:0,on:true,hold:0,played:0,t0:performance.now(),step:'',tipT:0,tipI:0,boot:0,log:[],fr:null,fi:0,cap:14000};
+const LD431_TIPS=['💡 Di notte gli zombie sono più forti: costruisci muri e accendi un fuoco prima del tramonto.','💡 Il bruto ha tanta vita: tieniti a distanza e mira alla testa.',
+  '💡 Lo zaino ha un limite: deposita legno e metallo nella cassa.','💡 Nel Negozio tocca un\'arma per vedere danno, cadenza e portata prima di comprarla.',
+  '💡 In Impostazioni puoi scegliere qualità grafica e 🎯 FPS (Auto / 60 / Max).','💡 Le torri di guardia ti danno una vista dall\'alto sull\'orda.'];
+function ld431El(){return document.getElementById('ld431');}
+function ld431Set(p,txt){const e=ld431El();if(!e)return;p=Math.max(LD431.p,Math.min(1,p));if(txt&&txt!==LD431.step){LD431.step=txt;const s=e.querySelector('.ldStep');if(s)s.textContent=txt;}
+  if(p-LD431.p<.004&&p<1)return;LD431.p=p;const f=e.querySelector('.ldFill');if(f)f.style.transform='scaleX('+Math.max(.04,p).toFixed(3)+')';const c=e.querySelector('.ldPct');if(c)c.textContent=Math.round(p*100)+'%';e.setAttribute('aria-valuenow',Math.round(p*100));}
+function ld431Tip(){const e=ld431El();if(!e)return;const t=e.querySelector('.ldTip');if(!t)return;LD431.tipI=(LD431.tipI+1)%LD431_TIPS.length;t.textContent=LD431_TIPS[LD431.tipI];}
+function ld431Show(txt){const e=ld431El();if(!e)return;LD431.on=true;LD431.p=0;const f=e.querySelector('.ldFill');if(f){f.style.transition='none';f.style.transform='scaleX(.04)';void f.offsetWidth;f.style.transition='';}
+  e.classList.remove('ldGone','ldOff');ld431Tip();ld431Set(.05,txt);}
+function ld431Hide(){const e=ld431El();LD431.on=false;if(!e)return;ld431Set(1);setTimeout(()=>{e.classList.add('ldOff');setTimeout(()=>{if(!LD431.on)e.classList.add('ldGone');},420);},260);}
+// startup pump: one short task per tick (each underlying step keeps its own <=6 ms + 1 program budget)
+function ld431Pump(){if(!LD431.on||LD431.hold)return;const now=performance.now(),el=now-LD431.t0;
+  if(now-LD431.tipT>3600){LD431.tipT=now;if(LD431.tipT>LD431.t0+500)ld431Tip();}
+  let w=0;try{const g=W43.prog&&W43.prog();if(g)w=g[1]?Math.min(1,g[0]/g[1])*(g[2]?.92:1):0;if(W43.log.some(x=>x.tag==='menu'))w=1;}catch(e){}
+  const mg=MG431.done?1:Math.min(.9,el/2600);
+  if(MG431.done&&!UP424.done&&w>=1){try{up424Step();}catch(e){}}
+  let u=0;try{u=UP424.done?1:UP424.list?UP424.i/UP424.list.length:0;}catch(e){}
+  const p=.12+.38*w+.12*mg+.36*u;ld431Set(p,w<1?'Preparo gli shader…':!MG431.done?'Unisco la mappa…':u<1?'Carico modelli e texture…':'Pronto');
+  if((w>=1&&MG431.done&&UP424.done)||el>LD431.cap){LD431.log.push(['startup',Math.round(el),w,u,MG431.done]);ld431Hide();return;}
+  setTimeout(ld431Pump,u>0&&u<1?0:40);}
+// first match: warm frames on the real canvas, behind the overlay
+function ld431Frames(){const L=[];const vmK=Object.keys(VM||{});
+  L.push({k:'world',yaw:0},{k:'world',yaw:Math.PI/2},{k:'world',yaw:Math.PI},{k:'world',yaw:-Math.PI/2},{k:'zpool'});
+  for(const k of vmK)L.push({k:'vm',w:k});L.push({k:'world',yaw:0},{k:'end'});return L;}
+function ld431Frame(){const F=LD431.fr;if(!F){LD431.hold=0;return;}const it=F[LD431.fi++];ld431Set(.1+.88*Math.min(1,LD431.fi/F.length),LD431.fi<6?'Preparo la partita…':'Preparo le armi…');
+  if(!it||it.k==='end'){LD431.hold=0;LD431.fr=null;LD431.log.push(['match',Math.round(performance.now()-LD431.mt),F.length]);try{renderer.shadowMap.needsUpdate=true;}catch(e){}ld431Hide();return;}
+  const t0=performance.now();const sv=[];
+  try{const cr=camera.rotation.y;
+    if(it.k==='world'){camera.rotation.y=cr+it.yaw;camera.updateMatrixWorld();}
+    if(it.k==='zpool'){for(const z of zombies)if(z&&z.g&&!z.g.visible){sv.push([z.g,z.g.visible]);z.g.visible=true;z.g.traverse(o=>{if(o.isMesh){sv.push([o,null,o.frustumCulled]);o.frustumCulled=false;}});}}
+    let vsv=null;if(it.k==='vm'&&VM[it.w]){vsv=[];for(const k in VM){vsv.push([VM[k],VM[k].visible]);VM[k].visible=(k===it.w);}vmScene.updateMatrixWorld(true);}
+    renderer.shadowMap.needsUpdate=true;renderer.setRenderTarget(null);renderer.setClearColor(scene.fog.color,1);renderer.clear();renderer.render(scene,camera);renderer.clearDepth();renderer.render(vmScene,vmCam);
+    if(vsv)for(const [g,v] of vsv)g.visible=v;
+    camera.rotation.y=cr;camera.updateMatrixWorld();
+  }catch(e){LD431.err=String(e);}
+  finally{for(let i=sv.length-1;i>=0;i--){const [o,v,fc]=sv[i];if(v===null)o.frustumCulled=fc;else o.visible=v;}}
+  LD431.log.push([it.k+(it.w?':'+it.w:''),Math.round(performance.now()-t0)]);}
+LD431.frame=ld431Frame;
+{const _sg431=startGame;startGame=function(){const first=!LD431.played;LD431.played=1;
+  if(first&&!/[?&]noload431/.test(location.search)){ld431Show('Preparo la partita…');}
+  const r=_sg431.apply(this,arguments);
+  if(first&&!/[?&]noload431/.test(location.search)){LD431.fr=ld431Frames();LD431.fi=0;LD431.mt=performance.now();LD431.hold=1;}
+  return r;};}
+// startup: menu warm right away (was +1.2 s), merge earlier (in the menu nothing moves), uploads right after the merge
+if(/[?&]noload431/.test(location.search)){LD431.on=false;try{const e=ld431El();if(e)e.classList.add('ldGone');}catch(e){}}
+else{LD431.boot=performance.now();LD431.menuW=1;setTimeout(()=>{try{warmShaders42('menu');}catch(e){}},30);setTimeout(ld431Pump,60);}
+window.__ld431=LD431;
+// ======================= 4.3.1 shop fixes =======================
+// (1) scroll position kept across re-renders (purchase, gems sync after an invoice, thumbnails ready...); reset only when the tab changes
+//     or the shop opens; never re-rendered under the finger (deferred to touchend)
+// (2) tabs: a short tap with small movement switches the tab even when the WebView cancels the pointer (pointercancel/touchcancel)
+// (3) badges live in a strip above the picture (never over the thumbnail); equipment pictures no longer dimmed as "loading" placeholders
+// (4) tapping a weapon / equipment card (picture, name, body) opens its sheet: stat bars, comparison, rarity, rotating preview,
+//     buy / equip buttons inside. Buying happens only from buttons. 👁 opens the same sheet.
+const SH431={tab:null,drag:false,pend:0,acts:[],sheet:null,raf:0};
+{const _rs=renderShop;renderShop=function(){const L=$('shopList'),S=$('shopScreen');const vis=!!(S&&!S.classList.contains('hidden'));
+  const same=vis&&SH431.tab===shopTab;if(same&&SH431.drag){SH431.pend=1;try{slog('shop render deferred (drag)');}catch(e){}return;}
+  const sl=L?L.scrollLeft:0,st=L?L.scrollTop:0;const r=_rs.apply(this,arguments);SH431.tab=shopTab;SH431.pend=0;
+  try{sh431Deco();}catch(e){console.error('sh431',e);}
+  if(same&&L){L.scrollLeft=sl;L.scrollTop=st;if(Math.abs(L.scrollLeft-sl)>2||Math.abs(L.scrollTop-st)>2)requestAnimationFrame(()=>{L.scrollLeft=sl;L.scrollTop=st;});}
+  return r;};}
+{const L=$('shopList');const dn=e=>{if(e.target&&e.target.closest&&e.target.closest('#shopList'))SH431.drag=true;};
+ const up=()=>{if(!SH431.drag)return;SH431.drag=false;if(SH431.pend){SH431.pend=0;setTimeout(()=>{try{if(!$('shopScreen').classList.contains('hidden'))renderShop();}catch(e){}},0);}};
+ addEventListener('touchstart',dn,{capture:true,passive:true});addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')dn(e);},true);
+ addEventListener('touchend',up,{capture:true,passive:true});addEventListener('touchcancel',up,{capture:true,passive:true});addEventListener('pointerup',up,true);
+ // a pointercancel alone is not the end of the drag (native scroll goes on); touchend/touchcancel is
+}
+// ---- (2) tab taps that the WebView cancelled ----
+{let lx=0,ly=0;addEventListener('touchmove',e=>{const t=e.touches[0];if(t){lx=t.clientX;ly=t.clientY;}},{capture:true,passive:true});
+ addEventListener('pointermove',e=>{lx=e.clientX;ly=e.clientY;},{capture:true,passive:true});
+ const cancelTap=(x,y,ts,via)=>{const d=tapDown;if(!d||!d.b||!d.b.closest)return;const tb=d.b.closest('.tab');if(!tb||!tb.closest('#shopTabs'))return;
+   if(!(x||y)){x=lx||d.x;y=ly||d.y;}const mv=Math.hypot(x-d.x,y-d.y),dt=ts-d.ts;if(mv>14||dt>650)return;tapDown=null;
+   try{slog('tab tap via',via,tb.dataset.t,'mv='+Math.round(mv),'dt='+Math.round(dt));}catch(e){}tapFire(tb,via);};
+ addEventListener('pointercancel',e=>{if(tapDown&&tapDown.via==='ptr')cancelTap(e.clientX,e.clientY,e.timeStamp,'pcancel');},true);
+ addEventListener('touchcancel',e=>{const t=e.changedTouches&&e.changedTouches[0];cancelTap(t?t.clientX:0,t?t.clientY:0,e.timeStamp,'tcancel');},{capture:true,passive:true});
+ // touchend after a pointercancel (Telegram Android): tapEnd() ignores it (cx); for a tab, accept it if the finger barely moved
+ addEventListener('touchend',e=>{const d=tapDown;if(!d||!d.cx)return;const t=e.changedTouches&&e.changedTouches[0];if(t)cancelTap(t.clientX,t.clientY,e.timeStamp,'tend');},{capture:true,passive:true});}
+// ---- (3) badge strip + pictures ----
+function sh431Deco(){const L=$('shopList');if(!L)return;
+  for(const c of L.querySelectorAll('.scard')){const tags=[...c.children].filter(x=>x.matches&&x.matches('.ownTag,.bestTag,.featTag,.valTag'));const th=c.querySelector('.sthumb');
+    if(tags.length&&th){let st=c.querySelector(':scope>.tags431');if(!st){st=document.createElement('div');st.className='tags431';c.insertBefore(st,c.firstChild);}
+      {const vt=tags.find(t=>t.classList.contains('valTag')),bt=tags.find(t=>t.classList.contains('bestTag'));if(vt&&bt&&/50%/.test(bt.textContent)){vt.remove();tags.splice(tags.indexOf(vt),1);}}// same message twice ('+50% · MIGLIORE' / 'MIGLIOR VALORE · +50%'): keep one, never clipped
+      tags.sort((a,b)=>(a.classList.contains('ownTag')?1:0)-(b.classList.contains('ownTag')?1:0));for(const t of tags)st.appendChild(t);c.classList.add('hasTags431');}
+    const ws=sh431W(c);if(ws){c.classList.add('w431');const e=th&&th.querySelector('.emo');if(e)e.classList.add('wph');const pv=c.querySelector('[data-prova]');if(pv){pv.textContent='👁';pv.dataset.full='👁';pv.title='Scheda arma';pv.setAttribute('aria-label','Scheda arma');}}
+    else if(sh431E(c))c.classList.add('e431');}}
+function sh431W(c){if(shopTab!=='armi')return null;for(const b of c.querySelectorAll('[data-buy],[data-eq],[data-prova]')){const d=b.dataset;const s=SHOP_W.find(q=>q.id===d.buy||q.w===d.eq||q.w===d.prova);if(s)return s;}return null;}
+function sh431E(c){if(shopTab!=='equip')return null;for(const b of c.querySelectorAll('[data-buy]')){const s=SHOP_E.find(q=>q.id===b.dataset.buy);if(s)return s;}
+  const n=(c.querySelector('.sname')||{}).textContent;return SHOP_E.find(q=>q.name===n)||null;}
+// ---- (4) card tap -> sheet; buy only from buttons ----
+{const _ca=cardAct;cardAct=function(c,via){const w=sh431W(c),e=w?null:sh431E(c);if(w){sh431Weapon(w,c);return;}if(e){sh431Equip(e,c);return;}return _ca.apply(this,arguments);};}
+{const _ct=ctlAct;ctlAct=function(b,via){SH431.acts.push([via,ctlId(b),b.dataset.m||'',Math.round(performance.now())]);if(SH431.acts.length>40)SH431.acts.shift();return _ct.apply(this,arguments);};}
+provaW=function(wid){const s=SHOP_W.find(q=>q.w===wid);let c=null;for(const x of document.querySelectorAll('#shopList .scard'))if(sh431W(x)===s){c=x;break;}if(s)sh431Weapon(s,c);};
+function sh431Btns(c,skipProva){const out=[];if(!c)return out;for(const b of c.querySelectorAll('.sbtns button')){if(skipProva&&b.dataset.prova)continue;if(b.disabled){out.push({label:(b.dataset.full||b.textContent).trim(),ghost:1,dis:1});continue;}
+    out.push({label:(b.dataset.full||b.textContent).trim(),fn:()=>{const card=sh431Live(c);const bb=card&&[...card.querySelectorAll('.sbtns button')].find(x=>ctlId(x)===ctlId(b)&&(x.dataset.m||'')===(b.dataset.m||''));ctlAct(bb||b,'sheet');},cls:b.className});}return out;}
+function sh431Live(c){if(c&&c.isConnected)return c;const n=c&&(c.querySelector('.sname')||{}).textContent;for(const x of document.querySelectorAll('#shopList .scard'))if((x.querySelector('.sname')||{}).textContent===n)return x;return null;}
+function sh431Open(title,html,btns,cls){sh431Stop();dialog(title,html,btns.filter(b=>!b.dis).concat([{label:'Chiudi',ghost:1}]));const D=$('dlgScreen');D.classList.add('ws431');if(cls)D.dataset.ws=cls;
+  const r=$('dlgBtns');[...r.children].forEach((e,i)=>{const b=btns.filter(x=>!x.dis)[i];if(b&&b.cls)e.className+=' '+b.cls.split(/\s+/).filter(k=>/^b(Star|Gem|Coin|Own)$|^eq$|^poor$|^off$/.test(k)).join(' ');});
+  const dis=btns.filter(b=>b.dis);if(dis.length){const n=document.createElement('div');n.className='wsNote';n.textContent=dis.map(b=>b.label).join(' · ');$('dlgB').appendChild(n);}}
+{const _dg=dialog;dialog=function(){sh431Stop();const D=$('dlgScreen');if(D){D.classList.remove('ws431');delete D.dataset.ws;}return _dg.apply(this,arguments);};}
+function sh431Stop(){if(SH431.raf){cancelAnimationFrame(SH431.raf);SH431.raf=0;}const P=SH431.sheet;SH431.sheet=null;if(P){try{if(P.g&&P.g.parent)P.g.parent.remove(P.g);P.rt&&P.rt.dispose();}catch(e){}}}
+const WS431=[['Danno','dmg',''],['Cadenza','rof','colpi/s'],['DPS','dps',''],['Caricatore','mag','colpi'],['Ricarica','rel','s'],['Portata','rng','m']];
+function ws431Stats(w){return {dmg:Math.round(w.dmg*w.pellets),rof:+(1/w.rate).toFixed(1),dps:dps42(w),mag:w.mag,rel:+(w.reload||0).toFixed(1),rng:Math.round(w.range||0)};}
+function sh431Weapon(s,c){const w=WEAPONS.find(q=>q.id===s.w);if(!w)return;const h=heldW42(),A=ws431Stats(w),H=h&&h.id!==w.id?ws431Stats(h):null;
+  const guns=WEAPONS.filter(q=>!q.melee&&!q.tool&&q.mag);const mx={};for(const [,k] of WS431)mx[k]=Math.max(...guns.map(q=>ws431Stats(q)[k]||0),1);const mnRel=Math.min(...guns.map(q=>q.reload||9).filter(v=>v>0));
+  const frac=(k,v)=>k==='rel'?(v>0?Math.min(1,mnRel/v):1):Math.min(1,v/mx[k]);
+  const rows=WS431.map(([l,k,u])=>{const v=A[k],f=frac(k,v);let cmp='';if(H){const hv=H[k];let x=k==='rel'?(v>0?hv/v:1):(hv>0?v/hv:1);x=Math.round(x*10)/10;const cl=x>=1.05?'up':x<=0.95?'dn':'eq';cmp='<small class="ws'+cl+'">'+(cl==='eq'?'≈':'×'+x)+'</small>';}
+    const hm=H?'<em style="left:'+(frac(k,H[k])*100).toFixed(1)+'%"></em>':'';
+    return '<div class="wsRow"><span class="wsN">'+l+'</span><span class="wsBar"><i style="transform:scaleX('+Math.max(.03,f).toFixed(3)+')"></i>'+hm+'</span><b>'+v+(u?'<small> '+u+'</small>':'')+'</b>'+cmp+'</div>';}).join('');
+  const own=owns(s.id),img=(THUMBS&&THUMBS[s.w])||'';
+  const html='<div class="ws431s r-'+s.rar+'"><div class="wsP"><canvas class="wsCv" width="320" height="180"></canvas>'+(img?'<img class="wsImg" alt="" src="'+img+'">':'')+
+    '<div class="wsRar">'+RAR_L[s.rar]+(own?' · <span class="wsOwn">TUA</span>':'')+'</div><div class="wsWhy">'+esc(WHY[s.w]||'')+'</div></div>'+
+    '<div class="wsS">'+(H?'<div class="wsVs">Confronto con <b>'+esc(h.name)+'</b> (in mano al via) · ▮ = la tua</div>':'<div class="wsVs">È l\'arma che hai in mano al via</div>')+rows+'</div></div>';
+  sh431Open(w.name,html,sh431Btns(c,true),'w');sh431Preview(s.w);}
+// equipment: whole loadout before / after
+const ES431=[['Protezione','prot','%',50],['Salute','hp','',150],['Velocità','spd','m/s',5.2],['Zaino','bag','posti',120],['Granate al via','nad','',3],['Raccolta','mag','m',2.6]];
+function es431Stats(has){const a=(typeof ST42!=='undefined'&&ST42.a)||0;return {prot:Math.round(100-(has('e_armor')?75:100)*(1-a/100)),hp:has('e_medpack')?150:100,spd:+(4.4*(has('e_boots')?1.12:1)).toFixed(2),
+  bag:has('e_backpack')?120:60,nad:has('e_nadebag')?3:0,mag:has('e_magnet')?2.6:1.25};}
+function sh431Equip(s,c){const own=owns(s.id),cur=es431Stats(id=>owns(id)),nw=es431Stats(id=>owns(id)||id===s.id);
+  const rows=ES431.map(([l,k,u,m])=>{const a=cur[k],b=nw[k],d=+(b-a).toFixed(2);const cl=d>0?'up':d<0?'dn':'eq';const ch=d!==0;
+    return '<div class="wsRow'+(ch?' wsHi':'')+'"><span class="wsN">'+l+'</span><span class="wsBar"><i style="transform:scaleX('+Math.max(.03,Math.min(1,b/m)).toFixed(3)+')"></i><em style="left:'+(Math.min(1,a/m)*100).toFixed(1)+'%"></em></span><b>'+(ch?a+' → '+b:b)+(u?'<small> '+u+'</small>':'')+'</b><small class="ws'+cl+'">'+(ch?(d>0?'+':'')+d:'=')+'</small></div>';}).join('');
+  const html='<div class="ws431s r-'+s.rar+'"><div class="wsP"><div class="wsEmo"><span>'+s.emo+'</span></div><div class="wsRar">'+RAR_L[s.rar]+(own?' · <span class="wsOwn">ATTIVO</span>':'')+'</div><div class="wsWhy">'+esc(s.desc)+'</div></div>'+
+    '<div class="wsS"><div class="wsVs">'+(own?'Già attivo: ecco cosa ti dà':'Il tuo equipaggiamento adesso → con '+esc(s.name))+' · ▮ = adesso</div>'+rows+'</div></div>';
+  sh431Open(s.name,html,sh431Btns(c,false),'e');}
+// rotating 3D preview: a clone of the weapon model (shared geometry/materials) drawn into a small target, ~30 fps, only while the sheet is open
+function sh431Preview(wid){const g0=VM&&VM[wid];const cv=document.querySelector('#dlgB .wsCv');if(!g0||!cv)return;
+  try{const W=320,H=180,g=g0.clone(true);g.traverse(o=>{if(o.isSprite||o.isPoints||(o.isMesh&&(o.material===gloveM||o.material===sleeveM)))o.visible=false;});
+    g.visible=true;g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.copy(g0.scale);g.updateMatrixWorld(true);
+    const box=new T.Box3();g.traverse(o=>{if(o.isMesh&&o.visible&&o.geometry){o.geometry.computeBoundingBox&&!o.geometry.boundingBox&&o.geometry.computeBoundingBox();const b=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);box.union(b);}});
+    const ctr=box.getCenter(new T.Vector3()),sz=box.getSize(new T.Vector3());const piv=new T.Group();g.position.sub(ctr);piv.add(g);TS43.add(piv);
+    const cam=new T.PerspectiveCamera(28,W/H,.01,20);const R=Math.max(sz.x,sz.y,sz.z)||1;cam.position.set(0,R*.28,R*2.25);cam.lookAt(0,0,0);
+    const rt=new T.WebGLRenderTarget(W,H),buf=new Uint8Array(W*H*4),cx=cv.getContext('2d'),id=cx.createImageData(W,H);const lut=new Uint8Array(256);for(let i=0;i<256;i++)lut[i]=Math.round(Math.pow(i/255,1/2.2)*255);
+    const P=SH431.sheet={g:piv,rt,t0:performance.now(),last:0,fr:0};
+    const step=now=>{if(SH431.sheet!==P||!cv.isConnected||$('dlgScreen').classList.contains('hidden')){if(SH431.sheet===P)sh431Stop();return;}SH431.raf=requestAnimationFrame(step);
+      if(now-P.last<32)return;P.last=now;piv.rotation.y=(now-P.t0)/1000*.9;piv.rotation.x=.12;piv.updateMatrixWorld(true);
+      const prev=renderer.getRenderTarget(),pc=new T.Color();renderer.getClearColor(pc);const pa=renderer.getClearAlpha();
+      renderer.setRenderTarget(rt);renderer.setClearColor(0x000000,0);renderer.clear();renderer.render(TS43,cam);renderer.readRenderTargetPixels(rt,0,0,W,H,buf);renderer.setRenderTarget(prev);renderer.setClearColor(pc,pa);
+      const d=id.data;for(let y=0;y<H;y++){const sr=(H-1-y)*W*4,dr=y*W*4;for(let x=0;x<W*4;x+=4){d[dr+x]=lut[buf[sr+x]];d[dr+x+1]=lut[buf[sr+x+1]];d[dr+x+2]=lut[buf[sr+x+2]];d[dr+x+3]=buf[sr+x+3];}}
+      cx.putImageData(id,0,0);if(!P.fr++){cv.classList.add('on');const im=cv.parentNode.querySelector('.wsImg');if(im)im.style.display='none';}};
+    SH431.raf=requestAnimationFrame(step);}catch(e){console.error('preview431',e);}}
+window.__shop431=SH431;
 const SHOWFPS=/fps/.test(location.search+location.hash);
 let last=performance.now(),menuAng=0,ftAvg=16,resT=0,fpsN=0,fpsT=0,_sdt=1/60,_prDir=0,_prLock=0;
-function loop(now){requestAnimationFrame(loop);const raw=now-last;let dt=Math.min(.05,raw/1000);last=now;_sdt+=(dt-_sdt)*.25;if(Math.abs(dt-_sdt)<.006)dt=_sdt;musicUpdate(dt);
+function loop(now){requestAnimationFrame(loop);if(FL431.skip(now))return;if(LD431.hold){LD431.frame(now);last=performance.now();return;}const raw=now-last;let dt=Math.min(.05,raw/1000);last=now;_sdt+=(dt-_sdt)*.25;if(Math.abs(dt-_sdt)<.006)dt=_sdt;musicUpdate(dt);
   if(game.state==='play')update(dt);
   else if(game.state==='menu'||game.state==='pause'||game.state==='over'){game.frames++;return;}
   else if(game.state==='menuX'){menuAng+=dt*.12;game.time+=dt;camera.position.set(Math.sin(menuAng)*12,3.2,Math.cos(menuAng)*12);camera.lookAt(0,1.2,0);
     for(const z of zombies){if(!z.alive)continue;z.menuA+=dt*z.speed/7;_tgt.set(Math.cos(z.menuA+.3)*7,0,Math.sin(z.menuA+.3)*7);updateZombie(z,dt,game.time,_tgt,false);}
     for(const p of pickups)p.item.rotation.y+=dt;}
   updateEnv(dt,performance.now()/1000);updateParticles(dt);updateTracers(dt);updateNums(dt);
-  if(_pPR){_pPR=0;renderer.setPixelRatio(curPR);renderer.setSize(VW(),VH(),false);}sky.position.set(camera.position.x,0,camera.position.z);sunDisc.position.set(camera.position.x-95,8,camera.position.z-60);renderer.setClearColor(scene.fog.color,1);renderer.clear();renderer.render(scene,camera);
+  if(_pPR){_pPR=0;renderer.setPixelRatio(curPR);renderer.setSize(VW(),VH(),false);}sky.position.set(camera.position.x,0,camera.position.z);sunDisc.position.set(camera.position.x-95,8,camera.position.z-60);renderer.setClearColor(scene.fog.color,1);renderer.clear();FL431.cullPre();renderer.render(scene,camera);FL431.cullPost();
   if(game.state==='play'||game.state==='craft'){renderer.clearDepth();renderer.render(vmScene,vmCam);}
   game.frames++;
-  // dynamic resolution: keep ~60fps on phones
-  if(raw>0&&raw<250)ftAvg=ftAvg*.95+raw*.05;resT+=raw;fpsN++;fpsT+=raw;
-  if(resT>1200){resT=0;if(_prLock>0)_prLock-=1.2;
-    if(ftAvg>23&&curPR>PR_MIN){curPR=Math.max(PR_MIN,curPR-.1);_pPR=1;if(_prDir>0)_prLock=10;_prDir=-1;}
-    else if(_prLock<=0&&ftAvg<(_prDir<0?12.5:14.5)&&curPR<MAX_PR){curPR=Math.min(MAX_PR,curPR+.1);_pPR=1;if(_prDir<0)_prLock=10;_prDir=1;}}
-  if(fpsT>1000&&SHOWFPS){$('fps').textContent=Math.round(fpsN*1000/fpsT)+' fps · '+curPR.toFixed(2)+'x';fpsN=0;fpsT=0;}}
+  // 4.3.1: resolution / frame cap driven by missed vsyncs (FL431)
+  if(raw>0&&raw<250)ftAvg=ftAvg*.95+raw*.05;fpsN++;fpsT+=raw;FL431.tick(raw,now);
+  if(fpsT>1000&&SHOWFPS){$('fps').textContent=Math.round(fpsN*1000/fpsT)+' fps · '+curPR.toFixed(2)+'x · '+FL431.hz+'Hz';fpsN=0;fpsT=0;}}
 requestAnimationFrame(loop);
 // test hooks
 window.__game={get flash(){try{return flash}catch(e){return null}},SV,PIECES,NODES,LOOT,POOL,PDEF,addPiece,placeBuild,setBuild,svSave,svLoadData,enterPhase,toolHit,ADS,setADS,svUse,openChest,closeChest,PROJ,MERGED,ownedList,VM,scene,camera,get mus(){return MUS;},get au(){return AU;},renderTheme,MUSDBG,applyLight,svSnapshot,damagePiece,get scenecalls(){return renderer.info.render.calls;},S,PROF,SET,EQ,DIFF,buildPlan,startWave,throwNade,spawnDrop,drops,explosion,addGems,sha256hex,verifyClaim,claimCheck,openShop,renderShop,THUMBS:()=>THUMBS,pauseGame,resumeGame,gameOver,showMenu,nades,slamRing,spawnZombie,inv2:inv,VM,game,player,inv,own,mag,res,zombies,pickups,craft,equip,startGame,fire,hurt,WEAPONS,startReload,setFiring:v=>{firing=v;triggerHeld=false;},get curW(){return curW;},get pr(){return curPR;},renderer};
@@ -4942,6 +5215,67 @@ body.hudBandR424 #topRight .row2 b{font-size:11px!important}
 body.hudBandR424 #bagBtn{width:42px!important;height:42px!important}
 body.hudBandR424 #bagBtn b{bottom:1px!important;font-size:8.5px!important;padding:1px 3px!important}
 body.hudBandR424 #bagBtn{font-size:17px!important;align-items:flex-start!important;padding-top:4px;box-sizing:border-box}
+
+</style>
+<style id="v431css">
+/* 4.3.1: FPS row uses the same segmented control as the Grafica row */
+.fps431 .seg43 button{min-width:44px}
+/* ---- 4.3.1 shop: badges in a strip above the picture (never over the thumbnail) ---- */
+#shopList .scard{position:relative}
+#shopList .scard>.tags431{position:absolute;left:8px;right:8px;top:6px;height:18px;display:flex;gap:5px;align-items:center;justify-content:flex-start;overflow:hidden;z-index:3;pointer-events:none}
+#shopList .scard>.tags431>*{position:static!important;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0!important;top:auto!important;right:auto!important;left:auto!important;
+  font:800 10px/14px ZRaj,sans-serif!important;letter-spacing:.4px;padding:2px 7px!important;border-radius:999px!important;box-sizing:border-box}
+#shopList .scard>.tags431>.ownTag{margin-left:auto!important}
+#shopList .scard.hasTags431 .sthumb{padding-top:24px!important;box-sizing:border-box}
+#shopList .scard.hasTags431 .sthumb img{max-height:calc(100% - 2px)!important}
+/* equipment / coins / starter pictures are the emoji itself: not a dimmed "loading" placeholder */
+#shopList .scard.e431 .sthumb,#shopList .scard.starter42 .sthumb{container-type:size}
+#shopList .sthumb>.emo:not(.wph){font-size:40px!important;font-size:min(44px,58cqh)!important;opacity:1!important}
+.shopXC #shopList .sthumb>.emo:not(.wph){font-size:24px!important;font-size:min(30px,58cqh)!important}
+#shopList .scard.w431 .sbtns button[data-prova]{flex:0 0 40px!important;width:40px!important;min-width:40px!important;padding:0!important;font-size:17px!important}
+#shopList .scard.w431,#shopList .scard.e431{cursor:pointer}
+/* ---- weapon / equipment sheet ---- */
+#dlgScreen.ws431 .sheet{width:min(760px,calc(100vw - var(--sal,0px) - var(--sar,0px) - 20px))!important;max-width:none!important}
+#dlgScreen.ws431 #dlgT{font-size:20px}
+.ws431s{display:flex;gap:14px;align-items:stretch;text-align:left}
+.ws431s .wsP{flex:0 0 42%;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;padding:6px;background:radial-gradient(ellipse at 50% 60%,var(--rg,rgba(120,150,200,.2)),rgba(0,0,0,0) 72%);min-width:0}
+.ws431s .wsCv{width:100%;max-width:320px;aspect-ratio:16/9;height:auto;display:none}
+.ws431s .wsCv.on{display:block}
+.ws431s .wsImg{width:100%;max-width:300px;aspect-ratio:16/9;object-fit:contain}
+.ws431s .wsEmo{height:110px;display:flex;align-items:center;justify-content:center;perspective:300px}
+.ws431s .wsEmo span{font-size:72px;display:inline-block;animation:ws431spin 2.8s ease-in-out infinite alternate;filter:drop-shadow(0 8px 10px rgba(0,0,0,.6))}
+@keyframes ws431spin{from{transform:rotateY(-38deg) rotateZ(-4deg)}to{transform:rotateY(38deg) rotateZ(4deg)}}
+.ws431s .wsRar{margin-top:4px;font:800 12px ZRaj,sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--rc,#ddd)}
+.ws431s .wsOwn{color:#7be08e}
+.ws431s .wsWhy{margin-top:4px;font-size:12px;opacity:.85;text-align:center;line-height:1.3}
+.ws431s .wsS{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.ws431s .wsVs{font-size:11.5px;opacity:.75;margin-bottom:2px}
+.ws431s .wsRow{display:grid;grid-template-columns:92px minmax(60px,1fr) 108px 44px;gap:8px;align-items:center;font-size:13px}
+.ws431s .wsRow .wsN{font-weight:700;opacity:.9}
+.ws431s .wsBar{position:relative;height:12px;border-radius:7px;background:rgba(255,255,255,.1);overflow:hidden}
+.ws431s .wsBar i{position:absolute;inset:0;transform-origin:0 50%;border-radius:7px;background:linear-gradient(90deg,#ff9a3d,#ffd66b)}
+.ws431s .wsBar em{position:absolute;top:-1px;bottom:-1px;width:3px;margin-left:-1.5px;background:#9fd0ff;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+.ws431s .wsRow b{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.ws431s .wsRow b small{font-weight:600;opacity:.65;font-size:10.5px}
+.ws431s .wsRow>small{font:800 12px ZRaj,sans-serif;text-align:right}
+.ws431s .wsup{color:#6be37f}.ws431s .wsdn{color:#ff7a6b}.ws431s .wseq{color:#9aa6b8}
+.ws431s .wsRow.wsHi .wsN{color:#ffd66b}
+.wsNote{margin-top:8px;font-size:12px;opacity:.75;text-align:center}
+@media (max-height:420px){.ws431s .wsRow{font-size:12px;grid-template-columns:84px minmax(50px,1fr) 100px 40px;gap:6px}.ws431s .wsBar{height:10px}.ws431s .wsEmo{height:80px}.ws431s .wsEmo span{font-size:54px}.ws431s .wsS{gap:4px}}
+@media (orientation:portrait){.ws431s{flex-direction:column}.ws431s .wsP{flex-basis:auto}}
+#shopList .scard.hasTags431 .sthumb{overflow:hidden}
+#shopList .scard.hasTags431 .sthumb .gemBig,#shopList .scard.hasTags431 .sthumb .emo{line-height:1!important}
+#shopList .scard.w431 .sbtns{display:flex!important;flex-wrap:nowrap!important;gap:6px!important;min-width:0}
+#shopList .scard.w431 .sbtns>button:not([data-prova]){flex:1 1 0!important;min-width:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:6px!important;padding-right:6px!important}
+/* 4.3.1 final: icon-only sheet button must not also get the compact ::before eye (was 👁👁) */
+#shopList .scard.w431 .bProva::before{content:none!important}
+/* compact cards already show 'Solo con 💎' in the ⚡ line: don't repeat it next to the rarity */
+#shopScreen.shopC .scard .srar .gOnly42,#shopScreen.shopXC .scard .srar .gOnly42{display:none!important}
+/* short screens + Telegram band: smaller preview so rarity/description are never clipped by the buttons */
+@media (max-height:420px){.ws431s .wsCv,.ws431s .wsImg{max-width:min(210px,100%)}.ws431s .wsWhy{font-size:11px;margin-top:2px}.ws431s .wsRar{margin-top:2px}}
+@media (max-height:340px){.ws431s .wsCv,.ws431s .wsImg{max-width:min(160px,100%)}.ws431s .wsEmo{height:60px}.ws431s .wsEmo span{font-size:42px}}
+/* the emoji pictures (equipment / coins / starter) kept the grey shimmer "loading" pill behind them: remove it */
+#shopList .sthumb>span.emo:not(.wph){background:none!important;animation:none!important;width:auto!important;height:auto!important;border-radius:0!important}
 
 </style>
 </body>

@@ -1,22 +1,28 @@
 {
- "rev": "2026-10-04c",
+ "rev": "2026-10-04e",
  "upcoming": [
   {
-   "icon": "⚡",
-   "title": "Gioco più fluido",
-   "desc": "Meno scatti, fps stabili.",
+   "icon": "🆕",
+   "title": "Nuove sfide ed eventi",
+   "desc": "Altre novità per il gioco, restate sintonizzati!",
    "eta": "In arrivo",
-   "tone": "soon"
-  },
-  {
-   "icon": "🐞",
-   "title": "Correzione bug",
-   "desc": "Piccoli errori sistemati in tutto il gioco.",
-   "eta": "In arrivo",
-   "tone": "soon"
+   "tone": "later"
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.1",
+   "date": "4 ott",
+   "items": [
+    "⚡ Gioco più fluido (meno scatti, fps stabili)",
+    "🐞 Correzione bug",
+    "Schermata di caricamento: niente blocchi nel menu e all'inizio della partita",
+    "Negozio: tocca un'arma o un equipaggiamento per la scheda con statistiche, confronto e anteprima 3D",
+    "Negozio: le etichette non coprono più le immagini, la lista resta dov'era e le schede rispondono meglio al tocco",
+    "Nuova opzione 🎯 FPS in Impostazioni: Auto / 60 / Max",
+    "Risoluzione adattiva e ombre più leggere: si abbassa un poco solo quando serve"
+   ]
+  },
   {
    "ver": "4.3",
    "date": "4 ott",
