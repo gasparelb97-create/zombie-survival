@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04l",
+ "rev": "2026-10-04m",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,16 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.9",
+   "date": "4 ott",
+   "items": [
+    "🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo",
+    "⚡ Movimento più fluido sui telefoni a 90 e 120 Hz",
+    "⏳ Caricamento della partita senza blocchi",
+    "📱 Menu che si adatta allo schermo del telefono e del tablet"
+   ]
+  },
   {
    "ver": "4.3.8",
    "date": "4 ott",
