@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04g",
+ "rev": "2026-10-04h",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,17 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.4",
+   "date": "4 ott",
+   "items": [
+    "🏠 Il tetto si posa esattamente dove miri",
+    "🧱 Il tetto deve poggiare su muri, porte, finestre o un altro tetto; se togli l'appoggio crolla (rimborso di parte della legna)",
+    "🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita",
+    "🎒 Zaino leggibile con scorrimento verticale quando serve",
+    "🛠️ Piccole correzioni di grafica e interfaccia"
+   ]
+  },
   {
    "ver": "4.3.3",
    "date": "4 ott",
