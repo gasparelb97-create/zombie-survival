@@ -872,15 +872,14 @@ body.q421open #weaponInfo{visibility:hidden!important}
   <h1 class="ztitle">Zombie<span>Survival</span></h1>
   <div class="ztag">Taglia legna, costruisci la base e resisti all'orda della notte.</div>
   <div class="playRow"><button class="mBtn zombie" id="btnZombie"><span class="ic">🏕️</span><span><b>Gioca</b><small id="survSub">Nuova partita · giorno e notte</small></span></button><button class="mBtn icon newRun" id="btnNewRun" aria-label="Nuova partita" style="display:none"><span class="ic">↺</span></button></div>
-  <div class="diffSeg" id="diffSeg"><button data-d="normale">Normale</button><button data-d="difficile">Difficile</button></div>
   <div class="menuRow one">
     <button class="mBtn shop" id="btnShop"><span class="ic">🛒</span><span><b>Negozio</b><small>Armi e equipaggiamento</small></span><span class="gemc" id="menuGems">💎 0</span></button>
   </div>
   <div class="menuRow four">
     <button class="mBtn" id="btnRank"><span class="ic">🏆</span><span><b>Classifica</b></span></button>
     <button class="mBtn online" id="btnOnline"><span class="ic">🌐</span><span><b>Arena</b></span></button>
-    <button class="mBtn icon" id="btnHelp" aria-label="Impostazioni"><span class="ic">⚙️</span></button>
-    <button class="mBtn icon" id="btnMute" aria-label="Audio"><span class="ic" id="muteIc">🔊</span></button>
+    <button class="mBtn icon" id="btnHelp" aria-label="Impostazioni"><span class="ic">⚙️</span><small class="lb422">Opzioni</small></button>
+    <button class="mBtn icon" id="btnMute" aria-label="Audio"><span class="ic" id="muteIc">🔊</span><small class="lb422">Audio</small></button>
   </div>
   <div class="menuFoot" id="menuBest"></div>
 </div>
@@ -902,6 +901,7 @@ body.q421open #weaponInfo{visibility:hidden!important}
     <div><b>💻 PC</b><br>WASD · Shift corri · mouse guarda<br>Click spara · tasto destro mira<br>E usa · C crafting · G granata · R ricarica<br>B costruisci · R/T ruota · X smonta · 1-8 pezzi<br>1-8 / Q / rotella: armi · P / Esc pausa</div>
     <div><b>🌙 Survival</b><br>Il giorno dura 7 minuti: 🪓 legna dagli alberi, ⛏️ pietra, ferro e carbone dalle rocce.<br>Al tramonto torna alla base: di notte l'orda attacca i muri. Ogni 5 notti arriva il boss.<br>Monete 🪙 da zombie, casse e missioni · 💎 dalle missioni e dai boss.</div>
   </div>
+  <div class="ver422">Zombie Survival v4.2.2</div>
   <div class="btnRow"><button class="act ghost" id="helpBack">← Indietro</button></div>
 </div></div>
 <div id="pauseScreen" class="overlay sheetBg hidden"><div class="sheet" style="max-width:400px">
@@ -1073,7 +1073,7 @@ function stats(){var n=D.fn,a=[],sum=0,cs=0,rs=0;for(var i=0;i<n;i++){var v=D.fr
   return {fps:Math.round(D.fps),avg:n?+(sum/n).toFixed(1):0,p95:n?+a[Math.floor(n*.95)].toFixed(1):0,max120:n?+a[n-1].toFixed(1):0,worst:+D.worst.toFixed(1),long50:D.long50,long100:D.long100,
     cpu:n?+(cs/n).toFixed(2):0,render:n?+(rs/n).toFixed(2):0,update:n?+((cs-rs)/n).toFixed(2):0,frames:D.total,renderFuoriFrame:D.extRender,renderFuoriFrameMs:Math.round(D.extRenderMs),longTasks:D.longTasks,longTaskMax:Math.round(D.longTaskMs)};}
 function sysObj(){var o={};SYS.forEach(function(k){o[k]=+D.sys[k].toFixed(2);});return o;}
-function report(){var m=performance.memory,s=stats();return {v:VER,quando:new Date().toISOString(),durata_s:Math.round((now()-D.start)/1000),perf:s,sistemi:sysOn?sysObj():'non agganciati',
+function report(){var m=performance.memory,s=stats();return {v:VER,app:(window.GAME_VER||''),quando:new Date().toISOString(),durata_s:Math.round((now()-D.start)/1000),perf:s,sistemi:sysOn?sysObj():'non agganciati',
   stato:state(),memoria:m?{usataMB:+(m.usedJSHeapSize/1048576).toFixed(1),totMB:+(m.totalJSHeapSize/1048576).toFixed(1),limiteMB:Math.round(m.jsHeapSizeLimit/1048576),trend:D.heap.slice(-30)}:'non disponibile',
   device:device(),contestoPerso:D.ctxLost,errori:D.errors.slice(),ultimiFrame:Array.prototype.slice.call(D.frames,0,D.fn).map(function(v){return Math.round(v*10)/10;})};}
 function summary(){var r=report(),s=r.perf,st=r.stato||{},e=r.errori;var L=['🐞 Zombie debug '+VER+' '+new Date().toLocaleString('it-IT'),
@@ -1875,7 +1875,7 @@ sensEl.addEventListener('input',()=>{SENS=parseFloat(sensEl.value);$('sensV').te
 function goFullscreen(){if(TG.W){tgFull();return;}
   if(!isTouch)return;try{const el=document.documentElement;const rq=el.requestFullscreen||el.webkitRequestFullscreen;if(rq){const r=rq.call(el,{navigationUI:'hide'});if(r&&r.then)r.then(()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>{});}}catch(e){}}
 function startGame(load){curPendR=null;if(typeof load!=='boolean')load=!!svLoadData();SV.on=true;audioInit();goFullscreen();
-  for(const id of ['startScreen','overScreen','soonScreen','pauseScreen','shopScreen','rankScreen','helpScreen','dlgScreen'])$(id).classList.add('hidden');resetGame();svEnter(load);game.state='play';last=performance.now();lockPointer();setTimeout(()=>{renderThumbs();wbSig='';hud4();},80);}
+  for(const id of ['startScreen','overScreen','soonScreen','pauseScreen','shopScreen','rankScreen','helpScreen','dlgScreen'])$(id).classList.add('hidden');resetGame();svEnter(load);game.state='play';last=performance.now();lockPointer();setTimeout(()=>{renderThumbsIdle(()=>{wbSig='';try{hud4();}catch(e){}});wbSig='';hud4();},80);}
 function showMenu(){svExit();game.state='menu';$('pauseScreen').classList.add('hidden');slamRing.visible=false;$('bossBar').style.display='none';hideBanner();$('lowhp').style.opacity=0;document.body.classList.add('inmenu');$('overScreen').classList.add('hidden');$('startScreen').classList.remove('hidden');for(const z of zombies){z.alive=false;z.g.visible=false;}showBest();}
 function onTap(id,fn){const el=$(id);let tt=0;el.addEventListener('touchend',e=>{pd(e);tt=Date.now();fn();},{passive:false});el.addEventListener('click',()=>{if(Date.now()-tt>600)fn();});}
 onTap('btnZombie',startGame);onTap('btnOnline',()=>{audioInit();$('soonScreen').classList.remove('hidden');});onTap('soonBack',()=>$('soonScreen').classList.add('hidden'));
@@ -2008,7 +2008,7 @@ function updateEnv(dt,t){for(const L of lamps){let k=1;if(L.flick){L.t-=dt;if(L.
 
 // ======================= v3 module =======================
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
-const SET={diff:(d=>d==='difficile'?'difficile':'normale')(LS.get('zc_diff','normale')),mute:!!LS.get('zc_mute',false),vib:LS.get('zc_vib',true)!==false};
+const SET={diff:'normale',mute:!!LS.get('zc_mute',false),vib:LS.get('zc_vib',true)!==false};
 const DIFFS={normale:{hp:1,dmg:1,spd:1,cnt:1,score:1,label:'Normale'},difficile:{hp:1.35,dmg:1.4,spd:1.12,cnt:1.25,score:1.5,label:'Difficile'}};
 function DIFF(){return DIFFS[SET.diff]||DIFFS.normale;}
 const URLQ=new URLSearchParams(location.search);const DEBUG_WAVE=Math.max(0,Math.min(99,parseInt(URLQ.get('wave')||'0',10)||0));
@@ -2041,24 +2041,42 @@ const RAR_L={comune:'Comune',raro:'Raro',epico:'Epico',leggendario:'Leggendario'
 function itemName(id){const w=SHOP_W.find(s=>s.id===id);if(w)return WEAPONS.find(q=>q.id===w.w).name;const e=SHOP_E.find(s=>s.id===id);if(e)return e.name;const g=SHOP_G.find(s=>s.id===id);return g?g.gems+' diamanti':id;}
 
 // ---------- weapon thumbnails (rendered once from the real 3D models) ----------
-let THUMBS=null;
-function renderThumbs(){if(THUMBS)return THUMBS;THUMBS={};try{
-  const W=440,H=260,rt=new T.WebGLRenderTarget(W,H),sc=new T.Scene();sc.add(new T.HemisphereLight(0xeef2ff,0x4a4038,3.2));
+let THUMBS=null,TH422=null;
+// 4.2.2: thumbnails rendered incrementally (one weapon per idle slice); THUMBS is published only when complete
+function thumbInit422(){if(TH422)return TH422;const W=440,H=260;TH422={W,H,P:{},keys:Object.keys(VM),i:0,done:false,ms:0,max:0,n:0};try{
+  const rt=new T.WebGLRenderTarget(W,H),sc=new T.Scene();sc.add(new T.HemisphereLight(0xeef2ff,0x4a4038,3.2));
   const k=new T.DirectionalLight(0xffffff,4.5);k.position.set(1.4,1.6,.6);sc.add(k);const f2=new T.DirectionalLight(0xfff0e0,2.5);f2.position.set(1,-.2,-.6);sc.add(f2);const rim=new T.DirectionalLight(0xa8c8ff,3.5);rim.position.set(-1,.8,-1.6);sc.add(rim);
   const cam=new T.PerspectiveCamera(30,W/H,.01,10),buf=new Uint8Array(W*H*4),cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d'),id=cx.createImageData(W,H);
-  const lut=new Uint8Array(256);for(let i=0;i<256;i++)lut[i]=Math.round(Math.pow(i/255,1/2.2)*255);
-  const pc=renderer.getClearColor(new T.Color()),pa=renderer.getClearAlpha(),nu=renderer.shadowMap.needsUpdate;renderer.setClearColor(0x000000,0);
-  for(const s of Object.keys(VM).map(k=>({w:k}))){const g=VM[s.w];if(!g)continue;const par=g.parent,vis=g.visible,pos=g.position.clone(),rot=g.rotation.clone(),hid=[];
-    g.traverse(o=>{if((o.isSprite||(o.isMesh&&(o.material===gloveM||o.material===sleeveM)))&&o.visible){hid.push(o);o.visible=false;}});
+  const lut=new Uint8Array(256);for(let i=0;i<256;i++)lut[i]=Math.round(Math.pow(i/255,1/2.2)*255);Object.assign(TH422,{rt,sc,cam,buf,cv,cx,id,lut});}catch(e){TH422.done=true;THUMBS=TH422.P;}return TH422;}
+// thumb scene uses its own lights -> its programs differ from the game ones: compile + link them first, one program per slice
+function thumbWarm422(Q){if(Q.wDone)return true;const t0=performance.now();
+  if(!Q.wq){Q.wq=[];Q.wp=[];const seen=new Set();for(const key of Q.keys){const g=VM[key];if(!g)continue;g.traverse(o=>{if(!o.isMesh||!o.material||Array.isArray(o.material))return;if(o.material===gloveM||o.material===sleeveM)return;const k2=o.material.uuid+(o.isSkinnedMesh?'S':'');if(seen.has(k2))return;seen.add(k2);Q.wq.push(o);});}}
+  if(Q.wp.length){const pr=Q.wp.shift();try{pr.getUniforms();}catch(e){}return false;}
+  while(Q.wq.length){const o=Q.wq.shift();const before=renderer.info.programs.length;const kids=o.children,sv=kids.slice();kids.length=0;
+    try{renderer.compile(o,Q.cam,Q.sc);}catch(e){}finally{kids.length=0;for(const c of sv)kids.push(c);}
+    const L=renderer.info.programs;for(let i=before;i<L.length;i++)Q.wp.push(L[i]);if(L.length>before||performance.now()-t0>6)return false;}
+  if(Q.wp.length)return false;Q.wDone=true;return true;}
+function thumbOne422(){const Q=thumbInit422();if(Q.done)return;if(!Q.sync&&!thumbWarm422(Q))return;const t0=performance.now();const {W,H,rt,sc,cam,buf,cv,cx,id,lut}=Q;
+  const pc=renderer.getClearColor(new T.Color()),pa=renderer.getClearAlpha(),nu=renderer.shadowMap.needsUpdate;
+  try{while(Q.i<Q.keys.length){const key=Q.keys[Q.i++];const g=VM[key];if(!g)continue;renderer.setClearColor(0x000000,0);const par=g.parent,vis=g.visible,pos=g.position.clone(),rot=g.rotation.clone(),hid=[];
+    try{g.traverse(o=>{if((o.isSprite||(o.isMesh&&(o.material===gloveM||o.material===sleeveM)))&&o.visible){hid.push(o);o.visible=false;}});
     sc.add(g);g.visible=true;g.position.set(0,0,0);g.rotation.set(0,0,0);g.updateMatrixWorld(true);
     const box=new T.Box3();g.traverse(o=>{if(o.isMesh&&o.visible)box.expandByObject(o);});const c=box.getCenter(new T.Vector3()),sz=box.getSize(new T.Vector3());
     const asp=W/H,len=Math.max(sz.z/asp,sz.y*1.25),dist=len/(2*Math.tan(15*Math.PI/180))*1.32;
     cam.position.set(c.x+dist*.96,c.y+dist*.16,c.z+dist*.2);cam.lookAt(c);
     renderer.setRenderTarget(rt);renderer.clear();renderer.render(sc,cam);renderer.readRenderTargetPixels(rt,0,0,W,H,buf);renderer.setRenderTarget(null);
     for(let y=0;y<H;y++){const sr=(H-1-y)*W*4,dr=y*W*4;for(let x=0;x<W*4;x+=4){id.data[dr+x]=lut[buf[sr+x]];id.data[dr+x+1]=lut[buf[sr+x+1]];id.data[dr+x+2]=lut[buf[sr+x+2]];id.data[dr+x+3]=buf[sr+x+3];}}
-    cx.putImageData(id,0,0);const o2=document.createElement('canvas');o2.width=W/2;o2.height=H/2;const ox=o2.getContext('2d');ox.imageSmoothingQuality='high';ox.drawImage(cv,0,0,W/2,H/2);THUMBS[s.w]=o2.toDataURL('image/png');
-    sc.remove(g);par.add(g);g.visible=vis;g.position.copy(pos);g.rotation.copy(rot);hid.forEach(o=>o.visible=true);}
-  renderer.setClearColor(pc,pa);renderer.shadowMap.needsUpdate=nu;rt.dispose();}catch(e){}return THUMBS;}
+    cx.putImageData(id,0,0);const o2=document.createElement('canvas');o2.width=W/2;o2.height=H/2;const ox=o2.getContext('2d');ox.imageSmoothingQuality='high';ox.drawImage(cv,0,0,W/2,H/2);Q.P[key]=o2.toDataURL('image/png');}
+    finally{sc.remove(g);if(par)par.add(g);g.visible=vis;g.position.copy(pos);g.rotation.copy(rot);hid.forEach(o=>o.visible=true);}break;}}catch(e){}
+  renderer.setRenderTarget(null);renderer.setClearColor(pc,pa);renderer.shadowMap.needsUpdate=nu;
+  const dt=performance.now()-t0;Q.ms+=dt;Q.max=Math.max(Q.max,dt);Q.n++;
+  if(Q.i>=Q.keys.length){Q.done=true;THUMBS=Q.P;try{Q.rt.dispose();}catch(e){}try{slog('perf thumbs total='+Math.round(Q.ms)+'ms slices='+Q.n+' maxSlice='+Math.round(Q.max)+'ms');}catch(e){}
+    const cbs=Q.cbs||[];Q.cbs=[];for(const f of cbs)try{f();}catch(e){}}}
+function renderThumbs(){const Q=thumbInit422();Q.sync=1;while(!Q.done)thumbOne422();return THUMBS;}
+function renderThumbsIdle(cb){const Q=thumbInit422();if(Q.done){if(cb)cb();return;}if(cb)(Q.cbs||(Q.cbs=[])).push(cb);if(Q.run)return;Q.run=1;
+  const idle=window.requestIdleCallback?f=>requestIdleCallback(f,{timeout:700}):f=>setTimeout(f,60);
+  const step=()=>{if(Q.done)return;thumbOne422();if(!Q.done)idle(step);};idle(step);}
+function thumbsPartial422(){return THUMBS||(TH422&&TH422.P)||{};}
 
 // ---------- shop ----------
 let shopTab='armi';
@@ -2071,7 +2089,7 @@ function buyBtns(id){const st=STARS_PRICES[id],gp=GEM_PRICES[id];let h='';
   else h+='<button class="bAd" data-ad="'+id+'">🎬 Prova 1 partita</button>';
   if(gp)h+='<button class="bGem'+(PROF.gems<gp?' poor':'')+'" data-buy="'+id+'" data-m="gem">💎 '+gp+'</button>';return h;}
 function renderShop(){refreshGems();document.querySelectorAll('#shopTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.t===shopTab));
-  const L=$('shopList');let h='';const th=THUMBS||{};
+  const L=$('shopList');let h='';const th=thumbsPartial422();
   if(shopTab==='armi'){$('shopNote').textContent='Le armi sbloccate sono nel tuo arsenale a ogni partita, con munizioni piene.';
     for(const s of SHOP_W){const w=WEAPONS.find(q=>q.id===s.w),o=owns(s.id),eq=PROF.eqw===s.w;
       h+='<div class="scard r-'+s.rar+'">'+(o?'<div class="ownTag">TUA</div>':'')+(s.best&&!o?'<div class="bestTag">LA PIÙ FORTE</div>':'')+'<div class="sthumb">'+(th[s.w]?'<img alt="" src="'+th[s.w]+'">':'<span class="emo">🔫</span>')+'</div><div class="sbody"><div class="sname">'+esc(w.name)+'</div><div class="srar">'+RAR_L[s.rar]+'</div>'+wBars(w)+
@@ -2083,7 +2101,8 @@ function renderShop(){refreshGems();document.querySelectorAll('#shopTabs .tab').
     if(adsOn()){const a=adState();h+='<div class="scard r-epico"><div class="sthumb"><span class="emo">🎬</span></div><div class="sbody"><div class="sname">Guarda un video</div><div class="srar">+'+AD_GEMS+' 💎 gratis</div><div class="sdesc">Ancora '+(AD_DAILY_MAX-a.n)+' su '+AD_DAILY_MAX+' oggi.</div><div class="sbtns"><button class="bAd" data-adgem="1"'+(a.n>=AD_DAILY_MAX?' disabled style="opacity:.5"':'')+'>🎬 Guarda: +'+AD_GEMS+'💎</button></div></div></div>';}
     h+='<div class="scard r-comune"><div class="sthumb"><span class="emo">🏆</span></div><div class="sbody"><div class="sname">Premi settimanali</div><div class="srar">Zombie uccisi in totale questa settimana</div><div class="sdesc">🥇 20💎 · 🥈 10💎 · 🥉 5💎<br>Ogni partita si somma al tuo totale. Ogni lunedì alle 00:00 il bot ti invia il premio: toccalo e i diamanti arrivano da soli sul tuo profilo.</div></div></div>';}
   L.innerHTML=h;L.scrollLeft=0;L.scrollTop=0;}
-function openShop(tab){audioInit();shopTab=tab||'armi';renderThumbs();renderShop();$('shopScreen').classList.remove('hidden');}
+function openShop(tab){audioInit();shopTab=tab||'armi';renderShop();$('shopScreen').classList.remove('hidden');
+  renderThumbsIdle(()=>{const S=$('shopScreen'),L=$('shopList');if(!S||S.classList.contains('hidden')||shopTab!=='armi')return;const st=L.scrollTop,sl=L.scrollLeft;renderShop();L.scrollTop=st;L.scrollLeft=sl;});}
 function grant(id){const g=SHOP_G.find(s=>s.id===id);if(g){addGems(g.gems,true);}else if(!owns(id)){PROF.owned.push(id);const w=SHOP_W.find(s=>s.id===id);if(w)PROF.eqw=w.w;saveProf();}
   play('buy');renderShop();mtoast('✔ '+itemName(id)+(g?' accreditati!':' sbloccato!'),2200);}
 function buy(id,m){if(m==='gem'){const p=GEM_PRICES[id];if(PROF.gems<p){dialog('Diamanti insufficienti','Ti servono <b>💎 '+p+'</b>, ne hai <b>'+fmt(PROF.gems)+'</b>.',[{label:'Vai ai diamanti',fn:()=>{shopTab='gems';renderShop();}},{label:'Chiudi',ghost:1}]);return;}
@@ -2130,8 +2149,9 @@ function renderRank(){document.querySelectorAll('#rankScreen .tab').forEach(b=>b
   $('rankFoot').innerHTML='🌍 Classifica globale: scrivi <b>/classifica</b> al bot<br><span style="opacity:.75">La settimana si azzera lunedì alle 00:00 (tra '+resetIn()+')</span>';}
 function openRank(){rankMode='week';renderRank();$('rankScreen').classList.remove('hidden');}
 $('rankScreen').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b){rankMode=b.dataset.r;renderRank();}});
+function miniRow422(x,i){return '<div class="rk mini422'+(x.id===myId()?' me':'')+'"><span class="pos">'+MEDAL[i]+'</span><span class="nm"><span class="nmT">'+esc(x.n)+'</span><small>'+x.g+(x.g===1?' partita':' partite')+'</small></span><span class="kv">'+x.k+' ☠️</span><span class="prize">'+PRIZE[i]+'💎</span></div>';}
 function renderMini(){const rows=rankRows('week',3);$('miniReset').textContent='reset tra '+resetIn();
-  let hh=rows.map((x,i)=>rowHTML(x,i,true)).join('');for(let i=rows.length;i<3;i++)hh+='<div class="rk ph"><span class="pos">'+MEDAL[i]+'</span><span class="nm">posto libero</span><span class="prize">'+PRIZE[i]+'💎</span></div>';$('miniList').innerHTML=hh;}
+  let hh=rows.map((x,i)=>miniRow422(x,i)).join('');for(let i=rows.length;i<3;i++)hh+='<div class="rk ph"><span class="pos">'+MEDAL[i]+'</span><span class="nm">posto libero</span><span class="prize">'+PRIZE[i]+'💎</span></div>';$('miniList').innerHTML=hh;}
 
 // ---------- menu ----------
 function showBest(){setTimeout(svMenuInfo,0);const b=LS.get('zc_best',{});
@@ -2139,7 +2159,7 @@ function showBest(){setTimeout(svMenuInfo,0);const b=LS.get('zc_best',{});
 function syncToggles(){$('muteIc').textContent=SET.mute?'🔇':'🔊';for(const id of ['tgMute1','tgMute2']){$(id).textContent=SET.mute?'OFF':'ON';$(id).classList.toggle('on',!SET.mute);}for(const id of ['tgVib1','tgVib2']){$(id).textContent=SET.vib?'ON':'OFF';$(id).classList.toggle('on',SET.vib);}}
 function setMute(v){SET.mute=v;LS.set('zc_mute',v);if(AU.master)AU.master.gain.value=v?0:.72;syncToggles();}
 function setVib(v){SET.vib=v;LS.set('zc_vib',v);syncToggles();if(v&&navigator.vibrate)try{navigator.vibrate(30);}catch(e){}}
-document.querySelectorAll('#diffSeg button').forEach(b=>onTap2(b,()=>{SET.diff=b.dataset.d;LS.set('zc_diff',SET.diff);showBest();}));
+try{LS.set('zc_diff','normale');}catch(e){}
 function onTap2(el,fn){let tt=0;el.addEventListener('touchend',e=>{if(e.cancelable)e.preventDefault();tt=Date.now();fn();},{passive:false});el.addEventListener('click',()=>{if(Date.now()-tt>600)fn();});}
 onTap('btnShop',()=>openShop('armi'));onTap('shopClose',()=>{$('shopScreen').classList.add('hidden');showBest();});
 onTap('btnRank',openRank);onTap('miniRank',openRank);onTap('rankBack',()=>$('rankScreen').classList.add('hidden'));
@@ -3137,10 +3157,10 @@ function tapStart(x,y,t,ts,via){if(!tapOpen())return;const b=tapBtnAt(x,y,t);tap
   slog('tap down',via,Math.round(x)+','+Math.round(y),'t='+tDesc(t),'efp='+tDesc(document.elementFromPoint(x,y)),'btn='+(b?tDesc(b):'-'),c?'card='+cardId(c):'');}
 function tapEnd(x,y,t,ts,via){if(!tapDown||!tapOpen()){tapDown=null;return;}const d=tapDown;tapDown=null;const u=tapBtnAt(x,y,null);const mv=Math.hypot(x-d.x,y-d.y),dt=ts-d.ts;
   const same=!!d.b&&(u===d.b||(cardOf(d.b)&&cardOf(d.b)===cardOf(u))||(u&&tapKey(u)===tapKey(d.b))||(!u&&mv<=24));
-  slog('tap up',via,'mv='+Math.round(mv),'dt='+Math.round(dt),'btn='+(u?tDesc(u):'-'),'same='+(same?1:0));if(!same||mv>24||dt>800)return;tapFire(d.b,via);}
+  slog('tap up',via,'mv='+Math.round(mv),'dt='+Math.round(dt),'btn='+(u?tDesc(u):'-'),'same='+(same?1:0)+(d.cx?' drag':''));if(d.cx||!same||mv>10||dt>800)return;tapFire(d.b,via);}
 addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;tapStart(e.clientX,e.clientY,e.target,e.timeStamp,'ptr');},true);
 addEventListener('pointerup',e=>{tapEnd(e.clientX,e.clientY,e.target,e.timeStamp,'ptr');},true);
-addEventListener('pointercancel',e=>{if(tapDown&&tapDown.via==='ptr')slog('tap pointercancel');},true);
+addEventListener('pointercancel',e=>{if(tapDown&&tapDown.via==='ptr'){tapDown.cx=1;slog('tap pointercancel');}},true);
 addEventListener('touchstart',e=>{if(tapDown&&tapDown.via==='ptr')return;const t=e.changedTouches[0];if(t)tapStart(t.clientX,t.clientY,e.target,e.timeStamp,'touch');},{capture:true,passive:true});
 addEventListener('touchend',e=>{const t=e.changedTouches[0];if(!t)return;if(tapDown)tapEnd(t.clientX,t.clientY,e.target,e.timeStamp,tapDown.via==='ptr'?'touch2':'touch');},{capture:true,passive:true});
 addEventListener('click',e=>{if(e.isTrusted&&performance.now()-tapFireT<800){e.stopImmediatePropagation();e.preventDefault();slog('ghost click eaten',tDesc(e.target));tapFireT=-1e9;return;}if(!tapOpen())return;const b=tapRes(e.target);if(!b||b.__syn||!e.isTrusted)return;
@@ -3600,15 +3620,17 @@ function warmShaders42(tag){if(!renderer||!renderer.compile)return;const t0=perf
   try{n=fixMats42(scene)+fixMats42(vmScene);}catch(e){}
   // renderer.compile() walks ALL materials (visible or not); do it one top-level object at a time in idle slices (<=8 ms or 1 new program per slice)
   const tmp=new T.Group();try{if(typeof gMats!=='undefined')for(const m of gMats.concat([gDark]))tmp.add(new T.Mesh(G.box,m));}catch(e){}
-  const Q=[];for(const o of scene.children)Q.push([o,camera,scene]);Q.push([tmp,camera,scene]);for(const o of vmScene.children)Q.push([o,vmCam,vmScene]);
+  const Q=[];const seen422=new Set();const add422=(root,cam,sc)=>{root.traverse(o=>{const m=o.material;if(!m)return;const ms=Array.isArray(m)?m:[m];const sig=(o.isInstancedMesh?'I':'')+(o.isSkinnedMesh?'S':'')+(o.isPoints?'P':'')+(o.isSprite?'s':'')+(o.isLine?'L':'');
+    let fresh=false;for(const mm of ms){const key=mm.uuid+sig;if(!seen422.has(key)){seen422.add(key);fresh=true;}}if(fresh)Q.push([o,cam,sc,1]);});};
+  for(const o of scene.children)add422(o,camera,scene);add422(tmp,camera,scene);for(const o of vmScene.children)add422(o,vmCam,vmScene);
   const pend=[];let k=0,slices=0,maxSl=0;const step=dl=>{const s0=performance.now();slices++;
     // finish (link + uniforms) one pending program per slice; with KHR_parallel_shader_compile just wait until the driver is done
     if(pend.length){const pr=pend.shift();try{if(pr.isReady&&!pr.isReady()&&PF42.par){pend.push(pr);}else pr.getUniforms();}catch(e){}}
-    else while(k<Q.length){const [o,cam,sc]=Q[k++];const before=renderer.info.programs.length;try{renderer.compile(o,cam,sc);}catch(e){}
-      const L=renderer.info.programs;for(let i=before;i<L.length;i++)pend.push(L[i]);if(L.length>before||performance.now()-s0>8)break;}
+    else while(k<Q.length){const [o,cam,sc]=Q[k++];const before=renderer.info.programs.length;const kids=o.children;let sv=null;if(kids&&kids.length){sv=kids.slice();kids.length=0;}try{renderer.compile(o,cam,sc);}catch(e){}finally{if(sv){kids.length=0;for(const c of sv)kids.push(c);}}
+      const L=renderer.info.programs;for(let i=before;i<L.length;i++)pend.push(L[i]);if(L.length>before||performance.now()-s0>6)break;}
     maxSl=Math.max(maxSl,performance.now()-s0);
-    if(k<Q.length||pend.length){_idle42(step,600);return;}
-    if(tag==='menu'&&typeof renderThumbs==='function')_idle42(()=>{if(game.state==='menu'){const t1=performance.now();try{renderThumbs();}catch(e){}pfLog('thumbs',Math.round(performance.now()-t1)+'ms');}},1500);
+    if(k<Q.length||pend.length){_idle42(step,1200);return;}
+    if(tag==='menu'&&typeof renderThumbsIdle==='function')_idle42(()=>{try{renderThumbsIdle();}catch(e){}},1500);
     const ms=Math.round(performance.now()-t0),np=renderer.info.programs.length-p0;PF42.warm++;PF42.log.push([tag,ms,np,n,slices,Math.round(maxSl),Math.round(t0)]);
     pfLog('warm',tag,'total='+ms+'ms','newProg='+np,'split='+n,'slices='+slices,'maxSlice='+Math.round(maxSl)+'ms');};
   _idle42(step,600);}
@@ -3717,7 +3739,7 @@ setInterval(q421Place,250);
 const JOY421={l:0,t:0,r:0,b:0,s:1};
 function joyHome421(){const cs=getComputedStyle(document.documentElement),sl=parseFloat(cs.getPropertyValue('--sal'))||0,sab=parseFloat(cs.getPropertyValue('--sab'))||0;
   const cx=Math.min(Math.max(100+sl,VW()*.13+sl),118+sl);let rowB=0;
-  for(const id of ['pauseBtn','hud42','quest42']){const e=document.getElementById(id);if(e&&e.offsetWidth){const r=e.getBoundingClientRect();if(r.left<cx+120)rowB=Math.max(rowB,r.bottom);}}
+  for(const id of ['pauseBtn','hud42','quest42']){const e=document.getElementById(id);if(e&&e.offsetWidth){const r=e.getBoundingClientRect();if(r.left<cx+120||id==='hud42')rowB=Math.max(rowB,r.bottom);}}
   if(!rowB)rowB=parseFloat(cs.getPropertyValue('--sat'))+44||60;
   const botLim=VH()-sab-54-8,topLim=rowB+24,avail=botLim-topLim,s=Math.max(.7,Math.min(1,avail/130)),R=65*s;
   let cy=VH()-164-sab;cy=Math.min(Math.max(cy,topLim+R),botLim-R);
@@ -3780,7 +3802,7 @@ window.__econ42={dps42,bestCoinDps,W_TUNE,SVC42,svcBuy,hint42,hintTarget,COS42,g
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
 
 // ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
-const NEWS421_FB={"rev":"2026-10-03b","upcoming":[{"icon":"🌄","title":"4.3 Grafica nuova","desc":"Ombre vere di sole e luna, texture per neve, legno e mattoni, luci e nebbia più belle.","eta":"Domani mattina","tone":"soon"},{"icon":"🎯","title":"Armi rifatte in 3D","desc":"Tutte le armi ridisegnate con animazioni: rinculo, ricarica, bossoli e fiammata.","eta":"Domani mattina","tone":"soon"},{"icon":"🏗️","title":"Nuove costruzioni","desc":"Torretta, porta, falò, recinto elettrico e molto altro per il tuo rifugio.","eta":"Domani mattina","tone":"soon"},{"icon":"⚔️","title":"Arena PvP 1v1 e 3v3","desc":"Sfida altri sopravvissuti in duelli e squadre.","eta":"Prossimamente","tone":"later"}],"recent":[{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
+const NEWS421_FB={"rev":"2026-10-03c","upcoming":[{"icon":"🌄","title":"4.3 Grafica nuova","desc":"Ombre vere di sole e luna, texture per neve, legno e mattoni, luci e nebbia più belle.","eta":"Domani mattina","tone":"soon"},{"icon":"🎯","title":"Armi rifatte in 3D","desc":"Tutte le armi ridisegnate con animazioni: rinculo, ricarica, bossoli e fiammata.","eta":"Domani mattina","tone":"soon"},{"icon":"🏗️","title":"Nuove costruzioni","desc":"Torretta, porta, falò, recinto elettrico e molto altro per il tuo rifugio.","eta":"Domani mattina","tone":"soon"},{"icon":"⚔️","title":"Arena PvP 1v1 e 3v3","desc":"Sfida altri sopravvissuti in duelli e squadre.","eta":"Prossimamente","tone":"later"}],"recent":[{"ver":"4.2.2","date":"3 ott","items":["Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito","Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili","In partita livello, monete e missioni stanno insieme in alto al centro","Menu più reattivo all'avvio (meno blocchi)"]},{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
 let NEWS421=NEWS421_FB;const NEWS421_K='zc_news_seen';
 function news421Esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function news421Dot(){const b=document.getElementById('newsBtn');if(!b)return;let seen='';try{seen=localStorage.getItem(NEWS421_K)||'';}catch(e){}b.classList.toggle('new',!!NEWS421.rev&&seen!==NEWS421.rev);}
@@ -3795,6 +3817,66 @@ function news421Open(refresh){const d=document.getElementById('dlgScreen');dialo
  const s=document.getElementById('startScreen');if(s&&!document.getElementById('newsBtn')){const b=document.createElement('button');b.id='newsBtn';b.innerHTML='📰 <span>Novità</span><i class="nDot"></i>';s.appendChild(b);onTap('newsBtn',()=>news421Open());}
  news421Dot();news421Load();}
 window.__news421={open:()=>news421Open(),get data(){return NEWS421;}};
+// ======================= 4.2.2 hotfix =======================
+window.GAME_VER='4.2.2';
+// ---- (S) touch scrolling inside panels (news, shop, bag, leaderboard, quests, settings). Native scrolling first; if the
+//      WebView swallows it (Telegram Android: pointercancel but the list never moves) we scroll the list ourselves + momentum.
+const SCR422={fb:0,nat:0,last:''};
+(function(){let st=null,mom=0;
+  const SEL='.overlay,#qList,#quest42,#buildBar';
+  const canY=e=>{const cs=getComputedStyle(e);return /(auto|scroll)/.test(cs.overflowY)&&e.scrollHeight>e.clientHeight+2;};
+  const canX=e=>{const cs=getComputedStyle(e);return /(auto|scroll)/.test(cs.overflowX)&&e.scrollWidth>e.clientWidth+2;};
+  function scroller(el,ax,d){for(let e=el;e&&e!==document.body&&e!==document.documentElement;e=e.parentElement){
+      if(ax==='y'?canY(e):canX(e)){const pos=ax==='y'?e.scrollTop:e.scrollLeft,max=ax==='y'?e.scrollHeight-e.clientHeight:e.scrollWidth-e.clientWidth;
+        if((d<0&&pos<max-1)||(d>0&&pos>1))return e;}}return null;}
+  const getP=(el,ax)=>ax==='y'?el.scrollTop:el.scrollLeft;
+  const setP=(el,ax,v)=>{if(ax==='y')el.scrollTop=v;else el.scrollLeft=v;};
+  function stopMom(){if(mom){cancelAnimationFrame(mom);mom=0;}}
+  addEventListener('touchstart',e=>{stopMom();if(e.touches.length!==1){st=null;return;}const t=e.touches[0],tg=e.target;
+    if(!tg||!tg.closest||!tg.closest(SEL)){st=null;return;}
+    st={x:t.clientX,y:t.clientY,lx:t.clientX,ly:t.clientY,tg,el:null,ax:null,s0:0,d0:0,t0:e.timeStamp,man:false,exp:0,v:[],n:0};},{capture:true,passive:true});
+  addEventListener('touchmove',e=>{if(!st)return;const t=e.touches[0];if(!t)return;st.n++;const dx=t.clientX-st.x,dy=t.clientY-st.y;
+    if(!st.ax){if(Math.hypot(dx,dy)<6)return;st.ax=Math.abs(dy)>=Math.abs(dx)?'y':'x';const d=st.ax==='y'?dy:dx;st.el=scroller(st.tg,st.ax,d);
+      if(!st.el){st=null;return;}st.s0=getP(st.el,st.ax);st.d0=d;st.lx=t.clientX;st.ly=t.clientY;return;}
+    const el=st.el,ax=st.ax,d=ax==='y'?dy:dx,step=ax==='y'?t.clientY-st.ly:t.clientX-st.lx;st.lx=t.clientX;st.ly=t.clientY;
+    st.v.push([e.timeStamp,step]);if(st.v.length>6)st.v.shift();
+    if(!st.man){const travel=Math.abs(d-st.d0),moved=Math.abs(getP(el,ax)-st.s0);
+      if(moved>=1){if(!st.nat){st.nat=1;SCR422.nat++;}return;}
+      if(travel>18&&e.timeStamp-st.t0>50){st.man=true;SCR422.fb++;const v0=getP(el,ax);setP(el,ax,v0-(d-st.d0));st.exp=getP(el,ax);
+        SCR422.last=(el.id||el.className||el.tagName)+'';try{slog('scroll fallback',SCR422.last,'ax='+ax,'cancelable='+(e.cancelable?1:0),'n='+st.n);}catch(x){}}
+      return;}
+    // manual mode: if the browser scrolled too, hand back to it (no double scroll)
+    const cur=getP(el,ax);if(Math.abs(cur-st.exp)>2){st.man=false;st.s0=cur;st.d0=d;return;}
+    if(e.cancelable)e.preventDefault();setP(el,ax,cur-step);st.exp=getP(el,ax);},{capture:true,passive:false});
+  const end=e=>{if(!st)return;const S=st;st=null;if(!S.man||!S.el)return;
+    const now=e.timeStamp;let sum=0,dt=0;for(const [ts,s] of S.v)if(now-ts<120){sum+=s;}const first=S.v.find(([ts])=>now-ts<120);dt=first?Math.max(16,now-first[0]):0;
+    let vel=dt?sum/dt:0;if(Math.abs(vel)<.15)return;let lt=performance.now();
+    const go=()=>{const tt=performance.now(),k=tt-lt;lt=tt;const before=getP(S.el,S.ax);setP(S.el,S.ax,before-vel*k);vel*=Math.pow(.94,k/16);
+      if(Math.abs(vel)>.03&&getP(S.el,S.ax)!==before)mom=requestAnimationFrame(go);else mom=0;};mom=requestAnimationFrame(go);};
+  addEventListener('touchend',end,{capture:true,passive:true});addEventListener('touchcancel',end,{capture:true,passive:true});
+})();
+window.__scr422=SCR422;
+// ---- (U) in-game top group: level bar + coins + 📋 missions chip, centred under Telegram's top band ----
+function hudTop422(){const h=document.getElementById('hud42'),q=document.getElementById('quest42');if(!h||!q||document.body.classList.contains('hudOff42'))return;
+  const ch=q.querySelector('#qChip'),c=document.getElementById('coin42');const hr=h.getBoundingClientRect();const wH=c&&c.offsetWidth?c.getBoundingClientRect().right-hr.left:h.offsetWidth,wC=ch?ch.offsetWidth:0;if(!wH)return;const gap=8,tot=wH+gap+wC;
+  const cs=getComputedStyle(document.documentElement),sal=parseFloat(cs.getPropertyValue('--sal'))||0,sar=parseFloat(cs.getPropertyValue('--sar'))||0;
+  let left=Math.round((innerWidth-tot)/2);
+  // never over pause (left) or the backpack/clock card (right)
+  const pb=document.getElementById('pauseBtn'),bag=document.getElementById('bagBtn');
+  const minL=pb&&pb.offsetWidth?pb.getBoundingClientRect().right+10:sal+60;const maxR=bag&&bag.offsetWidth?bag.getBoundingClientRect().left-10:innerWidth-sar-200;
+  if(left+tot>maxR)left=Math.round(maxR-tot);if(left<minL)left=Math.round(minL);
+  if(h.style.getPropertyValue('left')!==left+'px')h.style.setProperty('left',left+'px','important');if(!document.body.classList.contains('hudTop422'))document.body.classList.add('hudTop422');}
+function q422Chip(){const q=document.getElementById('quest42'),c=document.getElementById('coin42'),h=document.getElementById('hud42');if(!q||!h||!document.body.classList.contains('hudTop422'))return;
+  const last=c&&c.offsetWidth?c:h;const r=last.getBoundingClientRect();q.style.left=Math.round(r.right+8)+'px';}
+function q422Panel(){const q=document.getElementById('quest42'),L=document.getElementById('qList');if(!q||!L||!q.classList.contains('open')||!L.style.left)return;
+  const jb=document.getElementById('joyBase').getBoundingClientRect(),bag=document.getElementById('bagBtn');const left=Math.round(((window.__joy421&&__joy421.r)||jb.right)+28);
+  const right=bag&&bag.offsetWidth?bag.getBoundingClientRect().left-8:innerWidth-200;L.style.left=left+'px';L.style.width=Math.round(Math.max(220,Math.min(340,right-left)))+'px';
+  L.classList.remove('qTight');if(L.scrollHeight>L.clientHeight+1)L.classList.add('qTight');}
+{const _qp=q421Place;q421Place=function(){try{hudTop422();}catch(e){}const r=_qp.apply(this,arguments);try{q422Chip();q422Panel();}catch(e){}return r;};}
+setInterval(()=>{try{q421Place();}catch(e){}},250);
+// re-place the top group in the same frame the HUD becomes visible (no 250 ms window at the old spot)
+{let wasOff=true,busy=false;try{new MutationObserver(()=>{const off=document.body.classList.contains('hudOff42');if(busy||off===wasOff){wasOff=off;return;}wasOff=off;if(off)return;busy=true;try{q421Place();}catch(e){}finally{busy=false;}}).observe(document.body,{attributes:true,attributeFilter:['class']});}catch(e){}}
+
 
 
 // ======================= end v4 module =======================
@@ -3827,5 +3909,53 @@ window.__game={get flash(){try{return flash}catch(e){return null}},SV,PIECES,NOD
 if(window.__DBG)try{({updateZombie,svTarget,svNoise,keepOut,collide,losBlocked,musicUpdate,ambUpdate,footstep,play,gun,groan,updateHUD,hud41,hud4,wiUpdate,svClockHUD,drawRadar,updateNums,updateParticles,updateTracers,updateFlames,updateProj,updateBurn,updateSnow,updateEnv,svWaves,applyLight,updateNodes,updateFires,updateExtras}=__DBG.sys({updateZombie,svTarget,svNoise,keepOut,collide,losBlocked,musicUpdate,ambUpdate,footstep,play,gun,groan,updateHUD,hud41,hud4,wiUpdate,svClockHUD,drawRadar,updateNums,updateParticles,updateTracers,updateFlames,updateProj,updateBurn,updateSnow,updateEnv,svWaves,applyLight,updateNodes,updateFires,updateExtras}));}catch(e){__DBG.log('hook',e&&e.message);}
 })();
 </script>
+<style id="v422css">
+/* ===== 4.2.2 hotfix ===== */
+/* (S) panels scroll with the finger: vertical pan allowed on every scroll container and its children */
+.overlay .sb42,.overlay.sheetBg>.sheet,#rankList,#qList,#bagScreen .sheet,.news42{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.overlay .sb42,.overlay .sb42 *,.overlay.sheetBg>.sheet,.news42,.news42 *,#rankList,#rankList *,#qList,#qList *{touch-action:pan-y!important}
+#shopList,#shopList *{touch-action:pan-x pan-y!important}
+#dlgScreen.news42 .sb42{overflow-y:auto!important}
+.ver422{margin:8px 0 2px;font:600 11px ZRaj,sans-serif;letter-spacing:.4px;color:#9aa6b6;text-align:center}
+/* (H) home: no difficulty selector; icon buttons */
+.diffSeg{display:none!important}
+.mBtn.icon .lb422{display:none}
+/* compact home (Telegram landscape phones): GIOCA, ↺, then 4 square labelled tiles on ONE row */
+body.homeXC #startScreen .menuL{grid-template-columns:minmax(0,1fr) auto!important;width:min(600px,calc(100vw - 292px - var(--sar)))!important}
+body.homeXC #startScreen .playRow{grid-column:1!important;min-width:0}
+body.homeXC #startScreen .menuRow.four{grid-column:2!important;grid-row:2;display:grid!important;grid-template-columns:repeat(4,52px)!important;gap:5px!important;max-width:none!important;align-self:stretch}
+body.homeXC #startScreen .menuRow.one{grid-column:1/-1!important}
+body.homeXC #startScreen .menuRow.four .mBtn,body.homeXC #startScreen .menuRow.four .mBtn.icon,body.homeXC #startScreen .menuRow.four .mBtn:not(.icon){width:52px!important;min-width:52px!important;height:auto!important;min-height:54px!important;flex:none!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:2px!important;padding:4px 2px!important}
+body.homeXC #startScreen .menuRow.four .mBtn .ic{font-size:20px!important;width:auto!important;line-height:1!important;margin:0!important}
+body.homeXC #startScreen .menuRow.four .mBtn>span,body.homeXC #startScreen .menuRow.four .mBtn>small{display:block!important;flex:none!important;line-height:1!important;margin:0!important}
+body.homeXC #startScreen .menuRow.four .mBtn b,body.homeXC #startScreen .menuRow.four .mBtn .lb422{display:block!important;font:700 9.5px/1.1 ZRaj,sans-serif!important;letter-spacing:-.1px!important;text-transform:uppercase;white-space:nowrap;color:#e8eef8}
+/* mini leaderboard: full names, kills always visible */
+#miniRank{width:262px!important}
+body.homeXC #miniRank{width:246px!important}
+@media (max-width:700px) and (orientation:landscape){#miniRank,body.homeXC #miniRank{width:220px!important}}
+#miniRank .rk.mini422{gap:6px;align-items:center}
+#miniRank .rk.mini422 .nm{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;min-width:0;line-height:1.1}
+#miniRank .rk.mini422 .nmT{display:block;font-size:12.5px;font-weight:600;overflow-wrap:anywhere}
+#miniRank .rk.mini422 small{display:block;font-size:10px;opacity:.65;margin-top:1px}
+#miniRank .rk.mini422 .kv{font-size:13.5px!important;white-space:nowrap}
+#miniRank .rk.mini422 .prize{font-size:11px!important;padding:1px 5px!important}
+#miniRank .rk.ph .nm{white-space:nowrap}
+/* record / level lines: readable on the snowy background */
+#startScreen #lvlMenu,#startScreen .menuFoot{opacity:1!important;color:#f2f5fa!important;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.9)!important;background:rgba(8,10,16,.55);border-radius:9px;padding:3px 9px!important;width:fit-content;max-width:100%;box-sizing:border-box}
+#startScreen #lvlMenu small{opacity:.85!important;color:#cfd8e6}
+#startScreen .menuFoot b{color:#ffc27a!important}
+#startScreen .menuFoot:empty{display:none}
+/* (U) HUD: level/coins/missions as one compact group at the top centre (left set by hudTop422) */
+#hud42{left:calc(50% - 150px)!important}
+body.hudTop422 #hud42{right:auto!important;transform:none!important}
+body.homeXC #startScreen .playRow .mBtn.newRun{flex:0 0 46px!important;width:46px!important}
+body.homeXC #startScreen .playRow .mBtn.zombie{padding:7px 10px!important}
+body.homeXC #startScreen .playRow .mBtn.zombie b{font-size:20px!important}
+body.homeXC #startScreen .playRow .mBtn.zombie small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15!important;font-size:11px!important}
+#startScreen #lvlMenu,#startScreen .menuFoot{justify-self:start!important;align-self:flex-start!important;width:fit-content!important}
+/* thumbnails are rendered lazily: small placeholder until the 3D picture is ready */
+#shopList .sthumb>.emo{font-size:22px!important;line-height:1!important;opacity:.45}
+
+</style>
 </body>
 </html>

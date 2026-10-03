@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-03b",
+  "rev": "2026-10-03c",
   "upcoming": [
     {
       "icon": "🌄",
@@ -31,6 +31,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.2.2",
+      "date": "3 ott",
+      "items": [
+        "Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito",
+        "Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili",
+        "In partita livello, monete e missioni stanno insieme in alto al centro",
+        "Menu più reattivo all'avvio (meno blocchi)"
+      ]
+    },
     {
       "ver": "4.2.1",
       "date": "3 ott",
