@@ -783,6 +783,44 @@ body.safeC .sheet.wrap42>.btnRow .act{padding-top:8px!important;padding-bottom:8
 body.safeC #overScreen .sheet{max-width:620px!important}
 body.safeC #overScreen .btnRow{flex-wrap:nowrap!important;gap:6px!important}
 body.safeC #overScreen .btnRow .act{padding:8px 10px!important;font-size:12.5px!important;white-space:nowrap;min-width:0}
+/* 4.2.1 quests chip in the top row */
+#quest42{max-width:none!important}
+#qChip{height:28px!important;white-space:nowrap}
+body.q421open #banner{visibility:hidden!important}
+/* 4.2.1 Bacheca aggiornamenti */
+#newsBtn{position:absolute;z-index:5;top:calc(var(--sat) + 12px);right:calc(var(--sar) + 16px);display:flex;align-items:center;gap:6px;padding:8px 18px 8px 12px;border-radius:14px;border:1px solid rgba(255,210,90,.45);background:linear-gradient(135deg,rgba(40,30,18,.88),rgba(20,22,30,.9));color:#ffe7b0;font:700 13px ZRaj,sans-serif;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,0,0,.45);pointer-events:auto}
+#newsBtn .nDot{display:none;position:absolute;top:4px;right:4px;width:12px;height:12px;border-radius:50%;background:#ff3b3b;border:2px solid #1a1a1a;box-shadow:0 0 8px #ff3b3b}
+#newsBtn.new .nDot{display:block;animation:nPulse 1.6s infinite}@keyframes nPulse{50%{transform:scale(1.25)}}
+#dlgScreen.news42>.sheet{max-width:min(760px,calc(100vw - var(--sal) - var(--sar) - 24px))!important;width:100%}
+.news42{text-align:left}.news42 h4{margin:4px 2px 8px;font:800 13px ZRaj,sans-serif;letter-spacing:1px;color:#ffcf6a;text-transform:uppercase}
+.news42 .nGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-bottom:12px}
+.news42 .nCard{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.news42 .nCard.soon{border-color:rgba(255,190,70,.4);background:linear-gradient(135deg,rgba(255,170,40,.10),rgba(255,255,255,.03))}
+.news42 .nIco{flex:0 0 44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;background:radial-gradient(circle at 30% 30%,rgba(255,210,120,.35),rgba(60,40,20,.6))}
+.news42 .nCard.later .nIco{background:radial-gradient(circle at 30% 30%,rgba(120,170,255,.35),rgba(20,30,60,.6))}
+.news42 .nTxt{flex:1;min-width:0}.news42 .nTop{display:flex;gap:6px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.news42 .nTop b{font:700 14px ZRaj,sans-serif;color:#fff}.news42 .nEta{font:700 10.5px ZRaj,sans-serif;padding:2px 7px;border-radius:8px;background:#ffb02e;color:#2a1600;white-space:nowrap}
+.news42 .nCard.later .nEta{background:#5b8cff;color:#fff}.news42 p{margin:3px 0 0;font:500 12px/1.3 ZRaj,sans-serif;color:#cfd3dc}
+.news42 .nRel{padding:8px 10px;margin-bottom:6px;border-radius:10px;background:rgba(255,255,255,.04);border-left:3px solid #4caf50}
+.news42 .nVer{display:flex;gap:8px;align-items:baseline}.news42 .nVer b{color:#8fe28f;font:800 13px ZRaj,sans-serif}.news42 .nVer small{color:#9aa}
+.news42 ul{margin:4px 0 0;padding-left:18px}.news42 li{font:500 12px/1.35 ZRaj,sans-serif;color:#dde}
+
+/* 4.2.1 compact HUD quests panel with close X */
+#qList{padding:4px 8px 6px!important;box-shadow:0 6px 18px rgba(0,0,0,.5);background:rgba(10,12,18,.88)!important}
+#qList .qHead{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 0 3px;border-bottom:1px solid rgba(255,255,255,.12)}
+#qList .qHead b{font:800 12px ZRaj,sans-serif;color:#ffe2a0;letter-spacing:.3px}
+#qList #qX{flex:0 0 26px;width:26px;height:26px;margin:0 -4px 0 0;border:0;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;font:700 14px/26px sans-serif;padding:0}
+#qList .qRow{font-size:12px!important;padding:3px 0!important;gap:1px 8px}
+#qList .qRow button{font:800 11px ZRaj,sans-serif!important;padding:3px 8px!important;white-space:nowrap}
+#qList .qRow em,#qList .qRow small{white-space:nowrap}
+#qList .qStreak{margin-top:3px}
+body.q421open #weaponInfo{visibility:hidden!important}
+#qList.qTight .qHead{padding-bottom:2px}#qList.qTight #qX{flex-basis:22px;width:22px;height:22px;line-height:22px;font-size:12px}
+#qList.qTight .qRow{grid-template-columns:1fr 46px auto auto!important;gap:0 6px!important;padding:2px 0!important;font-size:11.5px!important}
+#qList.qTight .qRow span{grid-column:1;grid-row:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#qList.qTight .qRow i{grid-column:2;grid-row:1}#qList.qTight .qRow small{grid-column:3;grid-row:1}
+#qList.qTight .qRow button,#qList.qTight .qRow em{grid-column:4;grid-row:1;padding:2px 7px!important}
+#qList.qTight .qStreak{margin-top:2px;font-size:10.5px}
 </style>
 <script>if(/^https?:$/.test(location.protocol)&&!(window.Telegram&&window.Telegram.WebApp))document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');</script>
 </head>
@@ -3503,6 +3541,7 @@ function floatTxt42(t){const d=document.createElement('div');d.className='qFloat
 // compact collapsible edge tracker
 {const e=document.createElement('div');e.id='quest42';e.innerHTML='<button id="qChip">📋 <b>0/3</b></button><div id="qList"></div>';$('hud').appendChild(e);
  onTap('qChip',()=>{e.classList.toggle('open');qHUD(true);});
+ const qx=ev=>{if(ev.target.closest('#qX')){if(ev.cancelable)ev.preventDefault();e.classList.remove('open');qHUD(true);return true;}};e.addEventListener('click',qx);e.addEventListener('touchend',qx,{passive:false});
  e.addEventListener('click',ev=>{const b=ev.target.closest('button[data-qc]');if(b)qClaim(+b.dataset.qc);});
  e.addEventListener('touchend',ev=>{const b=ev.target.closest('button[data-qc]');if(b&&ev.cancelable){ev.preventDefault();qClaim(+b.dataset.qc);}},{passive:false});}
 let qSig='';
@@ -3510,7 +3549,7 @@ function qRows(){const Q=qEnsure();return Q.L.map((q,i)=>{const D=qDef(q.id);if(
 function qHUD(force){const Q=qEnsure();const n=Q.L.filter(q=>{const D=qDef(q.id);return D&&q.p>=D.n;}).length,cl=Q.L.filter(q=>q.cl).length,ready=n>cl;
   const s=n+'|'+cl+'|'+Q.L.map(q=>q.p).join(',')+'|'+$('quest42').classList.contains('open');if(s===qSig&&!force)return;qSig=s;
   $('qChip').innerHTML='📋 <b>'+n+'/3</b>'+(ready?' <span class="qDot"></span>':'');$('quest42').classList.toggle('ready',ready);
-  if($('quest42').classList.contains('open'))$('qList').innerHTML=qRows()+(P42.qs?'<div class="qStreak">🔥 Serie: '+P42.qs+' giorni · premi +'+Math.round(qBonus()*100)+'%</div>':'');
+  if($('quest42').classList.contains('open'))$('qList').innerHTML='<div class="qHead"><b>📋 Missioni di oggi</b><button id="qX" aria-label="Chiudi">✕</button></div>'+qRows()+(P42.qs?'<div class="qStreak">🔥 Serie: '+P42.qs+' giorni · premi +'+Math.round(qBonus()*100)+'%</div>':'');
   const m=$('qMenuBtn');if(m)m.innerHTML='📋 Missioni <b>'+n+'/3</b>'+(ready?' <span class="qDot"></span>':'');}
 function qRender(){const d=$('dlgB');if(d&&d.querySelector('.qPanel'))d.querySelector('.qPanel').innerHTML=qRows();}
 function qOpen(){dialog('📋 Missioni di oggi','<div class="qPanel">'+qRows()+'</div><div class="small" style="opacity:.7;margin-top:6px">Si rinnovano a mezzanotte. Completale tutte per 💎 extra'+(P42.qs?' · serie attuale '+P42.qs+' giorni (+'+Math.round(qBonus()*100)+'% monete)':'')+'.</div>',[{label:'Chiudi',ghost:1}]);}
@@ -3518,7 +3557,7 @@ $('dlgScreen').addEventListener('click',e=>{const b=e.target.closest('.qPanel bu
 {const b=document.createElement('button');b.id='qMenuBtn';b.className='qMenu';$('lvlMenu').appendChild(b);onTap('qMenuBtn',qOpen);}
 TICK42.push(()=>{qHUD();});
 qEnsure();qHUD(true);
-window.__q42={qEnsure,q42,qClaim,QPOOL};
+window.__q42={qEnsure,q42,qClaim,QPOOL,P42};
 
 // v42_ui
 
@@ -3656,6 +3695,42 @@ function shopShort42(){const S=$('shopScreen');if(!S||S.classList.contains('hidd
 function wrapSheets42(){for(const sh of document.querySelectorAll('.overlay.sheetBg>.sheet')){if(sh.classList.contains('wrap42'))continue;const last=sh.lastElementChild;
   if(!last||!last.classList.contains('btnRow'))continue;const sb=document.createElement('div');sb.className='sb42';while(sh.firstChild&&sh.firstChild!==last)sb.appendChild(sh.firstChild);sh.insertBefore(sb,last);sh.classList.add('wrap42');}}
 try{wrapSheets42();}catch(e){console.error(e);}setTimeout(()=>{try{wrapSheets42();}catch(e){}},1500);
+// ---- 4.2.1: quests chip in the top row right of level/coins; open panel never over the joystick ----
+function q421Place(){const q=document.getElementById('quest42'),h=document.getElementById('hud42');if(!q||!h||document.body.classList.contains('hudOff42'))return;
+  const r=h.getBoundingClientRect();if(r.width<2)return;const ch=q.querySelector('#qChip');const chH=ch?ch.offsetHeight||26:26;
+  q.style.left=Math.round(r.right+8)+'px';q.style.top=Math.round(r.top+(r.height-chH)/2)+'px';
+  const L=document.getElementById('qList');if(!L)return;
+  document.body.classList.toggle('q421open',q.classList.contains('open'));
+  if(q.classList.contains('open')){const jb=document.getElementById('joyBase').getBoundingClientRect(),bag=document.getElementById('bagBtn');
+    const left=Math.max(r.right+8,(window.__joy421&&__joy421.r||jb.right)+28),top=r.bottom+6,right=bag&&bag.offsetWidth?bag.getBoundingClientRect().left-8:innerWidth-200;
+    let bot=innerHeight-(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sab'))||0)-60;for(const id of ['wbar','buildBar']){const e=document.getElementById(id);if(e&&e.offsetWidth){const t=e.getBoundingClientRect().top;if(t>top+60)bot=Math.min(bot,t-6);}}
+    L.style.cssText='position:fixed;margin:0;left:'+Math.round(left)+'px;top:'+Math.round(top)+'px;width:'+Math.round(Math.max(220,Math.min(340,right-left)))+'px;max-height:'+Math.round(Math.max(90,bot-top))+'px;overflow-y:auto';
+    L.classList.remove('qTight');if(L.scrollHeight>L.clientHeight+1)L.classList.add('qTight');}
+  else L.style.cssText='';}
+setInterval(q421Place,250);
+{let qT=0;const q=document.getElementById('quest42');
+ const close=()=>{if(q&&q.classList.contains('open')){q.classList.remove('open');try{qHUD(true);}catch(e){}q421Place();}};
+ if(q)q.addEventListener('pointerdown',()=>{if(q.classList.contains('open')){clearTimeout(qT);qT=setTimeout(close,15000);}});
+ if(q)new MutationObserver(()=>{clearTimeout(qT);q421Place();if(q.classList.contains('open'))qT=setTimeout(close,15000);}).observe(q,{attributes:true,attributeFilter:['class']});
+ for(const id of ['joyZone','lookZone','fireBtn'])try{document.getElementById(id).addEventListener('touchstart',close,{passive:true});document.getElementById(id).addEventListener('pointerdown',close);}catch(e){}}
+// ---- 4.2.1b: joystick home never under the top HUD row / above the weapon bar; weapon name, build bar and hint kept out of the joystick zone ----
+const JOY421={l:0,t:0,r:0,b:0,s:1};
+function joyHome421(){const cs=getComputedStyle(document.documentElement),sl=parseFloat(cs.getPropertyValue('--sal'))||0,sab=parseFloat(cs.getPropertyValue('--sab'))||0;
+  const cx=Math.min(Math.max(100+sl,VW()*.13+sl),118+sl);let rowB=0;
+  for(const id of ['pauseBtn','hud42','quest42']){const e=document.getElementById(id);if(e&&e.offsetWidth){const r=e.getBoundingClientRect();if(r.left<cx+120)rowB=Math.max(rowB,r.bottom);}}
+  if(!rowB)rowB=parseFloat(cs.getPropertyValue('--sat'))+44||60;
+  const botLim=VH()-sab-54-8,topLim=rowB+24,avail=botLim-topLim,s=Math.max(.7,Math.min(1,avail/130)),R=65*s;
+  let cy=VH()-164-sab;cy=Math.min(Math.max(cy,topLim+R),botLim-R);
+  Object.assign(JOY421,{l:cx-R,t:cy-R,r:cx+R,b:cy+R,s,cx,cy});return JOY421;}
+homeJoy=function(){const J=joyHome421();placeJoyBase(J.cx,J.cy);joyBase.style.transform=J.s<1?'scale('+J.s.toFixed(3)+')':'';joyKnob.style.transform='';};
+function joy421Tick(){if(document.body.classList.contains('hudOff42')){const tp=document.getElementById('tip42');if(tp)tp.style.removeProperty('top');return;}const o={...JOY421},J=joyHome421();
+  if(joy.id===null&&(Math.abs(o.cy-J.cy)>.5||o.s!==J.s))homeJoy();
+  const X=Math.round(J.r+28)+'px';const wi=document.getElementById('weaponInfo');if(wi)wi.style.setProperty('left',X,'important');
+  const bb=document.getElementById('buildBar');if(bb)bb.style.setProperty('left',X,'important');
+  let rowB=0;for(const id of ['pauseBtn','hud42','quest42','bagBtn']){const e=document.getElementById(id);if(e&&e.offsetWidth)rowB=Math.max(rowB,e.getBoundingClientRect().bottom);}
+  const tp=document.getElementById('tip42');if(tp&&rowB)tp.style.setProperty('top',Math.round(rowB+8)+'px','important');}
+setInterval(joy421Tick,250);setTimeout(()=>{try{homeJoy();joy421Tick();}catch(e){}},300);
+window.__joy421=JOY421;
 
 // ======================= v4.2 economy: power ladder, coin sinks, soft hints =======================
 // ---- power ladder: coin weapons (raro SMG, epico AR) < 💎/⭐ epico < 💎/⭐ leggendario (≈1.6-1.9x the best coin weapon) ----
@@ -3703,6 +3778,23 @@ function hint42(why){if(HINT42.run)return false;const h=hintTarget();if(!h)retur
 if(typeof bossIntro2==='function'){const _bi=bossIntro2;bossIntro2=function(){const r=_bi.apply(this,arguments);setTimeout(()=>hint42('boss'),3500);return r;};}
 window.__econ42={dps42,bestCoinDps,W_TUNE,SVC42,svcBuy,hint42,hintTarget,COS42,get hintShown(){return HINT42.run;}};
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
+
+// ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
+const NEWS421_FB={"rev":"2026-10-03b","upcoming":[{"icon":"🌄","title":"4.3 Grafica nuova","desc":"Ombre vere di sole e luna, texture per neve, legno e mattoni, luci e nebbia più belle.","eta":"Domani mattina","tone":"soon"},{"icon":"🎯","title":"Armi rifatte in 3D","desc":"Tutte le armi ridisegnate con animazioni: rinculo, ricarica, bossoli e fiammata.","eta":"Domani mattina","tone":"soon"},{"icon":"🏗️","title":"Nuove costruzioni","desc":"Torretta, porta, falò, recinto elettrico e molto altro per il tuo rifugio.","eta":"Domani mattina","tone":"soon"},{"icon":"⚔️","title":"Arena PvP 1v1 e 3v3","desc":"Sfida altri sopravvissuti in duelli e squadre.","eta":"Prossimamente","tone":"later"}],"recent":[{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
+let NEWS421=NEWS421_FB;const NEWS421_K='zc_news_seen';
+function news421Esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function news421Dot(){const b=document.getElementById('newsBtn');if(!b)return;let seen='';try{seen=localStorage.getItem(NEWS421_K)||'';}catch(e){}b.classList.toggle('new',!!NEWS421.rev&&seen!==NEWS421.rev);}
+function news421Load(){try{const base=/^https?:/.test(location.protocol)?'':'https://gasparelb97-create.github.io/zombie-survival/';const ac=new AbortController();setTimeout(()=>ac.abort(),5000);
+  fetch(base+'updates.json?nc='+Date.now(),{cache:'no-store',signal:ac.signal}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.upcoming)&&Array.isArray(j.recent)){NEWS421=j;news421Dot();const d=document.getElementById('dlgScreen');if(d&&d.classList.contains('news42')&&!d.classList.contains('hidden'))news421Open(true);}}).catch(()=>{});}catch(e){}}
+function news421Html(){const N=NEWS421,up=(N.upcoming||[]).map(u=>'<div class="nCard '+news421Esc(u.tone||'soon')+'"><div class="nIco">'+news421Esc(u.icon||'✨')+'</div><div class="nTxt"><div class="nTop"><b>'+news421Esc(u.title)+'</b><span class="nEta">'+news421Esc(u.eta||'In lavorazione')+'</span></div><p>'+news421Esc(u.desc)+'</p></div></div>').join('');
+  const rc=(N.recent||[]).map(r=>'<div class="nRel"><div class="nVer"><b>v'+news421Esc(r.ver)+'</b>'+(r.date?'<small>'+news421Esc(r.date)+'</small>':'')+'</div><ul>'+(r.items||[]).map(i=>'<li>'+news421Esc(i)+'</li>').join('')+'</ul></div>').join('');
+  return '<div class="news42"><h4>🚧 In arrivo</h4><div class="nGrid">'+up+'</div><h4>✅ Ultime novità</h4>'+rc+'</div>';}
+function news421Open(refresh){const d=document.getElementById('dlgScreen');dialog('📰 Novità',news421Html(),[{label:'Chiudi'}]);d.classList.add('news42');
+  try{localStorage.setItem(NEWS421_K,NEWS421.rev||'');}catch(e){}news421Dot();if(!refresh)news421Load();}
+{const d=document.getElementById('dlgScreen');if(d)new MutationObserver(()=>{if(d.classList.contains('hidden')&&d.classList.contains('news42'))d.classList.remove('news42');}).observe(d,{attributes:true,attributeFilter:['class']});
+ const s=document.getElementById('startScreen');if(s&&!document.getElementById('newsBtn')){const b=document.createElement('button');b.id='newsBtn';b.innerHTML='📰 <span>Novità</span><i class="nDot"></i>';s.appendChild(b);onTap('newsBtn',()=>news421Open());}
+ news421Dot();news421Load();}
+window.__news421={open:()=>news421Open(),get data(){return NEWS421;}};
 
 
 // ======================= end v4 module =======================

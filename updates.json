@@ -1,0 +1,63 @@
+{
+  "rev": "2026-10-03b",
+  "upcoming": [
+    {
+      "icon": "🌄",
+      "title": "4.3 Grafica nuova",
+      "desc": "Ombre vere di sole e luna, texture per neve, legno e mattoni, luci e nebbia più belle.",
+      "eta": "Domani mattina",
+      "tone": "soon"
+    },
+    {
+      "icon": "🎯",
+      "title": "Armi rifatte in 3D",
+      "desc": "Tutte le armi ridisegnate con animazioni: rinculo, ricarica, bossoli e fiammata.",
+      "eta": "Domani mattina",
+      "tone": "soon"
+    },
+    {
+      "icon": "🏗️",
+      "title": "Nuove costruzioni",
+      "desc": "Torretta, porta, falò, recinto elettrico e molto altro per il tuo rifugio.",
+      "eta": "Domani mattina",
+      "tone": "soon"
+    },
+    {
+      "icon": "⚔️",
+      "title": "Arena PvP 1v1 e 3v3",
+      "desc": "Sfida altri sopravvissuti in duelli e squadre.",
+      "eta": "Prossimamente",
+      "tone": "later"
+    }
+  ],
+  "recent": [
+    {
+      "ver": "4.2.1",
+      "date": "3 ott",
+      "items": [
+        "Comandi più puliti: il chip delle missioni non copre più il joystick",
+        "Pannello missioni compatto con ✕, si chiude da solo quando ti muovi",
+        "Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"
+      ]
+    },
+    {
+      "ver": "4.2",
+      "date": "2 ott",
+      "items": [
+        "Gioco più fluido: meno scatti durante la partita",
+        "Schermate adattate a Telegram: niente più pulsanti nascosti",
+        "Armi ribilanciate: ogni arma del negozio è un vero passo avanti",
+        "Servizi in partita con le monete, potenziamenti per base e trappole",
+        "Mirini personalizzati e cambio statistiche dell'equipaggiamento",
+        "Missioni giornaliere con ricompense"
+      ]
+    },
+    {
+      "ver": "4.1.5",
+      "date": "1 ott",
+      "items": [
+        "Regalo di benvenuto: +20 💎 per tutti i giocatori"
+      ]
+    }
+  ]
+}
