@@ -1,12 +1,19 @@
 {
- "rev": "2026-10-04b",
+ "rev": "2026-10-04c",
  "upcoming": [
   {
-   "icon": "⚔️",
-   "title": "Arena PvP 1v1 e 3v3",
-   "desc": "Sfida altri sopravvissuti in duelli e squadre.",
-   "eta": "Prossimamente",
-   "tone": "later"
+   "icon": "⚡",
+   "title": "Gioco più fluido",
+   "desc": "Meno scatti, fps stabili.",
+   "eta": "In arrivo",
+   "tone": "soon"
+  },
+  {
+   "icon": "🐞",
+   "title": "Correzione bug",
+   "desc": "Piccoli errori sistemati in tutto il gioco.",
+   "eta": "In arrivo",
+   "tone": "soon"
   }
  ],
  "recent": [
