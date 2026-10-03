@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04m",
+ "rev": "2026-10-04n",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,17 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.10",
+   "date": "4 ott",
+   "items": [
+    "🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps",
+    "🧟 Zombie che camminano senza tremolii avanti e indietro",
+    "🕹️ Joystick più stabile: niente scatti di direzione",
+    "🎵 La musica riparte da sola se si interrompe",
+    "🛡️ Il gioco non si blocca più per un errore: lo salta e continua"
+   ]
+  },
   {
    "ver": "4.3.9",
    "date": "4 ott",
