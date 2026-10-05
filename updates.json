@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05k",
+ "rev": "2026-10-05l",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.22",
+   "date": "5 ott",
+   "items": [
+    "🧱 Mattoni, legno, tegole e intonaco al posto delle superfici piatte",
+    "🛣️ L'asfalto, la pietra dei marciapiedi e il metallo arrugginito si leggono da vicino",
+    "🏠 I tetti restano a spiovente e le auto restano auto, con la vernice graffiata"
+   ]
+  },
   {
    "ver": "4.3.21",
    "date": "5 ott",
