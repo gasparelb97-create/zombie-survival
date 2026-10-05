@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05h",
+ "rev": "2026-10-05i",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,16 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.19",
+   "date": "5 ott",
+   "items": [
+    "🏙️ Città abbandonata: case, scuola, mercato, ospedale, deposito e stazione, collegati da strade",
+    "🗺️ Minimappa con i nomi dei quartieri, orientata a nord",
+    "🏆 Ogni zombie ucciso entra subito nel totale. Il server riceve il numero esatto e, se non risponde, viene reinviato",
+    "⚡ I palazzi nuovi non aggiungono luci: la partita resta fluida"
+   ]
+  },
   {
    "ver": "4.3.18",
    "date": "5 ott",

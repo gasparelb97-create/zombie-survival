@@ -531,9 +531,9 @@ body.touch #bPlace{display:none}
 #hudTop>#wbar,#hudTop>#weaponInfo{pointer-events:auto}
 body.inmenu #hudTop,body.inmenu #bagBtn,body.inmenu #wpick{display:none!important}
 body.building #hudTop #wbar,body.building #hudTop #weaponInfo{display:none!important}
-/* v4.1 minimal: no minimap, 48px targets, transient weapon label */
-#radar{display:none!important}
-#buffs{left:calc(var(--sal) + 10px)!important}
+/* minimap of the city, square, above the joystick */
+#radar{display:block!important;width:92px!important;height:92px!important;border-radius:8px!important;top:calc(var(--sat) + 78px)!important;left:calc(var(--sal) + 10px)!important;opacity:.94;background:rgba(6,10,16,.78);border:1px solid rgba(255,255,255,.28)}
+#buffs{left:calc(var(--sal) + 112px)!important;top:calc(var(--sat) + 78px)!important}
 #wbar .ws{width:48px!important;height:48px!important}#wbar .ws.act{width:54px!important}
 #nadeBtn{width:var(--B)!important;height:var(--B)!important;right:calc(var(--sar) + 18px + var(--F) + var(--gap))!important}
 #weaponInfo{bottom:calc(60px + var(--sab))!important;transition:opacity .3s}
@@ -940,7 +940,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 </div>
 <div id="startScreen" class="overlay titleArt"><div class="shade"></div><div class="menuL">
   <h1 class="ztitle">Zombie<span>Survival</span></h1>
-  <div class="ver422 homeVer">Zombie Survival v4.3.18</div>
+  <div class="ver422 homeVer">Zombie Survival v4.3.19</div>
   <div class="ztag">Taglia legna, costruisci la base e resisti all'orda della notte.</div>
   <div class="playRow"><button class="mBtn zombie" id="btnZombie"><span class="ic">🏕️</span><span><b>Gioca</b><small id="survSub">Nuova partita · giorno e notte</small></span></button><button class="mBtn icon newRun" id="btnNewRun" aria-label="Nuova partita" style="display:none"><span class="ic">↺</span></button></div>
   <div class="menuRow one">
@@ -972,7 +972,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
     <div><b>💻 PC</b><br>WASD · Shift corri · mouse guarda<br>Click spara · tasto destro mira<br>E usa · C crafting · G granata · R ricarica<br>B costruisci · R/T ruota · X smonta · 1-8 pezzi<br>1-8 / Q / rotella: armi · P / Esc pausa</div>
     <div><b>🌙 Survival</b><br>Il giorno dura 7 minuti: 🪓 legna dagli alberi, ⛏️ pietra, ferro e carbone dalle rocce.<br>Al tramonto torna alla base: di notte l'orda attacca i muri. Ogni 5 notti arriva il boss.<br>Monete 🪙 da zombie, casse e missioni · 💎 dalle missioni e dai boss.</div>
   </div>
-  <div class="ver422">Zombie Survival v4.3.18</div>
+  <div class="ver422">Zombie Survival v4.3.19</div>
   <div class="btnRow"><button class="act ghost" id="helpBack">← Indietro</button></div>
 </div></div>
 <div id="pauseScreen" class="overlay sheetBg hidden"><div class="sheet" style="max-width:400px">
@@ -1483,11 +1483,11 @@ const sky=new T.Mesh(new T.SphereGeometry(120,24,12),new T.MeshBasicMaterial({ma
 const sunDisc=new T.Sprite(new T.SpriteMaterial({map:glowTex,color:0x9aa6ba,fog:false,depthWrite:false,blending:T.AdditiveBlending,transparent:true,opacity:.5}));sunDisc.scale.set(30,30,1);sunDisc.position.set(-95,8,-60);scene.add(sunDisc);
 scene.add(new T.HemisphereLight(0xc4d0e8,0x4c505c,1.0));
 const sun=new T.DirectionalLight(0xe6edff,1.15);sun.position.set(-60,30,-42);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
-{const sc=sun.shadow.camera;sc.left=-66;sc.right=66;sc.top=66;sc.bottom=-66;sc.near=1;sc.far=220;}sun.shadow.bias=-0.0008;sun.shadow.normalBias=.03;scene.add(sun);
+{const sc=sun.shadow.camera;sc.left=-100;sc.right=100;sc.top=100;sc.bottom=-100;sc.near=1;sc.far=240;}sun.shadow.bias=-0.0008;sun.shadow.normalBias=.03;scene.add(sun);
 const muzzleLight=new T.PointLight(0xffc060,0,9,1.6);scene.add(muzzleLight);
 
 // ---------- world ----------
-const CORE=52,HALF=64;const HOUSE_RECTS=[];
+const CORE=52,HALF=96;const HOUSE_RECTS=[];
 const boxes=[],circles=[],solids=[];
 const ground=new T.Mesh(new T.PlaneGeometry(240,240),new T.MeshLambertMaterial({map:groundTex}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);solids.push(ground);
 const road=new T.Mesh(new T.PlaneGeometry(8,HALF*2+4),new T.MeshLambertMaterial({map:roadTex,transparent:true,depthWrite:false}));road.rotation.x=-Math.PI/2;road.position.y=.012;road.receiveShadow=true;scene.add(road);
@@ -1609,8 +1609,8 @@ for(let n=0,t=0;n<40&&t<3000;t++){const x=(rnd()*2-1)*(CORE-3),z=(rnd()*2-1)*(CO
 for(const k in NIM){NIM[k].instanceMatrix.needsUpdate=true;NIM[k].computeBoundingSphere&&NIM[k].computeBoundingSphere();}
 
 // distant silhouettes moved farther for the bigger map
-for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=90+Math.random()*12,h=mesh(G.pine,MAT.hill,Math.cos(a)*r,3,Math.sin(a)*r,7+Math.random()*5,3+Math.random()*4,7+Math.random()*5,null,false);h.receiveShadow=false;}
-for(let i=0;i<14;i++){const a=Math.random()*Math.PI*2,r=82+Math.random()*8;const m=mesh(G.box,MAT.hill,Math.cos(a)*r,2.2,Math.sin(a)*r,3+Math.random()*3,4.4+Math.random()*3,3,null,false);m.rotation.y=a;}
+for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=108+Math.random()*10,h=mesh(G.pine,MAT.hill,Math.cos(a)*r,3,Math.sin(a)*r,7+Math.random()*5,3+Math.random()*4,7+Math.random()*5,null,false);h.receiveShadow=false;}
+for(let i=0;i<14;i++){const a=Math.random()*Math.PI*2,r=104+Math.random()*8;const m=mesh(G.box,MAT.hill,Math.cos(a)*r,2.2,Math.sin(a)*r,3+Math.random()*3,4.4+Math.random()*3,3,null,false);m.rotation.y=a;}
 // ---- merge static meshes by material/shadow/cell: keeps draw calls low on phones ----
 function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new Map();scene.updateMatrixWorld(true);const _p=new T.Vector3();
   scene.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||skip.has(o)||o.userData.dyn)return;const m=o.material;if(Array.isArray(m)||m.transparent)return;let p=o.parent;while(p&&p!==scene){if(p.isCamera)return;p=p.parent;}
@@ -1662,15 +1662,65 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
   for(const [cx,cz,rx,rz] of clumps)for(let i=0;i<8;i++){const x=cx+cR(-rx,rx),z=cz+cR(-rz,rz);if(Math.abs(x)<6.5)continue;if(!freeSpot(x,z,1.3))continue;
     let inH=false;for(const h of HOUSE_RECTS)if(Math.abs(x-h[0])<h[2]+1.4&&Math.abs(z-h[1])<h[3]+1.4)inH=true;if(inH)continue;
     const s=cR(.5,.95),m=mesh(ico,MAT.bush,x,s*.42,z,s,s*.6,s);m.rotation.y=cr()*6;const sn=mesh(ico,MAT.snow,x,s*.68,z,s*.55,s*.2,s*.55,null,false);sn.rotation.y=m.rotation.y;}}
- // outer wood past the old fence: one instanced mesh, no collision, own seed so nothing already placed moves
- {let fs=43181;const fr=()=>{fs=(fs*16807)%2147483647;return fs/2147483647;};const N=48,im=new T.InstancedMesh(G.pine,MAT.pine,N),o=new T.Object3D();
-  im.castShadow=false;im.receiveShadow=false;im.frustumCulled=false;
-  for(let i=0;i<N;i++){const edge=i%4,along=(fr()*2-1)*(HALF-4),depth=CORE+2+fr()*(HALF-CORE-5);let x,z;
-    if(edge===0){x=along;z=-depth;}else if(edge===1){x=along;z=depth;}else if(edge===2){x=-depth;z=along;}else{x=depth;z=along;}
-    let bad=Math.hypot(x,z)<22;for(const h of HOUSE_RECTS)if(Math.abs(x-h[0])<h[2]+4&&Math.abs(z-h[1])<h[3]+4)bad=true;
-    if(bad)o.scale.set(0,0,0);else{o.position.set(x,0,z);o.rotation.set(0,fr()*6,0);const s=.85+fr()*.8;o.scale.set(s,1.2+fr()*1.3,s);}
-    o.updateMatrix();im.setMatrixAt(i,o.matrix);}
-  scene.add(im);}
+ // abandoned city past the old fence. Streets first, then blocks that face them. Own meshes, no global Math.random, so the old town stays put.
+ {const CITY={plots:[],roads:[]};window.CITY4319=CITY;const wins=[];
+  const face=(mat,x,y,z,w,h,d)=>{const m=mesh(G.box,mat,x,y,z,w,h,d);m.castShadow=false;return m;};
+  function shell(x,z,w,d,h,door,mat){const t=.26,gap=1.7,y=h/2;
+    const jamb=(horiz,sign)=>{if(horiz){face(mat,x+sign*(w/4+gap/4),y,z+(door==='s'?d/2:-d/2),w/2-gap/2,h,t);}else{face(mat,x+(door==='e'?w/2:-w/2),y,z+sign*(d/4+gap/4),t,h,d/2-gap/2);}};
+    if(door==='n'||door==='s'){jamb(true,-1);jamb(true,1);face(mat,x,h-.28,z+(door==='s'?d/2:-d/2),gap,.55,t);}else face(mat,x,y,z-d/2,w,h,t);
+    if(door!=='n'&&door!=='s')face(mat,x,y,z+d/2,w,h,t);else if(door==='n')face(mat,x,y,z+d/2,w,h,t);else face(mat,x,y,z-d/2,w,h,t);
+    if(door==='w'||door==='e'){jamb(false,-1);jamb(false,1);face(mat,x+(door==='e'?w/2:-w/2),h-.28,z,t,.55,gap);face(mat,x+(door==='e'?-w/2:w/2),y,z,t,h,d);}else{face(mat,x-w/2,y,z,t,h,d);face(mat,x+w/2,y,z,t,h,d);}
+    face(MAT.roof,x,h+.1,z,w+.5,.16,d+.5);face(MAT.snow,x,h+.22,z,w*.88,.05,d*.82);
+    for(const s of [-1,1]){wins.push([x+s*(w/2+.02),1.45,z,.05,.7,.85]);wins.push([x,1.45,z+s*(d/2+.02),.85,.7,.05]);}
+    const inset=1.2;
+    if(door==='n'){boxes.push({x0:x-w/2,x1:x+w/2,z0:z-d/2+inset,z1:z+d/2});boxes.push({x0:x-w/2,x1:x-gap/2,z0:z-d/2,z1:z-d/2+inset});boxes.push({x0:x+gap/2,x1:x+w/2,z0:z-d/2,z1:z-d/2+inset});}
+    else if(door==='s'){boxes.push({x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2-inset});boxes.push({x0:x-w/2,x1:x-gap/2,z0:z+d/2-inset,z1:z+d/2});boxes.push({x0:x+gap/2,x1:x+w/2,z0:z+d/2-inset,z1:z+d/2});}
+    else if(door==='w'){boxes.push({x0:x-w/2+inset,x1:x+w/2,z0:z-d/2,z1:z+d/2});boxes.push({x0:x-w/2,x1:x-w/2+inset,z0:z-d/2,z1:z-gap/2});boxes.push({x0:x-w/2,x1:x-w/2+inset,z0:z+gap/2,z1:z+d/2});}
+    else{boxes.push({x0:x-w/2,x1:x+w/2-inset,z0:z-d/2,z1:z+d/2});boxes.push({x0:x+w/2-inset,x1:x+w/2,z0:z-d/2,z1:z-gap/2});boxes.push({x0:x+w/2-inset,x1:x+w/2,z0:z+gap/2,z1:z+d/2});}
+    HOUSE_RECTS.push([x,z,w/2+.4,d/2+.4]);CITY.plots.push({x,z,w,d});}
+  function roadStrip(x,z,len,horiz){const m=new T.Mesh(new T.PlaneGeometry(horiz?len:7.2,horiz?7.2:len),road.material);m.rotation.x=-Math.PI/2;m.position.set(x,.018,z);m.receiveShadow=true;scene.add(m);
+    CITY.roads.push(horiz?[x-len/2,z,x+len/2,z]:[x,z-len/2,x,z+len/2]);}
+  roadStrip(0,-74,70,true);for(const x of [-24,-10,10,24]){shell(x,-66,6.2,5.2,2.8,'n',MAT.brick);shell(x,-82,6.2,5.2,2.8,'s',MAT.brick);}
+  roadStrip(70,-4,80,false);for(const z of [-16,0,16,32]){shell(59,z,6.2,5.2,2.8,'e',MAT.plank);shell(81,z,6.2,5.2,2.8,'w',MAT.plank);}
+  shell(70,-50,12,8,3.5,'s',MAT.stoneW);face(MAT.redPaint,70,3.85,-50,2.4,.26,.26);face(MAT.redPaint,70,3.85,-50,.26,.26,2.4);
+  roadStrip(6,70,64,true);shell(-26,81,14,7,3.3,'n',MAT.rust2);shell(20,80,8,5.4,2.8,'n',MAT.plank);shell(48,79,10,6,3.1,'n',MAT.rust2);
+  roadStrip(-76,-4,46,false);shell(-87,-4,6.4,12,3.2,'e',MAT.brick);shell(-87,-28,5.6,4.2,2.6,'e',MAT.plank);
+  for(const z of [-16,-4,8]){face(MAT.rust2,-66,1.25,z,2.3,2.2,7);face(MAT.dark,-66,2.45,z,2,.45,5.6);boxes.push({x0:-67.2,x1:-64.8,z0:z-3.5,z1:z+3.5});}
+  circles.push({x:-2.05,z:-58,r:1.15});circles.push({x:2.05,z:-58,r:1.15});
+  // one west street from the station up to the houses, with a school and two blocks facing it
+  roadStrip(-55,-74,42,true);roadStrip(-76,-50,48,false);
+  shell(-60,-63.5,14,9,3.4,'w',MAT.brick);shell(-87,-58,8,6.2,3.6,'e',MAT.brick);shell(-87,-46,8,6.2,3.6,'e',MAT.plank);
+  // the market street keeps going south, into two garages
+  roadStrip(70,58,44,false);shell(58,64,9,6.4,3,'e',MAT.rust2);shell(82,70,10,7,3.2,'w',MAT.plank);
+  const walk=(x,z,len,horiz)=>{const m=new T.Mesh(new T.PlaneGeometry(horiz?len:1.45,horiz?1.45:len),MAT.stoneW);m.rotation.x=-Math.PI/2;m.position.set(x,.021,z);m.receiveShadow=true;m.castShadow=false;scene.add(m);};
+  walk(0,-70.55,70,true);walk(0,-77.45,70,true);walk(-55,-70.55,42,true);walk(-55,-77.45,42,true);
+  walk(65.15,-4,80,false);walk(74.85,-4,80,false);walk(65.15,58,44,false);walk(74.85,58,44,false);
+  walk(-80.6,-50,48,false);walk(-71.3,-50,48,false);walk(-80.6,-4,46,false);walk(-71.3,-4,46,false);
+  walk(6,65.3,64,true);walk(6,74.8,64,true);
+  face(MAT.rust2,18,1.15,63.1,8.2,2.2,2.2);face(MAT.dark,18,1.55,63.1,7.4,.55,2.05);face(MAT.redPaint,18,1.15,62.0,.15,.5,2.1);boxes.push({x0:13.8,x1:22.2,z0:62.0,z1:64.2});
+  face(MAT.redPaint,79,.75,-50,2.2,1.35,4.6);face(MAT.dark,79,1.5,-50.4,2,.65,2.3);face(MAT.snow,79,1.46,-50,2.1,.06,4.4);boxes.push({x0:77.85,x1:80.15,z0:-52.35,z1:-47.65});
+  const sign=(x,z)=>{face(MAT.wood,x,1.05,z,.1,2.1,.1);face(MAT.sign,x,1.85,z,1.15,.32,.06);circles.push({x,z,r:.12});};
+  sign(8,-70.55);sign(65.15,6);sign(-71.3,-40);sign(14,65.3);
+  face(MAT.wood,-68.3,.42,-60,1.3,.1,.38);face(MAT.wood,-68.3,.2,-59.84,.08,.4,.08);face(MAT.wood,-68.3,.2,-60.16,.08,.4,.08);
+  face(MAT.wood,-68.3,.42,-67,1.3,.1,.38);face(MAT.wood,-68.3,.2,-66.84,.08,.4,.08);face(MAT.wood,-68.3,.2,-67.16,.08,.4,.08);
+  const crateAt=(x,z)=>{face(MAT.crate,x,.55,z,1.05,1.05,1.05);boxes.push({x0:x-.52,x1:x+.52,z0:z-.52,z1:z+.52});};
+  crateAt(-26.4,-69.5);crateAt(-8.2,-69.5);crateAt(12.4,-69.5);crateAt(26.2,-79.8);crateAt(63.4,2.4);crateAt(63.4,18);
+  for(let i=-2;i<=2;i++){face(MAT.snow,i*1.15,.03,-71.2,.28,.02,2.1);face(MAT.snow,70+i*1.15,.03,-24,.28,.02,2.1);face(MAT.snow,-76,.03,-71.2+i*.7,2.1,.02,.26);}
+  CITY.tags=[['Case',0,-90],['Scuola',-60,-54],['Mercato',86,8],['Ospedale',86,-58],['Deposito',-16,86],['Stazione',-90,8]];
+  {let fs=43181;const fr=()=>{fs=(fs*16807)%2147483647;return fs/2147483647;};const N=36,im=new T.InstancedMesh(G.pine,MAT.pine,N),o=new T.Object3D();
+    im.castShadow=false;im.receiveShadow=false;im.frustumCulled=false;
+    for(let i=0;i<N;i++){const a=fr()*Math.PI*2,r=102+fr()*12;o.position.set(Math.cos(a)*r,0,Math.sin(a)*r);o.rotation.set(0,fr()*6,0);const s=.85+fr()*.6;o.scale.set(s,1.2+fr()*.8,s);o.updateMatrix();im.setMatrixAt(i,o.matrix);}scene.add(im);}
+  const iw=new T.InstancedMesh(G.box,MAT.dark,Math.max(1,wins.length));iw.castShadow=false;iw.receiveShadow=false;iw.frustumCulled=false;const ow=new T.Object3D();
+  if(!wins.length){ow.scale.set(0,0,0);ow.updateMatrix();iw.setMatrixAt(0,ow.matrix);}else wins.forEach((w,i)=>{ow.position.set(w[0],w[1],w[2]);ow.rotation.set(0,0,0);ow.scale.set(w[3],w[4],w[5]);ow.updateMatrix();iw.setMatrixAt(i,ow.matrix);});scene.add(iw);
+  const parked=[[-18,64],[-10,64],[-2,64],[8,64],[16,64],[30,64],[40,64],[67,-8],[67,8],[67,24],[73,-8],[73,10],[73,26],[-62,14],[-62,-22],[0,-90],[14,-90],[86,4]];
+  const nb=new T.InstancedMesh(G.box,MAT.rust,parked.length),nc=new T.InstancedMesh(G.box,MAT.dark,parked.length);nb.castShadow=nc.castShadow=false;nb.frustumCulled=nc.frustumCulled=false;
+  parked.forEach((c,i)=>{ow.position.set(c[0],.42,c[1]);ow.rotation.set(0,i%2?.2:-.12,0);ow.scale.set(1.65,.48,3.4);ow.updateMatrix();nb.setMatrixAt(i,ow.matrix);ow.position.y=.9;ow.scale.set(1.45,.42,1.7);ow.updateMatrix();nc.setMatrixAt(i,ow.matrix);});scene.add(nb,nc);
+  const poles=[[-18,-77.45],[6,-70.55],[28,-77.45],[-40,-77.45],[65.15,-28],[65.15,20],[74.85,-8],[74.85,48],[-80.6,-62],[-71.3,-36],[-80.6,8],[-71.3,-16],[-12,65.3],[28,74.8],[48,65.3],[79,-42]];
+  const ip=new T.InstancedMesh(G.cyl,MAT.metal,poles.length),op=new T.Object3D();ip.castShadow=false;ip.receiveShadow=false;ip.frustumCulled=false;
+  poles.forEach((c,i)=>{op.position.set(c[0],1.7,c[1]);op.rotation.set(0,0,0);op.scale.set(.1,3.4,.1);op.updateMatrix();ip.setMatrixAt(i,op.matrix);});scene.add(ip);
+  const bags=[[-17,-70.55],[-3,-77.45],[17,-70.55],[32,-77.45],[65.15,-30],[74.85,-14],[65.15,24],[74.85,30],[-80.6,-44],[-71.3,-56],[-14,65.3],[30,74.8],[-72.2,10],[-79.6,-18]];
+  const ib=new T.InstancedMesh(G.box,MAT.rust,bags.length);ib.castShadow=false;ib.receiveShadow=false;ib.frustumCulled=false;
+  bags.forEach((c,i)=>{op.position.set(c[0],.22,c[1]);op.rotation.set(0,i*.4,.2);op.scale.set(.55,.32,.4);op.updateMatrix();ib.setMatrixAt(i,op.matrix);});scene.add(ib);}
 }
 
 const MERGED=mergeStatics();
@@ -2038,7 +2088,7 @@ function damageZombie(z,dmg,part,point,dir){if(z.dead)return;const head=part==='
   if(Math.random()<.5){_n.set(0,1,0);_tmp.set(point.x+dir.x*rand(.3,1),0.005,point.z+dir.z*rand(.3,1));addDecal(bloods,_tmp,_n,rand(.4,.8));}
   dmgNumber(point,d,head,z);play('hit',head);if(head)headshotFx();
   if(z.hp<=0){killZombie(z,dir,d,head);hitMarker('kill');}else hitMarker(head?'head':'');}
-function killZombie(z,dir,d,head){z.dead=true;z.deadT=0;game.kills++;onKill(z,head);const fx2=Math.sin(z.g.rotation.y),fz=Math.cos(z.g.rotation.y);const dot=dir.x*fx2+dir.z*fz;z.fdir=dot<0?-1:1;
+function killZombie(z,dir,d,head){z.dead=true;z.deadT=0;game.kills++;try{zs439NoteKill();}catch(e){}onKill(z,head);const fx2=Math.sin(z.g.rotation.y),fz=Math.cos(z.g.rotation.y);const dot=dir.x*fx2+dir.z*fz;z.fdir=dot<0?-1:1;
   z.fa=0;z.fv=1+d*.02;z.sv=new T.Vector3(dir.x,0,dir.z).multiplyScalar(1.5+d*.04);z.landed=false;z.flop=[rand(-2.8,-.3),rand(-2.8,-.3),rand(-1.2,0),rand(-1.2,0),rand(-.6,.6)];
   play('kill');groan(z,'die');setTimeout(updateHUD,0);}
 function fire(){const w=WEAPONS[curW];if(SV.build){if(!isTouch)placeBuild();fireCd=.32;return;}if(fx.reload>=0)return;if(w.spin&&fx.spin<1)return;
@@ -2385,7 +2435,7 @@ $('shopTabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!
 
 // ---------- ranking (local; global via bot /classifica) ----------
 function romeParts(ms){const f=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'short'});const o={};for(const p of f.formatToParts(new Date(ms)))o[p.type]=p.value;return o;}
-function weekStart(){const now=Date.now();try{const o=romeParts(now),wd=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(o.weekday);const wall=Date.UTC(+o.year,+o.month-1,+o.day,(+o.hour)%24,+o.minute,+o.second),off=wall-now;return Date.UTC(+o.year,+o.month-1,+o.day-Math.max(0,wd),0,0,0)-off;}
+function weekStart(){const now=Date.now();try{const o=romeParts(now),wd=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(o.weekday);const wall=Date.UTC(+o.year,+o.month-1,+o.day,(+o.hour)%24,+o.minute,+o.second),off=wall-Math.floor(now/1000)*1000;return Date.UTC(+o.year,+o.month-1,+o.day-Math.max(0,wd),0,0,0)-off;}
   catch(e){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.getTime();}}
 function resetIn(){const ms=weekStart()+7*864e5-Date.now(),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return d>0?d+'g '+h+'h':h+'h '+Math.floor(ms%36e5/6e4)+'m';}
 function runs(){const r=LS.get('zc_runs',[]);return Array.isArray(r)?r:[];}
@@ -2423,7 +2473,7 @@ onTap('sendScoreBtn',()=>{queueScore();flushScores(true);});
 ['pointerdown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{if(AU.ctx&&AU.ctx.state==='running'&&MUS.g)return;audioInit();musicStart();},{passive:true}));
 
 // ---------- pause ----------
-function pauseGame(){if(game.state!=='play')return;game.state='pause';firing=false;resetTouchState();if(document.pointerLockElement)document.exitPointerLock();
+function pauseGame(){if(game.state!=='play')return;game.state='pause';firing=false;resetTouchState();if(document.pointerLockElement)document.exitPointerLock();try{queueScore();zs439Arm();}catch(e){}
   svSave();setBuild(false);$('pauseInfo').innerHTML=SV.on?'Giorno <b>'+SV.day+'</b> · '+clockTxt()+' · notti di fila <b>'+SV.streak+'</b> · '+DIFF().label+'<br><small style="opacity:.7">Partita salvata automaticamente</small>':'Ondata <b>'+game.wave+'</b> · <b>'+fmt(S.score)+'</b> punti · '+DIFF().label;syncToggles();$('pauseScreen').classList.remove('hidden');}
 function resumeGame(){if(game.state!=='pause')return;$('pauseScreen').classList.add('hidden');game.state='play';last=performance.now();lockPointer();}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(game.state==='play'||game.state==='pause'||game.state==='over'){queueScore();try{flushScores(false);}catch(e){}}if(game.state==='play')pauseGame();}});window.addEventListener('pagehide',()=>{if(game.state==='play'||game.state==='pause'||game.state==='over'){queueScore();try{flushScores(false);}catch(e){}}});
@@ -2931,15 +2981,18 @@ function wbTap(e){const s=e.target.closest&&e.target.closest('.ws');if(!s||game.
 $('wbar').addEventListener('touchstart',wbTap,{passive:false});$('wbar').addEventListener('mousedown',e=>{e.stopPropagation();wbTap(e);});
 // --- radar ---
 const radar=$('radar'),rctx=radar.getContext('2d');let radT=0;
-function drawRadar(){const W=radar.width,H=radar.height,cx=W/2,cy=H/2,R=W/2-2,sc=R/32,yaw=player.yaw;rctx.clearRect(0,0,W,H);
-  rctx.fillStyle='rgba(8,12,20,.62)';rctx.beginPath();rctx.arc(cx,cy,R,0,7);rctx.fill();rctx.strokeStyle='rgba(255,255,255,.18)';rctx.lineWidth=1;rctx.beginPath();rctx.arc(cx,cy,R*.5,0,7);rctx.stroke();
-  const cs=Math.cos(yaw),sn=Math.sin(yaw);const P=(x,z)=>{const dx=x-player.pos.x,dz=z-player.pos.z;return [cx+(dx*cs-dz*sn)*sc,cy+(dx*sn+dz*cs)*sc];};
-  const dot=(x,z,col,r,clampE)=>{let [px,py]=P(x,z);const dd=Math.hypot(px-cx,py-cy);if(dd>R-3){if(!clampE)return;px=cx+(px-cx)/dd*(R-3);py=cy+(py-cy)/dd*(R-3);}rctx.fillStyle=col;rctx.beginPath();rctx.arc(px,py,r,0,7);rctx.fill();};
-  if(SV.on){for(const p of PIECES)if(p.alive)dot(p.x,p.z,'rgba(110,190,255,.85)',1.6);for(const c of LOOT)if(!c.open)dot(c.x,c.z,'#ffd25a',2);}
-  for(const p of pickups)if(p.active)dot(p.x,p.z,'rgba(255,220,120,.7)',1.4);for(const d of drops)if(d.on)dot(d.x,d.z,'#7dff9a',2);
-  for(const z of zombies)if(z.alive&&!z.dead)dot(z.g.position.x,z.g.position.z,z.V.name==='boss'?'#ff3020':'#ff5a4a',z.V.name==='boss'?4:2.4,z.V.name==='boss');
-  rctx.fillStyle='#fff';rctx.beginPath();rctx.moveTo(cx,cy-6);rctx.lineTo(cx+4.5,cy+4);rctx.lineTo(cx-4.5,cy+4);rctx.closePath();rctx.fill();
-  rctx.fillStyle='rgba(255,255,255,.55)';rctx.font='bold 9px sans-serif';rctx.textAlign='center';const [nx,ny]=P(player.pos.x,player.pos.z-40);const a=Math.atan2(ny-cy,nx-cx);rctx.fillText('N',cx+Math.cos(a)*(R-7),cy+Math.sin(a)*(R-7)+3);}
+function drawRadar(){const W=radar.width,H=radar.height,cx=W/2,cy=H/2,R=W/2-3,sc=R/HALF;rctx.clearRect(0,0,W,H);
+  rctx.fillStyle='rgba(8,12,20,.55)';rctx.fillRect(0,0,W,H);
+  const P=(x,z)=>[cx+x*sc,cy+z*sc];
+  const C=window.CITY4319;rctx.strokeStyle='rgba(180,186,196,.85)';rctx.lineWidth=2;
+  if(C){for(const rd of C.roads){const a=P(rd[0],rd[1]),b=P(rd[2],rd[3]);rctx.beginPath();rctx.moveTo(a[0],a[1]);rctx.lineTo(b[0],b[1]);rctx.stroke();}
+    rctx.fillStyle='rgba(150,170,190,.9)';for(const q of C.plots){const a=P(q.x-q.w/2,q.z-q.d/2);rctx.fillRect(a[0],a[1],q.w*sc,q.d*sc);}}
+  rctx.strokeStyle='rgba(160,164,170,.7)';rctx.lineWidth=1.5;rctx.beginPath();const n0=P(0,-HALF),n1=P(0,HALF),e0=P(-HALF,-24),e1=P(HALF,-24);rctx.moveTo(n0[0],n0[1]);rctx.lineTo(n1[0],n1[1]);rctx.moveTo(e0[0],e0[1]);rctx.lineTo(e1[0],e1[1]);rctx.stroke();
+  if(SV.on){rctx.fillStyle='rgba(110,190,255,.9)';for(const p of PIECES)if(p.alive){const a=P(p.x,p.z);rctx.fillRect(a[0]-1,a[1]-1,2,2);}}
+  for(const z of zombies)if(z.alive&&!z.dead){const a=P(z.g.position.x,z.g.position.z);rctx.fillStyle=z.V.name==='boss'?'#ff3020':'#ff5a4a';rctx.fillRect(a[0]-1.5,a[1]-1.5,3,3);}
+  if(C&&C.tags){rctx.fillStyle='rgba(255,255,255,.9)';rctx.font='bold 8px sans-serif';rctx.textAlign='center';for(const t of C.tags){const a=P(t[1],t[2]);rctx.fillText(t[0],a[0],a[1]);}}
+  const me=P(player.pos.x,player.pos.z),yaw=player.yaw;rctx.save();rctx.translate(me[0],me[1]);rctx.rotate(-yaw);rctx.fillStyle='#fff';rctx.beginPath();rctx.moveTo(0,-5);rctx.lineTo(3.5,4);rctx.lineTo(-3.5,4);rctx.closePath();rctx.fill();rctx.restore();
+  rctx.fillStyle='rgba(255,255,255,.7)';rctx.font='bold 11px sans-serif';rctx.textAlign='center';rctx.fillText('N',cx,11);}
 
 // ---------- v4 (same mechanism/format as the v3 hotfix, KILLS ONLY; w = day reached (>=1, bot requires w>=1)): save score to the bot from any launch mode ----------
 // sendData() works only when the Mini App was opened from the reply-keyboard button (then initData is EMPTY);
@@ -3124,8 +3177,8 @@ function updateFires(dt,t){fireTk-=dt;let near=null,nd=1e9;for(const f of fireLi
 const hemiL=scene.children.find(o=>o.isHemisphereLight);
 // v4.1: torch = plain PointLight just ahead of the camera (the SpotLight cone rendered as a black half-disc on some mobile GPUs)
 const flash=new T.PointLight(0xfff0d8,0,17,1.2);flash.position.set(0,.25,-.8);camera.add(flash);
-const LDAY={hemi:1.0,sun:1.15,fog:new T.Color(0x939dac),near:10,far:72,sky:new T.Color(0xffffff),hc:new T.Color(0xc4d0e8),disc:.5},
- LDUSK={hemi:.6,sun:.7,fog:new T.Color(0x8a7078),near:8,far:54,sky:new T.Color(0xd0a0a0),hc:new T.Color(0xe0b0a0),disc:.7},
+const LDAY={hemi:1.0,sun:1.15,fog:new T.Color(0x939dac),near:12,far:98,sky:new T.Color(0xffffff),hc:new T.Color(0xc4d0e8),disc:.5},
+ LDUSK={hemi:.6,sun:.7,fog:new T.Color(0x8a7078),near:8,far:72,sky:new T.Color(0xd0a0a0),hc:new T.Color(0xe0b0a0),disc:.7},
  LNIGHT={hemi:.2,sun:.08,fog:new T.Color(0x0c1220),near:4,far:33,sky:new T.Color(0x1c2436),hc:new T.Color(0x6a7cb0),disc:.12};
 const _lc=new T.Color();
 function mixL(a,b,k){scene.fog.color.copy(a.fog).lerp(b.fog,k);scene.fog.near=lerp(a.near,b.near,k);scene.fog.far=lerp(a.far,b.far,k);sky.material.color.copy(a.sky).lerp(b.sky,k);
@@ -3278,7 +3331,7 @@ let h41T=0;function upd4(dt,t){const w=WEAPONS[curW];try{wiUpdate(dt);}catch(e){
   if(!firing)fx.flameOn=false;if(w.id==='flamer'){const pl=VM.flamer.userData.pilot;pl.scale.setScalar(.06+Math.random()*.025);}
   if(w.kind==='bolt'){const b=VM.crossbow.userData.bolt;const v=mag.crossbow>0&&fx.reload<0;for(const m of b)m.visible=v;}
   updateADS(dt,w);
-  radarT-=dt;if(radarT<=0){radarT=.12;drawRadar();}
+  radarT-=dt;if(radarT<=0){radarT=.28;drawRadar();}
   footstep(Math.hypot(player.vel.x,player.vel.z),dt);
   if(shadowDirty>0){shadowDirty-=dt;if(shadowDirty<=0)renderer.shadowMap.needsUpdate=true;}
   if(!SV.on)return;
@@ -4080,7 +4133,7 @@ window.__econ42={dps42,bestCoinDps,W_TUNE,SVC42,svcBuy,hint42,hintTarget,COS42,g
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
 
 // ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
-const NEWS421_FB={"rev":"2026-10-05g","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.17","date":"5 ott","items":["🏠 Livello e record stanno tutti in home, sopra la barra in basso","🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì","🎵 Il vento non copre più la musica: in home è spento","🐞 Nel debug c’è solo Problemi, e un problema già visto non viene ricontato","🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"]},{"ver":"4.3.16","date":"5 ott","items":["🐞 Il debug aperto sta sul paesaggio a destra: Gioca, Negozio, Opzioni e Audio restano toccabili","⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"]},{"ver":"4.3.15","date":"5 ott","items":["🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio","🐞 Il debug sta sul paesaggio. La lista problemi si scorre e Copia report mette il testo da incollare","☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"]},{"ver":"4.3.14","date":"5 ott","items":["🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo","🐞 Il debug a ogni apertura conta solo i problemi nuovi, non quelli già sistemati","🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma","🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"]},{"ver":"4.3.13","date":"5 ott","items":["⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento","🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta","⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"]},{"ver":"4.3.12","date":"5 ott","items":["⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera","🏷️ Versione visibile nella home","🐞 Debug visibile sotto la barra di Telegram, con la lista problemi scorrevole"]},{"ver":"4.3.11","date":"5 ott","items":["🏷️ La versione del gioco è visibile nella home, sotto il titolo","🐞 Debug di nuovo visibile: il pulsante non finisce più sotto la barra di Telegram","📋 Lista problemi completa e scorrevole, con la causa e dove intervenire","🔢 Il pulsante 🐞 mostra quanti problemi ha trovato in questa sessione"]},{"ver":"4.3.10","date":"4 ott","items":["🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps","🧟 Zombie che camminano senza tremolii avanti e indietro","🕹️ Joystick più stabile: niente scatti di direzione","🎵 La musica riparte da sola se si interrompe","🛡️ Il gioco non si blocca più per un errore: lo salta e continua"]},{"ver":"4.3.9","date":"4 ott","items":["🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo","⚡ Movimento più fluido sui telefoni a 90 e 120 Hz","⏳ Caricamento della partita senza blocchi","📱 Menu che si adatta allo schermo del telefono e del tablet"]},{"ver":"4.3.8","date":"4 ott","items":["📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"]},{"ver":"4.3.7","date":"4 ott","items":["🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare","🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio","🧱 Nessun danno attraverso muri, porte e finestre chiuse"]},{"ver":"4.3.6","date":"4 ott","items":["⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti","📜 Le liste non tornano più in cima da sole dopo lo scorrimento","📱 In verticale compare subito la schermata «Ruota il telefono»","💎 Avviso chiaro quando non hai abbastanza gemme","🛒 Apertura delle schede del negozio più veloce"]},{"ver":"4.3.5","date":"4 ott","items":["⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve","🏠 Anteprima di costruzione più leggera"]},{"ver":"4.3.4","date":"4 ott","items":["🏠 Il tetto si posa esattamente dove miri","🧱 Il tetto deve poggiare su muri, porte, finestre o un altro tetto; se togli l'appoggio crolla (rimborso di parte della legna)","🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita","🎒 Zaino leggibile con scorrimento verticale quando serve","🛠️ Piccole correzioni di grafica e interfaccia"]},{"ver":"4.3.3","date":"4 ott","items":["⚡ Più fluido sui telefoni: la risoluzione si adatta subito quando la grafica rallenta","🔊 Audio più leggero: meno suoni sovrapposti, meno scatti","🧟 Gli zombie bloccati trovano un'altra strada (anche dalla porta aperta)","🎒 Zaino più in alto e su due colonne: ogni slot dell'equipaggiamento ha il suo spazio"]},{"ver":"4.3.2","date":"4 ott","items":["⏳ Il caricamento ora parte quando inizi la partita: il menu si apre subito e la mappa è già tutta pronta quando entri","🧟 Zombie più nitidi e visibili da più lontano","✨ Grafica più nitida (antialiasing e texture più definite)","🏠 Dentro la base chiusa sei al sicuro: gli zombie non ti colpiscono attraverso i muri e assediano la casa solo se ti hanno visto entrare o ti sentono","🪟 Le finestre si aprono e si chiudono come le porte: chiuse bloccano la vista, aperte gli zombie ti vedono e ti attaccano","🔨 Costruzione più fluida: niente scatti quando piazzi o togli i pezzi","⚔️ Potenziamenti Attacco, Difesa e Velocità fino al livello 100, e livello giocatore massimo 100","🎁 Premio di accesso giornaliero: 7 giorni di fila, il 7° giorno 💎 e un equipaggiamento Raro","✨ Avviso quando trovi un equipaggiamento Epico o migliore di quello che indossi","🎉 Weekend di sangue: sabato e domenica +25% monete dagli zombie e un boss in più dalla 3ª notte","👥 Invita un amico: condividi il tuo link personale da Telegram","🎒 Borsa senza scorrimento, e mentre è aperta il gioco va in pausa"]},{"ver":"4.3.1","date":"4 ott","items":["⚡ Gioco più fluido (meno scatti, fps stabili)","🐞 Correzione bug","Schermata di caricamento: niente blocchi nel menu e all'inizio della partita","Negozio: tocca un'arma o un equipaggiamento per la scheda con statistiche, confronto e anteprima 3D","Negozio: le etichette non coprono più le immagini, la lista resta dov'era e le schede rispondono meglio al tocco","Nuova opzione 🎯 FPS in Impostazioni: Auto / 60 / Max","Risoluzione adattiva e ombre più leggere: si abbassa un poco solo quando serve"]},{"ver":"4.3","date":"4 ott","items":["🎯 Armi rifatte in 3D: canne, mirini, calcio e caricatori dettagliati, materiali metallo/legno e accenti per rarità","Animazioni nuove: fiammata con luce, bossoli, rinculo, ricarica col caricatore, minigun che gira, fiamme e plasma","🌄 Grafica nuova: ombre vere di sole e luna, texture per neve, legno, mattoni, asfalto e corteccia, nebbia e luci più belle","Zombie più dettagliati con movimenti più fluidi, più neve, impronte, sangue e scintille","🎨 Impostazioni → Grafica Bassa / Media / Alta: la tua scelta resta salvata","🏗️ Nuove costruzioni: torre di guardia, torretta automatica, banco da lavoro, generatore, faro, recinto elettrico, punte, imposte, raccoglitore d'acqua e arredi","Menu Costruisci diviso in Muri, Difesa, Utilità e Decorazioni","Anteprima 3D che ruota nel Negozio (Prova)","🎒 Zaino e orologio del giorno ora in alto a destra, accanto ai pulsanti di Telegram","Più spazio libero sullo schermo durante la partita","Liste del Negozio e delle Novità: scorrono sempre trascinando col dito","Avvio partita e Negozio più fluidi: niente blocchi al primo frame","Due tocchi rapidi di fila non vengono più persi"]},{"ver":"4.2.3","date":"3 ott","items":["Livello, monete e missioni ora in alto, accanto a Chiudi","Il contatore delle missioni non trema più","Avvio del menu più leggero: anteprime armi già pronte"]},{"ver":"4.2.2","date":"3 ott","items":["Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito","Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili","In partita livello, monete e missioni stanno insieme in alto al centro","Menu più reattivo all'avvio (meno blocchi)"]},{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
+const NEWS421_FB={"rev":"2026-10-05i","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.19","date":"5 ott","items":["🏙️ Città abbandonata: case, scuola, mercato, ospedale, deposito e stazione, collegati da strade","🗺️ Minimappa con i nomi dei quartieri, orientata a nord","🏆 Ogni zombie ucciso entra subito nel totale. Il server riceve il numero esatto e, se non risponde, viene reinviato","⚡ I palazzi nuovi non aggiungono luci: la partita resta fluida"]},{"ver":"4.3.18","date":"5 ott","items":["⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo","🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola","🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto","🐞 Il debug non copre più Novità e Invita","🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"]},{"ver":"4.3.17","date":"5 ott","items":["🏠 Livello e record stanno tutti in home, sopra la barra in basso","🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì","🎵 Il vento non copre più la musica: in home è spento","🐞 Nel debug c’è solo Problemi, e un problema già visto non viene ricontato","🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"]},{"ver":"4.3.16","date":"5 ott","items":["🐞 Il debug aperto sta sul paesaggio a destra: Gioca, Negozio, Opzioni e Audio restano toccabili","⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"]},{"ver":"4.3.15","date":"5 ott","items":["🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio","🐞 Il debug sta sul paesaggio. La lista problemi si scorre e Copia report mette il testo da incollare","☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"]},{"ver":"4.3.14","date":"5 ott","items":["🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo","🐞 Il debug a ogni apertura conta solo i problemi nuovi, non quelli già sistemati","🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma","🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"]},{"ver":"4.3.13","date":"5 ott","items":["⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento","🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta","⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"]},{"ver":"4.3.12","date":"5 ott","items":["⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera","🏷️ Versione visibile nella home","🐞 Debug visibile sotto la barra di Telegram, con la lista problemi scorrevole"]},{"ver":"4.3.11","date":"5 ott","items":["🏷️ La versione del gioco è visibile nella home, sotto il titolo","🐞 Debug di nuovo visibile: il pulsante non finisce più sotto la barra di Telegram","📋 Lista problemi completa e scorrevole, con la causa e dove intervenire","🔢 Il pulsante 🐞 mostra quanti problemi ha trovato in questa sessione"]},{"ver":"4.3.10","date":"4 ott","items":["🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps","🧟 Zombie che camminano senza tremolii avanti e indietro","🕹️ Joystick più stabile: niente scatti di direzione","🎵 La musica riparte da sola se si interrompe","🛡️ Il gioco non si blocca più per un errore: lo salta e continua"]},{"ver":"4.3.9","date":"4 ott","items":["🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo","⚡ Movimento più fluido sui telefoni a 90 e 120 Hz","⏳ Caricamento della partita senza blocchi","📱 Menu che si adatta allo schermo del telefono e del tablet"]},{"ver":"4.3.8","date":"4 ott","items":["📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"]},{"ver":"4.3.7","date":"4 ott","items":["🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare","🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio","🧱 Nessun danno attraverso muri, porte e finestre chiuse"]},{"ver":"4.3.6","date":"4 ott","items":["⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti","📜 Le liste non tornano più in cima da sole dopo lo scorrimento","📱 In verticale compare subito la schermata «Ruota il telefono»","💎 Avviso chiaro quando non hai abbastanza gemme","🛒 Apertura delle schede del negozio più veloce"]},{"ver":"4.3.5","date":"4 ott","items":["⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve","🏠 Anteprima di costruzione più leggera"]},{"ver":"4.3.4","date":"4 ott","items":["🏠 Il tetto si posa esattamente dove miri","🧱 Il tetto deve poggiare su muri, porte, finestre o un altro tetto; se togli l'appoggio crolla (rimborso di parte della legna)","🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita","🎒 Zaino leggibile con scorrimento verticale quando serve","🛠️ Piccole correzioni di grafica e interfaccia"]},{"ver":"4.3.3","date":"4 ott","items":["⚡ Più fluido sui telefoni: la risoluzione si adatta subito quando la grafica rallenta","🔊 Audio più leggero: meno suoni sovrapposti, meno scatti","🧟 Gli zombie bloccati trovano un'altra strada (anche dalla porta aperta)","🎒 Zaino più in alto e su due colonne: ogni slot dell'equipaggiamento ha il suo spazio"]},{"ver":"4.3.2","date":"4 ott","items":["⏳ Il caricamento ora parte quando inizi la partita: il menu si apre subito e la mappa è già tutta pronta quando entri","🧟 Zombie più nitidi e visibili da più lontano","✨ Grafica più nitida (antialiasing e texture più definite)","🏠 Dentro la base chiusa sei al sicuro: gli zombie non ti colpiscono attraverso i muri e assediano la casa solo se ti hanno visto entrare o ti sentono","🪟 Le finestre si aprono e si chiudono come le porte: chiuse bloccano la vista, aperte gli zombie ti vedono e ti attaccano","🔨 Costruzione più fluida: niente scatti quando piazzi o togli i pezzi","⚔️ Potenziamenti Attacco, Difesa e Velocità fino al livello 100, e livello giocatore massimo 100","🎁 Premio di accesso giornaliero: 7 giorni di fila, il 7° giorno 💎 e un equipaggiamento Raro","✨ Avviso quando trovi un equipaggiamento Epico o migliore di quello che indossi","🎉 Weekend di sangue: sabato e domenica +25% monete dagli zombie e un boss in più dalla 3ª notte","👥 Invita un amico: condividi il tuo link personale da Telegram","🎒 Borsa senza scorrimento, e mentre è aperta il gioco va in pausa"]},{"ver":"4.3.1","date":"4 ott","items":["⚡ Gioco più fluido (meno scatti, fps stabili)","🐞 Correzione bug","Schermata di caricamento: niente blocchi nel menu e all'inizio della partita","Negozio: tocca un'arma o un equipaggiamento per la scheda con statistiche, confronto e anteprima 3D","Negozio: le etichette non coprono più le immagini, la lista resta dov'era e le schede rispondono meglio al tocco","Nuova opzione 🎯 FPS in Impostazioni: Auto / 60 / Max","Risoluzione adattiva e ombre più leggere: si abbassa un poco solo quando serve"]},{"ver":"4.3","date":"4 ott","items":["🎯 Armi rifatte in 3D: canne, mirini, calcio e caricatori dettagliati, materiali metallo/legno e accenti per rarità","Animazioni nuove: fiammata con luce, bossoli, rinculo, ricarica col caricatore, minigun che gira, fiamme e plasma","🌄 Grafica nuova: ombre vere di sole e luna, texture per neve, legno, mattoni, asfalto e corteccia, nebbia e luci più belle","Zombie più dettagliati con movimenti più fluidi, più neve, impronte, sangue e scintille","🎨 Impostazioni → Grafica Bassa / Media / Alta: la tua scelta resta salvata","🏗️ Nuove costruzioni: torre di guardia, torretta automatica, banco da lavoro, generatore, faro, recinto elettrico, punte, imposte, raccoglitore d'acqua e arredi","Menu Costruisci diviso in Muri, Difesa, Utilità e Decorazioni","Anteprima 3D che ruota nel Negozio (Prova)","🎒 Zaino e orologio del giorno ora in alto a destra, accanto ai pulsanti di Telegram","Più spazio libero sullo schermo durante la partita","Liste del Negozio e delle Novità: scorrono sempre trascinando col dito","Avvio partita e Negozio più fluidi: niente blocchi al primo frame","Due tocchi rapidi di fila non vengono più persi"]},{"ver":"4.2.3","date":"3 ott","items":["Livello, monete e missioni ora in alto, accanto a Chiudi","Il contatore delle missioni non trema più","Avvio del menu più leggero: anteprime armi già pronte"]},{"ver":"4.2.2","date":"3 ott","items":["Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito","Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili","In partita livello, monete e missioni stanno insieme in alto al centro","Menu più reattivo all'avvio (meno blocchi)"]},{"ver":"4.2.1","date":"3 ott","items":["Comandi più puliti: il chip delle missioni non copre più il joystick","Pannello missioni compatto con ✕, si chiude da solo quando ti muovi","Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"]},{"ver":"4.2","date":"2 ott","items":["Gioco più fluido: meno scatti durante la partita","Schermate adattate a Telegram: niente più pulsanti nascosti","Armi ribilanciate: ogni arma del negozio è un vero passo avanti","Servizi in partita con le monete, potenziamenti per base e trappole","Mirini personalizzati e cambio statistiche dell'equipaggiamento","Missioni giornaliere con ricompense"]},{"ver":"4.1.5","date":"1 ott","items":["Regalo di benvenuto: +20 💎 per tutti i giocatori"]}]};
 let NEWS421=NEWS421_FB;const NEWS421_K='zc_news_seen';
 function news421Esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function news421Dot(){const b=document.getElementById('newsBtn');if(!b)return;let seen='';try{seen=localStorage.getItem(NEWS421_K)||'';}catch(e){}b.classList.toggle('new',!!NEWS421.rev&&seen!==NEWS421.rev);}
@@ -5065,7 +5118,7 @@ TH43.cbs=[];
 if(typeof renderThumbsIdle==='function')renderThumbsIdle=function(cb){if(THUMBS&&!TH43.stale){if(cb)cb();return;}if(cb)TH43.cbs.push(cb);thumbs43();};
 if(typeof thumbsPartial422==='function')thumbsPartial422=function(){if(!THUMBS||TH43.stale){const P=pre43();if(P){TH43.job++;TH43.busy=false;THUMBS=null;TH43.stale=false;thumbs43();return THUMBS||P;}}return (TH43.busy&&TH43.ctx)?TH43.ctx.out:(THUMBS||{});};
 if(typeof thumbOne422==='function')thumbOne422=function(){};
-window.GAME_VER='4.3.18';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.18');}catch(e){}
+window.GAME_VER='4.3.19';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.19');}catch(e){}
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;
 setTimeout(()=>{try{Object.assign(window.__game,{GFX43,gfxSet43,W43,TH43,VM,vmScene,vmCam,warmShaders42,thumbs43});}catch(e){}},0);
@@ -5527,7 +5580,7 @@ function svTarget433(z){const tg=svTarget(z);if(!z.alive||z.dead)return tg;const
     else if(mv>1)R.lvl=0;
     R.x=P.x;R.z=P.z;R.t=t;}
   return tg;}
-function expose433(){try{if(window.__game&&!__game.boxes){__game.boxes=boxes;__game.HALF=HALF;}}catch(e){}}
+function expose433(){try{if(window.__game&&!__game.boxes){__game.boxes=boxes;__game.HALF=HALF;__game.collide=collide;__game.circles=circles;}}catch(e){}}
 // ---- 4.3.4 building: roof exactly under the aim, roofs need support (walls/doors/windows/tall pieces or a supported roof), collapse on support loss ----
 const B434={n:0,ok:0,ref:0,anom:0,log:[],perTipo:{},load:null,tall:{}};window.__B434=B434;
 function tall434(t){if(B434.tall[t]!==undefined)return B434.tall[t];const D=PDEF[t];let h=0;try{for(const pt of D.parts||[])h=Math.max(h,pt[2]+pt[5]/2);}catch(e){}return B434.tall[t]=(t!=='roof'&&t!=='barricade'&&h>=2.3);}
@@ -5627,16 +5680,25 @@ function zs439Done(p){try{LS.set('zs_pend',pend().filter(x=>x.r!==p.r));const a=
 function zs439Post(p){return fetch(zs439Base()+'/score',{method:'POST',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},
   body:JSON.stringify({initData:TG.W.initData,k:p.k,w:p.w,s:p.s,r:p.r,wk:p.wk,d:p.d})}).then(r=>r.json().catch(()=>({})).then(j=>({st:r.status,j})));}
 // sends the queue one by one (server rate limit: 1 per 20 s per player); stops at the first temporary failure (retried on next start)
-function zs439Flush(first){if(!zs439On()||ONL439.sending)return;const q=pend();if(first)q.sort((a,b)=>(a.r===first.r?-1:b.r===first.r?1:0));const p=q[0];if(!p)return;
-  const fullK=p.k|0,fullS=p.s|0,dK=fullK-(KS439.ack|0);
-  if(dK<=0){LS.set('zs_pend',pend().filter(x=>x.r!==p.r));if(pend().length)setTimeout(()=>zs439Flush(),50);return;}
-  const send=Object.assign({},p,{k:dK,s:Math.max(0,fullS-(KS439.ackS|0)),r:KS439.ack?rnd8():p.r});
-  ONL439.sending=true;zs439Post(send).then(({st,j})=>{ONL439.sending=false;ONL439.last={st,err:j&&j.err,t:Date.now()};
-      if(j&&j.ok){KS439.ack=fullK;KS439.ackS=fullS;try{window.__zs439MarkLvl&&__zs439MarkLvl(send);}catch(e){}zs439Done(p);ONL439.t=0;try{if(game.state==='menu'&&typeof renderMini==='function')renderMini();}catch(e){}if(pend().length)setTimeout(()=>zs439Flush(),800);return;}
-      if(st===429){setTimeout(()=>zs439Flush(),Math.max(5,(j&&j.retry)||20)*1000+500);return;}
-      if(st===400||st===409||st===422||(st===403&&j&&j.err!=='auth_expired')){LS.set('zs_pend',pend().filter(x=>x.r!==p.r));if(pend().length)setTimeout(()=>zs439Flush(),1000);return;}
-      /* 5xx / auth_expired: keep queued */})
-    .catch(()=>{ONL439.sending=false;ONL439.last={st:0,err:'rete',t:Date.now()};});}
+function zs439Bag(){const wk=weekStart();let o=LS.get('zs_kx4319',null);if(!o||typeof o.wk!=='number'||Math.abs(o.wk-wk)>36e5)o={wk,add:0,opt:0,base:null,optAt:0};else if(o.wk!==wk)o.wk=wk;return o;}
+function zs439SaveBag(o){try{LS.set('zs_kx4319',o);}catch(e){}}
+function zs439NoteKill(){const o=zs439Bag();o.add=(o.add|0)+1;zs439SaveBag(o);try{queueScore();}catch(e){}zs439Arm();}
+function zs439Arm(){if(!zs439On())return;const wait=20000-(Date.now()-(ONL439.sentAt||0));if(wait<=0){zs439Flush();return;}if(ONL439.arm)return;ONL439.arm=setTimeout(()=>{ONL439.arm=0;try{zs439Flush();}catch(e){}},wait+100);}
+function zs439Sync(serverK){const o=zs439Bag();serverK=serverK|0;const prev=(typeof o.seen==='number')?o.seen:null;
+  if((o.opt|0)>0&&prev!=null){const grew=serverK-prev;if(grew>0){o.opt=Math.max(0,(o.opt|0)-grew);if((o.opt|0)<=0){o.opt=0;o.optAt=0;}}
+    else if(Date.now()-(o.optAt||0)>45000){o.add=(o.add|0)+(o.opt|0);o.opt=0;o.optAt=0;o.rid='';o.hold=0;zs439Arm();}}
+  o.seen=serverK;zs439SaveBag(o);return serverK+(o.opt|0)+(o.add|0);}
+function zs439Flush(first){if(!zs439On()||ONL439.sending)return;const o=zs439Bag();
+  if((o.fail|0)>=8&&Date.now()-(o.failAt||0)<45000)return;if((o.fail|0)>=8){o.fail=0;zs439SaveBag(o);}
+  const due=o.add|0;if(due<=0)return;if(!o.rid||!(o.hold|0)){o.rid=rnd8();o.hold=due;o.baseAtSend=(typeof o.seen==='number')?o.seen:null;zs439SaveBag(o);}
+  const dK=Math.min(due,o.hold|0);let p=null;try{p=queueScore();}catch(e){}if(!p)p={r:o.rid,k:dK,w:Math.max(1,SV.day|0),s:Math.round(S.score)||0,d:SET.diff,wk:weekStart()};
+  const fullS=p.s|0,dS=Math.max(0,fullS-(KS439.ackS|0));const send=Object.assign({},p,{k:dK,s:dS,r:o.rid});
+  ONL439.sending=true;ONL439.sentAt=Date.now();zs439Post(send).then(({st,j})=>{ONL439.sending=false;ONL439.last={st,err:j&&j.err,t:Date.now()};
+      if((j&&j.ok)||st===409){const b=zs439Bag();b.add=Math.max(0,(b.add|0)-dK);const seenNow=(typeof b.seen==='number')?b.seen:null,base=(typeof b.baseAtSend==='number')?b.baseAtSend:seenNow;
+        const already=(seenNow!=null&&base!=null)?Math.max(0,seenNow-base):0;if(b.rid===send.r){b.rid='';b.hold=0;b.baseAtSend=null;}b.opt=(b.opt|0)+Math.max(0,dK-already);b.optAt=Date.now();b.fail=0;zs439SaveBag(b);KS439.ack=game.kills|0;KS439.ackS=fullS;try{window.__zs439MarkLvl&&__zs439MarkLvl(send);}catch(e){}try{zs439Done(p);}catch(e){}ONL439.t=0;try{if(game.state==='menu'&&typeof renderMini==='function')renderMini();}catch(e){}if((b.add|0)>0)zs439Arm();return;}
+      if(st===429){setTimeout(()=>zs439Flush(),Math.max(20,(j&&j.retry)||20)*1000+400);return;}
+      const b=zs439Bag();b.fail=(b.fail|0)+1;b.failAt=Date.now();zs439SaveBag(b);setTimeout(()=>zs439Flush(),20000);})
+    .catch(()=>{ONL439.sending=false;ONL439.last={st:0,err:'rete',t:Date.now()};const b=zs439Bag();b.fail=(b.fail|0)+1;b.failAt=Date.now();zs439SaveBag(b);setTimeout(()=>zs439Flush(),20000);});}
 {const _fs=flushScores;flushScores=function(manual,pp){
   if(zs439On()){zs439Flush(pp||null);if(manual)mtoast('💾 Punteggio inviato alla classifica online',1600);return true;}
   const W=TG.W;if(ZS_API&&!manual&&!(W&&!W.initData&&W.sendData))return false;   // never open the chat automatically when the online board is configured
@@ -5653,27 +5715,33 @@ function zs439Archive(d){const wk=String(d.week||'');if(!wk)return;const A=LS.ge
   A.wk=wk;for(const x of d.top){const id=String(x.uid),p=A.players[id]||(A.players[id]={id,lifeK:0,lifeS:0,lifeN:0,bk:0,bw:0});
     p.nme=x.name||p.nme||'Giocatore';p.k=x.k|0;p.s=x.s|0;p.n=x.n|0;p.wk=wk;if((x.bk|0)>(p.bk|0))p.bk=x.bk|0;if((x.bw|0)>(p.bw|0))p.bw=x.bw|0;}
   LS.set('zs_all4317',A);}
-function zs439LifeRows(){const A=LS.get('zs_all4317',null);if(!A||!A.players)return [];return Object.keys(A.players).map(id=>{const p=A.players[id],cur=p.wk===A.wk;return {id,n:p.nme||'Giocatore',k:(p.lifeK|0)+(cur?(p.k|0):0),s:(p.lifeS|0)+(cur?(p.s|0):0),g:(p.lifeN|0)+(cur?(p.n|0):0),bk:p.bk|0,w:p.bw|0};}).sort((a,b)=>b.k-a.k||b.s-a.s);}
+function zs439LifeRows(){const A=LS.get('zs_all4317',null);if(!A||!A.players)return [];const me=myId(),bag=zs439Bag(),extra=(bag.add|0)+(bag.opt|0);return Object.keys(A.players).map(id=>{const p=A.players[id],cur=p.wk===A.wk;return {id,n:p.nme||'Giocatore',k:(p.lifeK|0)+(cur?(p.k|0):0)+(id===me?extra:0),s:(p.lifeS|0)+(cur?(p.s|0):0),g:(p.lifeN|0)+(cur?(p.n|0):0),bk:p.bk|0,w:p.bw|0};}).sort((a,b)=>b.k-a.k||b.s-a.s);}
 function zs439Top(cb){if(!ZS_API){cb(null);return;}if(ONL439.data&&Date.now()-ONL439.t<2500){cb(ONL439.data);return;}
   ONL439.cbs.push(cb);if(ONL439.busy)return;ONL439.busy=true;let ctl=null;try{ctl=new AbortController();setTimeout(()=>{try{ctl.abort();}catch(e){}},6000);}catch(e){}
   const me=myId(),fin=d=>{ONL439.busy=false;const L=ONL439.cbs;ONL439.cbs=[];for(const f of L)try{f(d);}catch(e){}};
   fetch(zs439Base()+'/top?wk=current&nc='+Date.now()+(me!=='local'?'&uid='+encodeURIComponent(me):''),ctl?{signal:ctl.signal}:{}).then(r=>r.ok?r.json():null)
     .then(j=>{if(j&&Array.isArray(j.top)){try{zs439Archive(j);}catch(e){}ONL439.data=j;ONL439.t=Date.now();fin(j);}else fin(ONL439.data||null);}).catch(()=>fin(ONL439.data||null));}
-function zs439Rows(d){return d.top.map(x=>({id:String(x.uid),n:x.name,k:x.k|0,s:x.s|0,g:x.n|0,bk:x.bk|0,w:x.bw|0})).sort((a,b)=>b.k-a.k||b.s-a.s);}
+function zs439Rows(d){const me=myId(),rows=d.top.map(x=>({id:String(x.uid),n:x.name,k:x.k|0,s:x.s|0,g:x.n|0,bk:x.bk|0,w:x.bw|0}));
+  let mine=null;for(const r of rows)if(r.id===me)mine=r;const shown=mine?zs439Sync(mine.k):((zs439Bag().seen|0)+(zs439Bag().opt|0)+(zs439Bag().add|0));
+  if(mine)mine.k=shown;else if(shown>0)rows.push({id:me,n:pname(),k:shown,s:0,g:1,bk:shown,w:0});
+  return rows.sort((a,b)=>b.k-a.k||b.s-a.s);}
 function zs439PaintRank(d){const me=myId(),rows=zs439Rows(d);
   $('rankList').innerHTML=rows.length?rows.map((x,i)=>{const h=rowHTML(x,i,true);return x.id===me?h.replace('<div class="rk">','<div class="rk me">'):h;}).join(''):'<div class="rk empty">Nessuno in classifica: uccidi degli zombie per entrare.</div>';
   const inTop=rows.some(x=>x.id===me);
-  $('rankFoot').innerHTML='🌍 Uccisioni dal server · <b>'+(d.players|0)+'</b> '+((d.players|0)===1?'giocatore':'giocatori')+(d.me?' · 📍 sei <b>'+d.me.pos+'°</b> con <b>'+(d.me.k|0)+'</b> ☠️':(inTop?'':' · gioca una partita per entrare'))+
+  const mi=rows.findIndex(x=>x.id===me);
+  $('rankFoot').innerHTML='🌍 Uccisioni dal server · <b>'+(d.players|0)+'</b> '+((d.players|0)===1?'giocatore':'giocatori')+(mi>=0?' · 📍 sei <b>'+(mi+1)+'°</b> con <b>'+rows[mi].k+'</b> ☠️':(inTop?'':' · gioca una partita per entrare'))+
     '<br><span style="opacity:.75">Si aggiorna da sola mentre gli altri giocano. I premi della settimana si azzerano lunedì (tra '+resetIn()+').</span>';}
 function zs439PaintAll(){const me=myId(),rows=zs439LifeRows().slice(0,20);
   $('rankList').innerHTML=rows.length?rows.map((x,i)=>{const h=rowHTML(x,i,false);return x.id===me?h.replace('<div class="rk">','<div class="rk me">'):h;}).join(''):'<div class="rk empty">Ancora nessun giocatore. Chi compare in settimana resta qui anche dopo il lunedì.</div>';
   $('rankFoot').innerHTML='🌍 Uccisioni di sempre · <b>'+rows.length+'</b> '+(rows.length===1?'giocatore':'giocatori')+'<br><span style="opacity:.75">Somma gli zombie uccisi. I nomi che il server ha mandato restano anche dopo il lunedì.</span>';}
-function zs439PaintMini(d){const rows=zs439Rows(d).slice(0,3);$('miniReset').textContent='';let hh=rows.map((x,i)=>miniRow422(x,i)).join('');
+function miniRow439(x,i){const mine=x.id===myId(),bag=mine?zs439Bag():null,wait=bag?(bag.add|0)+(bag.opt|0):0;
+  return '<div class="rk mini422'+(mine?' me':'')+'"><span class="pos">'+MEDAL[i]+'</span><span class="nm"><span class="nmT">'+esc(x.n)+'</span><small>'+(wait?('invio '+wait):'sul server')+'</small></span><span class="kv">'+x.k+' ☠️</span><span class="prize">'+PRIZE[i]+'💎</span></div>';}
+function zs439PaintMini(d){const rows=zs439Rows(d).slice(0,3);$('miniReset').textContent='';let hh=rows.map((x,i)=>miniRow439(x,i)).join('');
   for(let i=rows.length;i<3;i++)hh+='<div class="rk ph"><span class="pos">'+MEDAL[i]+'</span><span class="nm">posto libero</span><span class="prize">'+PRIZE[i]+'💎</span></div>';$('miniList').innerHTML=hh;}
 {const _rr=renderRank;renderRank=function(){_rr.apply(this,arguments);if(!ZS_API)return;
   zs439Top(d=>{try{if($('rankScreen').classList.contains('hidden'))return;if(rankMode==='week'){if(d)zs439PaintRank(d);}else zs439PaintAll();}catch(e){}});};}
 {const _rm=renderMini;renderMini=function(){_rm.apply(this,arguments);if(!ZS_API)return;zs439Top(d=>{try{if(d)zs439PaintMini(d);}catch(e){}});};}
-window.__zs439={ONL439,flush:()=>zs439Flush(),top:cb=>zs439Top(cb||(()=>{})),pend:()=>pend(),api:()=>ZS_API};
+window.__zs439={ONL439,flush:()=>zs439Flush(),top:cb=>zs439Top(cb||(()=>{})),pend:()=>pend(),api:()=>ZS_API,note:()=>zs439NoteKill(),bag:()=>zs439Bag(),sync:k=>zs439Sync(k)};
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){ONL439.t=0;try{if(game.state==='menu')renderMini();}catch(e){}}});
 setInterval(()=>{try{if(document.visibilityState!=='visible'||!ZS_API)return;const rank=$('rankScreen')&&!$('rankScreen').classList.contains('hidden');const menu=game.state==='menu'&&$('startScreen')&&!$('startScreen').classList.contains('hidden');if(!rank&&!menu)return;ONL439.t=0;if(rank)renderRank();else renderMini();}catch(e){}},4000);
 // ---- leftover GPU uploads after the upload warm: every geometry/texture the warm skipped (hidden parents, objects created after the
@@ -5767,7 +5835,7 @@ function loop0(now){requestAnimationFrame(loop);FL431.c0=performance.now();if(FL
   if(fpsT>1000&&SHOWFPS){$('fps').textContent=Math.round(fpsN*1000/fpsT)+' fps · '+curPR.toFixed(2)+'x · '+FL431.hz+'Hz';fpsN=0;fpsT=0;}if(LD431.cover)ld432Cover(raw);}
 requestAnimationFrame(loop);
 // test hooks
-window.__game={get flash(){try{return flash}catch(e){return null}},SV,PIECES,NODES,LOOT,POOL,PDEF,addPiece,placeBuild,setBuild,svSave,svLoadData,enterPhase,toolHit,ADS,setADS,svUse,openChest,closeChest,PROJ,MERGED,ownedList,VM,scene,camera,get mus(){return MUS;},get au(){return AU;},renderTheme,MUSDBG,applyLight,svSnapshot,damagePiece,get scenecalls(){return renderer.info.render.calls;},S,PROF,SET,EQ,DIFF,buildPlan,startWave,throwNade,spawnDrop,drops,explosion,addGems,sha256hex,verifyClaim,claimCheck,openShop,renderShop,THUMBS:()=>THUMBS,pauseGame,resumeGame,gameOver,showMenu,nades,slamRing,spawnZombie,inv2:inv,VM,game,player,inv,own,mag,res,zombies,pickups,craft,equip,startGame,fire,hurt,WEAPONS,startReload,setFiring:v=>{firing=v;triggerHeld=false;},get curW(){return curW;},get pr(){return curPR;},renderer};
+window.__game={get flash(){try{return flash}catch(e){return null}},SV,PIECES,NODES,LOOT,POOL,PDEF,addPiece,placeBuild,setBuild,svSave,svLoadData,enterPhase,toolHit,ADS,setADS,svUse,openChest,closeChest,PROJ,MERGED,ownedList,VM,scene,camera,get mus(){return MUS;},get au(){return AU;},renderTheme,MUSDBG,applyLight,svSnapshot,damagePiece,get scenecalls(){return renderer.info.render.calls;},S,PROF,SET,EQ,DIFF,buildPlan,startWave,throwNade,spawnDrop,drops,explosion,addGems,sha256hex,verifyClaim,claimCheck,openShop,renderShop,THUMBS:()=>THUMBS,pauseGame,resumeGame,gameOver,showMenu,nades,slamRing,spawnZombie,inv2:inv,VM,game,player,inv,own,mag,res,zombies,pickups,craft,equip,startGame,fire,hurt,WEAPONS,startReload,setFiring:v=>{firing=v;triggerHeld=false;},get curW(){return curW;},get pr(){return curPR;},renderer,boxes,circles,collide,HALF};
 if(window.__DBG)try{({updateZombie,svTarget,svNoise,keepOut,collide,losBlocked,musicUpdate,ambUpdate,footstep,play,gun,groan,updateHUD,hud41,hud4,wiUpdate,svClockHUD,drawRadar,updateNums,updateParticles,updateTracers,updateFlames,updateProj,updateBurn,updateSnow,updateEnv,svWaves,applyLight,updateNodes,updateFires,updateExtras}=__DBG.sys({updateZombie,svTarget,svNoise,keepOut,collide,losBlocked,musicUpdate,ambUpdate,footstep,play,gun,groan,updateHUD,hud41,hud4,wiUpdate,svClockHUD,drawRadar,updateNums,updateParticles,updateTracers,updateFlames,updateProj,updateBurn,updateSnow,updateEnv,svWaves,applyLight,updateNodes,updateFires,updateExtras}));}catch(e){__DBG.log('hook',e&&e.message);}
 })();
 </script>
