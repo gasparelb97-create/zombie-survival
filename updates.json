@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05m",
+ "rev": "2026-10-05n",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,16 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.24",
+   "date": "5 ott",
+   "items": [
+    "🏗️ Recinto, assi, botte, torcia, cartello, bandiera, sedia, stufa, cassa e vaso",
+    "🔫 Negozio più ricco: Volpe, Rondine, Canne mozze, Cervo e Vespa, con kit e munizioni",
+    "📦 Il deposito si amplia pagando con le monete",
+    "❄️ Sotto un tetto non nevica, e la neve pesa meno sul gioco"
+   ]
+  },
   {
    "ver": "4.3.23",
    "date": "5 ott",
