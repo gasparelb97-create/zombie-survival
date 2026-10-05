@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05b",
+ "rev": "2026-10-05c",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.13",
+   "date": "5 ott",
+   "items": [
+    "⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento",
+    "🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta",
+    "⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"
+   ]
+  },
   {
    "ver": "4.3.12",
    "date": "5 ott",
