@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05q",
+ "rev": "2026-10-05r",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.28",
+   "date": "5 ott",
+   "items": [
+    "🏠 Costruire è più facile: il pezzo dopo si mette in fila da solo, e dove costruisci non rinasce né un albero né una roccia",
+    "💡 Quadri, tende, camino e luci: muro, tetto e pavimento hanno texture nuove e la luce scalda la stanza",
+    "🪙 Dal deposito, in partita, spendi le monete per ampliare la cassa e potenziare l'arma in mano"
+   ]
+  },
   {
    "ver": "4.3.27",
    "date": "5 ott",
@@ -306,16 +315,6 @@
     "Livello, monete e missioni ora in alto, accanto a Chiudi",
     "Il contatore delle missioni non trema più",
     "Avvio del menu più leggero: anteprime armi già pronte"
-   ]
-  },
-  {
-   "ver": "4.2.2",
-   "date": "3 ott",
-   "items": [
-    "Le schede Novità, Negozio, Borsa e Classifica ora scorrono bene col dito",
-    "Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili",
-    "In partita livello, monete e missioni stanno insieme in alto al centro",
-    "Menu più reattivo all'avvio (meno blocchi)"
    ]
   }
  ]
