@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-04n",
+ "rev": "2026-10-05a",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,16 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.11",
+   "date": "5 ott",
+   "items": [
+    "🏷️ La versione del gioco è visibile nella home, sotto il titolo",
+    "🐞 Debug di nuovo visibile: il pulsante non finisce più sotto la barra di Telegram",
+    "📋 Lista problemi completa e scorrevole, con la causa e dove intervenire",
+    "🔢 Il pulsante 🐞 mostra quanti problemi ha trovato in questa sessione"
+   ]
+  },
   {
    "ver": "4.3.10",
    "date": "4 ott",
