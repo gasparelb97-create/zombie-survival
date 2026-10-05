@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05a",
+ "rev": "2026-10-05b",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.12",
+   "date": "5 ott",
+   "items": [
+    "⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera",
+    "🏷️ Versione visibile nella home",
+    "🐞 Debug visibile sotto la barra di Telegram, con la lista problemi scorrevole"
+   ]
+  },
   {
    "ver": "4.3.11",
    "date": "5 ott",
