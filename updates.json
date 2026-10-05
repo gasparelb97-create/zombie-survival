@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05o",
+ "rev": "2026-10-05p",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.26",
+   "date": "5 ott",
+   "items": [
+    "🏆 In classifica c’è anche chi ha giocato dall’altro telefono",
+    "⚡ La classifica si rilegge dal server ogni pochi secondi",
+    "🎮 I punti passano dal tasto Gioca del menu, non dalla tastiera della chat"
+   ]
+  },
   {
    "ver": "4.3.25",
    "date": "5 ott",
@@ -307,18 +316,6 @@
     "Comandi più puliti: il chip delle missioni non copre più il joystick",
     "Pannello missioni compatto con ✕, si chiude da solo quando ti muovi",
     "Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"
-   ]
-  },
-  {
-   "ver": "4.2",
-   "date": "2 ott",
-   "items": [
-    "Gioco più fluido: meno scatti durante la partita",
-    "Schermate adattate a Telegram: niente più pulsanti nascosti",
-    "Armi ribilanciate: ogni arma del negozio è un vero passo avanti",
-    "Servizi in partita con le monete, potenziamenti per base e trappole",
-    "Mirini personalizzati e cambio statistiche dell'equipaggiamento",
-    "Missioni giornaliere con ricompense"
    ]
   }
  ]
