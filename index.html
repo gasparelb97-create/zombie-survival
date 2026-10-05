@@ -15,6 +15,7 @@
 <script>
 (function(){
   var path=location.pathname.replace(/[^/]*$/,'');
+  try{var m=(location.hash||'').match(/tgWebAppData=([^&]+)/);if(m)sessionStorage.setItem('zs_tg425',decodeURIComponent(m[1]));}catch(e){}
   function go(ver){
     var q=new URLSearchParams(location.search);
     if(ver)q.set('v',ver);

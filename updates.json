@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05n",
+ "rev": "2026-10-05o",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.25",
+   "date": "5 ott",
+   "items": [
+    "🎵 La musica resta continua, senza scatti né rumori strani",
+    "🏆 Ogni partita da Telegram entra in classifica e il server resta aggiornato",
+    "💨 Meno voci e scoppiettii a ogni fotogramma, il gioco resta più fluido"
+   ]
+  },
   {
    "ver": "4.3.24",
    "date": "5 ott",
@@ -310,13 +319,6 @@
     "Servizi in partita con le monete, potenziamenti per base e trappole",
     "Mirini personalizzati e cambio statistiche dell'equipaggiamento",
     "Missioni giornaliere con ricompense"
-   ]
-  },
-  {
-   "ver": "4.1.5",
-   "date": "1 ott",
-   "items": [
-    "Regalo di benvenuto: +20 💎 per tutti i giocatori"
    ]
   }
  ]
