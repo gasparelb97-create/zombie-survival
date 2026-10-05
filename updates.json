@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-05t",
+  "rev": "2026-10-05u",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.31",
+      "date": "5 ott",
+      "items": [
+        "🏚️ Nei palazzi con la cassa si entra: il blocco in mezzo alla porta non c’è più, e la tettoia sta sopra la testa",
+        "❄️ La neve a terra, le montagne e gli alberi hanno una texture più vera, con neve anche sui rami",
+        "🩸 Per le strade ci sono sangue, ossa e corpi, senza chiudere il passaggio",
+        "💡 La lampada in casa illumina senza accecare la stanza",
+        "🎵 All’avvio la musica riparte da sola se un tema resta a metà"
+      ]
+    },
     {
       "ver": "4.3.30",
       "date": "5 ott",
@@ -297,19 +308,6 @@
         "🎉 Weekend di sangue: sabato e domenica +25% monete dagli zombie e un boss in più dalla 3ª notte",
         "👥 Invita un amico: condividi il tuo link personale da Telegram",
         "🎒 Borsa senza scorrimento, e mentre è aperta il gioco va in pausa"
-      ]
-    },
-    {
-      "ver": "4.3.1",
-      "date": "4 ott",
-      "items": [
-        "⚡ Gioco più fluido (meno scatti, fps stabili)",
-        "🐞 Correzione bug",
-        "Schermata di caricamento: niente blocchi nel menu e all'inizio della partita",
-        "Negozio: tocca un'arma o un equipaggiamento per la scheda con statistiche, confronto e anteprima 3D",
-        "Negozio: le etichette non coprono più le immagini, la lista resta dov'era e le schede rispondono meglio al tocco",
-        "Nuova opzione 🎯 FPS in Impostazioni: Auto / 60 / Max",
-        "Risoluzione adattiva e ombre più leggere: si abbassa un poco solo quando serve"
       ]
     }
   ]
