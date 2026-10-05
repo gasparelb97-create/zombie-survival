@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05i",
+ "rev": "2026-10-05j",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,17 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.20",
+   "date": "5 ott",
+   "items": [
+    "🏥 Ospedale, mercato, scuola, stazione e case si distinguono: tetti, tende e insegne diversi",
+    "🛒 Il mercato ha banchi, tende colorate e vetrine. La città ha fari, cespugli, sangue e un po' di fumo",
+    "🌲 Non resti più incastrato nella chioma degli alberi: si passa accanto al tronco",
+    "🧟 Gli zombie non attaccano la base, a meno che non ti abbiano visto entrare",
+    "🏆 Il tasto Classifica non c'è più: la classifica a destra resta ferma"
+   ]
+  },
   {
    "ver": "4.3.19",
    "date": "5 ott",
