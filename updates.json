@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05g",
+ "rev": "2026-10-05h",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,7 +10,18 @@
   }
  ],
  "recent": [
-   {
+  {
+   "ver": "4.3.18",
+   "date": "5 ott",
+   "items": [
+    "⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo",
+    "🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola",
+    "🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto",
+    "🐞 Il debug non copre più Novità e Invita",
+    "🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"
+   ]
+  },
+  {
    "ver": "4.3.17",
    "date": "5 ott",
    "items": [

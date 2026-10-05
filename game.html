@@ -940,7 +940,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 </div>
 <div id="startScreen" class="overlay titleArt"><div class="shade"></div><div class="menuL">
   <h1 class="ztitle">Zombie<span>Survival</span></h1>
-  <div class="ver422 homeVer">Zombie Survival v4.3.17</div>
+  <div class="ver422 homeVer">Zombie Survival v4.3.18</div>
   <div class="ztag">Taglia legna, costruisci la base e resisti all'orda della notte.</div>
   <div class="playRow"><button class="mBtn zombie" id="btnZombie"><span class="ic">🏕️</span><span><b>Gioca</b><small id="survSub">Nuova partita · giorno e notte</small></span></button><button class="mBtn icon newRun" id="btnNewRun" aria-label="Nuova partita" style="display:none"><span class="ic">↺</span></button></div>
   <div class="menuRow one">
@@ -954,7 +954,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
   </div>
   <div class="menuFoot" id="menuBest"></div>
 </div>
-<div id="miniRank"><h4>🏆 Top settimana <small id="miniReset"></small></h4><div id="miniList"></div></div>
+<div id="miniRank"><h4>🏆 Più zombie <small id="miniReset"></small></h4><div id="miniList"></div></div>
 </div>
 <div id="soonScreen" class="overlay sheetBg hidden"><div class="sheet" style="max-width:380px">
   <div style="font-size:46px">🚧</div>
@@ -972,7 +972,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
     <div><b>💻 PC</b><br>WASD · Shift corri · mouse guarda<br>Click spara · tasto destro mira<br>E usa · C crafting · G granata · R ricarica<br>B costruisci · R/T ruota · X smonta · 1-8 pezzi<br>1-8 / Q / rotella: armi · P / Esc pausa</div>
     <div><b>🌙 Survival</b><br>Il giorno dura 7 minuti: 🪓 legna dagli alberi, ⛏️ pietra, ferro e carbone dalle rocce.<br>Al tramonto torna alla base: di notte l'orda attacca i muri. Ogni 5 notti arriva il boss.<br>Monete 🪙 da zombie, casse e missioni · 💎 dalle missioni e dai boss.</div>
   </div>
-  <div class="ver422">Zombie Survival v4.3.17</div>
+  <div class="ver422">Zombie Survival v4.3.18</div>
   <div class="btnRow"><button class="act ghost" id="helpBack">← Indietro</button></div>
 </div></div>
 <div id="pauseScreen" class="overlay sheetBg hidden"><div class="sheet" style="max-width:400px">
@@ -990,8 +990,8 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 </div>
 <div id="rankScreen" class="overlay sheetBg hidden"><div class="sheet scroll">
   <h2>🏆 Classifica</h2>
-  <div class="rkTabs"><button class="tab on" data-r="week">Settimana</button><button class="tab" data-r="all">Sempre</button></div>
-  <div class="prizeNote"><b>Premi settimanali</b> · zombie uccisi in totale questa settimana (ogni partita si somma): <span class="prize">🥇 20💎</span><span class="prize">🥈 10💎</span><span class="prize">🥉 5💎</span></div>
+  <div class="rkTabs"><button class="tab on" data-r="week">Uccisioni</button><button class="tab" data-r="all">Sempre</button></div>
+  <div class="prizeNote"><b>Chi ha ucciso più zombie</b> · dal server, ogni partita si somma: <span class="prize">🥇 20💎</span><span class="prize">🥈 10💎</span><span class="prize">🥉 5💎</span></div>
   <div class="rkList" id="rankList"></div>
   <div class="sub2" style="margin-top:8px;text-align:center" id="rankFoot"></div>
   <div class="btnRow"><button class="act ghost" id="rankBack">← Indietro</button></div>
@@ -1483,11 +1483,11 @@ const sky=new T.Mesh(new T.SphereGeometry(120,24,12),new T.MeshBasicMaterial({ma
 const sunDisc=new T.Sprite(new T.SpriteMaterial({map:glowTex,color:0x9aa6ba,fog:false,depthWrite:false,blending:T.AdditiveBlending,transparent:true,opacity:.5}));sunDisc.scale.set(30,30,1);sunDisc.position.set(-95,8,-60);scene.add(sunDisc);
 scene.add(new T.HemisphereLight(0xc4d0e8,0x4c505c,1.0));
 const sun=new T.DirectionalLight(0xe6edff,1.15);sun.position.set(-60,30,-42);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
-{const sc=sun.shadow.camera;sc.left=-58;sc.right=58;sc.top=58;sc.bottom=-58;sc.near=1;sc.far=220;}sun.shadow.bias=-0.0008;sun.shadow.normalBias=.03;scene.add(sun);
+{const sc=sun.shadow.camera;sc.left=-66;sc.right=66;sc.top=66;sc.bottom=-66;sc.near=1;sc.far=220;}sun.shadow.bias=-0.0008;sun.shadow.normalBias=.03;scene.add(sun);
 const muzzleLight=new T.PointLight(0xffc060,0,9,1.6);scene.add(muzzleLight);
 
 // ---------- world ----------
-const HALF=52;const HOUSE_RECTS=[];
+const CORE=52,HALF=64;const HOUSE_RECTS=[];
 const boxes=[],circles=[],solids=[];
 const ground=new T.Mesh(new T.PlaneGeometry(240,240),new T.MeshLambertMaterial({map:groundTex}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);solids.push(ground);
 const road=new T.Mesh(new T.PlaneGeometry(8,HALF*2+4),new T.MeshLambertMaterial({map:roadTex,transparent:true,depthWrite:false}));road.rotation.x=-Math.PI/2;road.position.y=.012;road.receiveShadow=true;scene.add(road);
@@ -1502,8 +1502,8 @@ function mesh(geo,mat,x,y,z,sx,sy,sz,parent,cast){const m=new T.Mesh(geo,mat);m.
 function solidBox(x,z,w,d,h,mat,y0,noCollide){const m=mesh(G.box,mat,x,(y0||0)+h/2,z,w,h,d);solids.push(m);if(!noCollide)boxes.push({x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2});return m;}
 // perimeter fence (instanced posts + rails, some broken)
 {const posts=[],rails=[];
- for(let s=0;s<4;s++)for(let i=-HALF;i<=HALF;i+=2.5){const x=s<2?i:(s==2?-HALF:HALF),z=s<2?(s==0?-HALF:HALF):i;posts.push([x,z,rand(-.12,.12),rand(-.12,.12)]);
-  if(i+2.5<=HALF)for(const yy of [.55,1.15])if(Math.random()>.15)rails.push([s<2?x+1.25:x,yy+rand(-.08,.08),s<2?z:z+1.25,s>=2,rand(-.1,.1)]);}
+ for(let s=0;s<4;s++)for(let i=-CORE;i<=CORE;i+=2.5){const x=s<2?i:(s==2?-CORE:CORE),z=s<2?(s==0?-CORE:CORE):i;posts.push([x,z,rand(-.12,.12),rand(-.12,.12)]);
+  if(i+2.5<=CORE)for(const yy of [.55,1.15])if(Math.random()>.15)rails.push([s<2?x+1.25:x,yy+rand(-.08,.08),s<2?z:z+1.25,s>=2,rand(-.1,.1)]);}
  const pm=new T.InstancedMesh(G.box,MAT.wood,posts.length),rm=new T.InstancedMesh(G.box,MAT.wood,rails.length);const o=new T.Object3D();
  posts.forEach((p,i)=>{o.position.set(p[0],.85,p[1]);o.rotation.set(p[2],0,p[3]);o.scale.set(.18,1.7,.18);o.updateMatrix();pm.setMatrixAt(i,o.matrix);});
  rails.forEach((r,i)=>{o.position.set(r[0],r[1],r[2]);o.rotation.set(0,r[3]?Math.PI/2:0,r[4]);o.scale.set(2.55,.14,.06);o.updateMatrix();rm.setMatrixAt(i,o.matrix);});
@@ -1603,14 +1603,14 @@ function makeNode(type,x,z,s){const n={type,x,z,s,rot:rnd()*6.28,parts:[],alive:
   else if(type==='dead'){nAdd(n,NIM.trunk,nLocal(0,1.6,0,1,3.2,1));for(let b=0;b<4;b++)nAdd(n,NIM.branch,nLocal(0,2+b*.35,0,1,1.4-b*.15,1,rnd()*.6+.5,b*1.7,0,.6));}
   else{const rx=rnd(),rz=rnd();nAdd(n,NIM.rock,nLocal(0,.3,0,1.25,.75,1,rx,0,rz));nAdd(n,NIM.rocks,nLocal(0,.55,0,1.05,.32,.85,rx*.3,0,rz*.3));}
   n.circle={x,z,r:n.r,off:false};circles.push(n.circle);NODES.push(n);nodeWrite(n);return n;}
-for(let n=0,t=0;n<64&&t<4000;t++){const forest=n<34;const x=forest?(rnd()*2-1)*(HALF-4):(rnd()*2-1)*(HALF-3),z=forest?24+rnd()*(HALF-27):(rnd()*2-1)*(HALF-3);if(!freeSpot(x,z,2))continue;n++;makeNode('pine',x,z,.9+rnd()*.55);}
-for(let n=0,t=0;n<22&&t<3000;t++){const x=(rnd()*2-1)*(HALF-3),z=(rnd()*2-1)*(HALF-3);if(!freeSpot(x,z,1.6))continue;n++;makeNode('dead',x,z,.9+rnd()*.5);}
-for(let n=0,t=0;n<40&&t<3000;t++){const x=(rnd()*2-1)*(HALF-3),z=(rnd()*2-1)*(HALF-3);if(!freeSpot(x,z,1.5))continue;n++;makeNode('rock',x,z,.45+rnd()*.6);}
+for(let n=0,t=0;n<64&&t<4000;t++){const forest=n<34;const x=forest?(rnd()*2-1)*(CORE-4):(rnd()*2-1)*(CORE-3),z=forest?24+rnd()*(CORE-27):(rnd()*2-1)*(CORE-3);if(!freeSpot(x,z,2))continue;n++;makeNode('pine',x,z,.9+rnd()*.55);}
+for(let n=0,t=0;n<22&&t<3000;t++){const x=(rnd()*2-1)*(CORE-3),z=(rnd()*2-1)*(CORE-3);if(!freeSpot(x,z,1.6))continue;n++;makeNode('dead',x,z,.9+rnd()*.5);}
+for(let n=0,t=0;n<40&&t<3000;t++){const x=(rnd()*2-1)*(CORE-3),z=(rnd()*2-1)*(CORE-3);if(!freeSpot(x,z,1.5))continue;n++;makeNode('rock',x,z,.45+rnd()*.6);}
 for(const k in NIM){NIM[k].instanceMatrix.needsUpdate=true;NIM[k].computeBoundingSphere&&NIM[k].computeBoundingSphere();}
 
 // distant silhouettes moved farther for the bigger map
-for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=74+Math.random()*10,h=mesh(G.pine,MAT.hill,Math.cos(a)*r,3,Math.sin(a)*r,7+Math.random()*5,3+Math.random()*4,7+Math.random()*5,null,false);h.receiveShadow=false;}
-for(let i=0;i<14;i++){const a=Math.random()*Math.PI*2,r=60+Math.random()*7;const m=mesh(G.box,MAT.hill,Math.cos(a)*r,2.2,Math.sin(a)*r,3+Math.random()*3,4.4+Math.random()*3,3,null,false);m.rotation.y=a;}
+for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=90+Math.random()*12,h=mesh(G.pine,MAT.hill,Math.cos(a)*r,3,Math.sin(a)*r,7+Math.random()*5,3+Math.random()*4,7+Math.random()*5,null,false);h.receiveShadow=false;}
+for(let i=0;i<14;i++){const a=Math.random()*Math.PI*2,r=82+Math.random()*8;const m=mesh(G.box,MAT.hill,Math.cos(a)*r,2.2,Math.sin(a)*r,3+Math.random()*3,4.4+Math.random()*3,3,null,false);m.rotation.y=a;}
 // ---- merge static meshes by material/shadow/cell: keeps draw calls low on phones ----
 function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new Map();scene.updateMatrixWorld(true);const _p=new T.Vector3();
   scene.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||skip.has(o)||o.userData.dyn)return;const m=o.material;if(Array.isArray(m)||m.transparent)return;let p=o.parent;while(p&&p!==scene){if(p.isCamera)return;p=p.parent;}
@@ -1626,17 +1626,17 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
   for(const c of scene.children.slice())if(c.isGroup&&!c.children.length)scene.remove(c);return merged;}
 // ================= v4.2 richer map: POIs, trails, props (merged into static chunks) =================
 {let ws=4242;const wr=()=>{ws=(ws*16807)%2147483647;return ws/2147483647;};const wR=(a,b)=>a+(b-a)*wr();
- const ok=(x,z,r)=>Math.abs(x)<HALF-3&&Math.abs(z)<HALF-3&&Math.hypot(x,z)>9&&Math.abs(x)>4.2&&Math.abs(z+24)>4.2&&freeSpot(x,z,r);
+ const ok=(x,z,r)=>Math.abs(x)<CORE-3&&Math.abs(z)<CORE-3&&Math.hypot(x,z)>9&&Math.abs(x)>4.2&&Math.abs(z+24)>4.2&&freeSpot(x,z,r);
  MAT.bush=new T.MeshLambertMaterial({color:0x34503a,flatShading:true});MAT.dead=new T.MeshLambertMaterial({color:0x4a3a2c,flatShading:true});MAT.tent=new T.MeshLambertMaterial({color:0x4f6a3a,flatShading:true});
  MAT.tent2=new T.MeshLambertMaterial({color:0x7a5a32,flatShading:true});MAT.trail=new T.MeshLambertMaterial({color:0x9aa0aa,transparent:true,opacity:.55,depthWrite:false});MAT.sign=new T.MeshLambertMaterial({color:0xb8a070});
  const ico=new T.IcosahedronGeometry(1,0),cone4=new T.ConeGeometry(1,1,4);
  // snow drifts + bushes + small stones scattered (non-blocking)
- for(let i=0;i<150;i++){const x=wR(-HALF+4,HALF-4),z=wR(-HALF+4,HALF-4);if(!ok(x,z,.6))continue;const k=wr();
+ for(let i=0;i<150;i++){const x=wR(-CORE+4,CORE-4),z=wR(-CORE+4,CORE-4);if(!ok(x,z,.6))continue;const k=wr();
    if(k<.45){const s=wR(.5,1.1);const m=mesh(ico,MAT.bush,x,s*.45,z,s,s*.7,s);m.rotation.y=wr()*6;const c=mesh(ico,MAT.snow,x,s*.75,z,s*.7,s*.25,s*.7,null,false);c.rotation.y=m.rotation.y;}
    else if(k<.8){const m=mesh(ico,MAT.snow,x,.05,z,wR(1,2.4),wR(.15,.35),wR(.8,1.6),null,false);m.rotation.y=wr()*6;}
    else{const s=wR(.2,.45);const m=mesh(G.rock,MAT.rock,x,s*.4,z,s,s*.7,s*1.1);m.rotation.set(wr(),wr()*6,wr());}}
  // dead trees (blocking, thin)
- for(let i=0;i<22;i++){const x=wR(-HALF+5,HALF-5),z=wR(-HALF+5,HALF-5);if(!ok(x,z,1))continue;const h=wR(3,4.6);const t=mesh(G.trunk,MAT.dead,x,h/2,z,.8,h,.8);solids.push(t);circles.push({x,z,r:.32});
+ for(let i=0;i<22;i++){const x=wR(-CORE+5,CORE-5),z=wR(-CORE+5,CORE-5);if(!ok(x,z,1))continue;const h=wR(3,4.6);const t=mesh(G.trunk,MAT.dead,x,h/2,z,.8,h,.8);solids.push(t);circles.push({x,z,r:.32});
    for(let b=0;b<3;b++){const br=mesh(G.branch,MAT.dead,x,h*wR(.55,.85),z,1,wR(1,1.7),1);br.rotation.set(wR(.6,1.1),wr()*6,0);br.position.x+=Math.sin(br.rotation.y)*.4;br.position.z+=Math.cos(br.rotation.y)*.4;}}
  // abandoned camp (south-west): tents, cold fire ring, crates, sign
  {const cx=-30,cz=30;for(const [dx,dz,ry,m] of [[-3,-1,.4,MAT.tent],[2.6,-2,-.5,MAT.tent2],[0,3.2,1.6,MAT.tent]]){const x=cx+dx,z=cz+dz;if(!freeSpot(x,z,1.4))continue;const t=mesh(cone4,m,x,1.05,z,1.7,2.1,2.2);t.rotation.y=ry+Math.PI/4;solids.push(t);circles.push({x,z,r:1.25});mesh(G.box,MAT.snow,x,2.0,z,.5,.08,.5,null,false);}
@@ -1662,6 +1662,15 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
   for(const [cx,cz,rx,rz] of clumps)for(let i=0;i<8;i++){const x=cx+cR(-rx,rx),z=cz+cR(-rz,rz);if(Math.abs(x)<6.5)continue;if(!freeSpot(x,z,1.3))continue;
     let inH=false;for(const h of HOUSE_RECTS)if(Math.abs(x-h[0])<h[2]+1.4&&Math.abs(z-h[1])<h[3]+1.4)inH=true;if(inH)continue;
     const s=cR(.5,.95),m=mesh(ico,MAT.bush,x,s*.42,z,s,s*.6,s);m.rotation.y=cr()*6;const sn=mesh(ico,MAT.snow,x,s*.68,z,s*.55,s*.2,s*.55,null,false);sn.rotation.y=m.rotation.y;}}
+ // outer wood past the old fence: one instanced mesh, no collision, own seed so nothing already placed moves
+ {let fs=43181;const fr=()=>{fs=(fs*16807)%2147483647;return fs/2147483647;};const N=48,im=new T.InstancedMesh(G.pine,MAT.pine,N),o=new T.Object3D();
+  im.castShadow=false;im.receiveShadow=false;im.frustumCulled=false;
+  for(let i=0;i<N;i++){const edge=i%4,along=(fr()*2-1)*(HALF-4),depth=CORE+2+fr()*(HALF-CORE-5);let x,z;
+    if(edge===0){x=along;z=-depth;}else if(edge===1){x=along;z=depth;}else if(edge===2){x=-depth;z=along;}else{x=depth;z=along;}
+    let bad=Math.hypot(x,z)<22;for(const h of HOUSE_RECTS)if(Math.abs(x-h[0])<h[2]+4&&Math.abs(z-h[1])<h[3]+4)bad=true;
+    if(bad)o.scale.set(0,0,0);else{o.position.set(x,0,z);o.rotation.set(0,fr()*6,0);const s=.85+fr()*.8;o.scale.set(s,1.2+fr()*1.3,s);}
+    o.updateMatrix();im.setMatrixAt(i,o.matrix);}
+  scene.add(im);}
 }
 
 const MERGED=mergeStatics();
@@ -2160,7 +2169,9 @@ function updateZombie(z,dt,t,target,canAttack){const V=z.V,sc=V.scale;
     z.g.position.x+=Math.sin(z.g.rotation.y)*sp;z.g.position.z+=Math.cos(z.g.rotation.y)*sp;
     for(const o of zombies){if(o===z||!o.alive||o.dead)continue;const ex=z.g.position.x-o.g.position.x,ez=z.g.position.z-o.g.position.z,ed=Math.hypot(ex,ez),md=.38*(sc+o.V.scale);if(ed<md&&ed>1e-4){z.g.position.x+=ex/ed*(md-ed)*.5;z.g.position.z+=ez/ed*(md-ed)*.5;}}
     collide(z.g.position,.35*sc);moved=Math.hypot(z.g.position.x-ox,z.g.position.z-oz);
-    if(sp>0&&moved<sp*.35){z.stuck+=dt;if(z.stuck>(V.heavy||sc>1.2?.7:.35)&&z.sideT<=0){z.side=(t-(z.sideLT||-9)<4&&z.side)?z.side:(Math.random()<.5?-1:1);z.sideLT=t;z.sideT=(V.heavy||sc>1.2)?2.2:1.3;z.stuck=0;}}else z.stuck=Math.max(0,z.stuck-dt);
+    if(sp>0&&moved<sp*.35){z.stuck+=dt;if(z.stuck>(V.heavy||sc>1.2?.7:.35)&&z.sideT<=0){if(!z.side)z.side=Math.random()<.5?-1:1;z.stuckN=(z.stuckN|0)+1;z.sideLT=t;
+      if(z.stuckN>=2){z.stuckN=0;z.sideT=0;const a=z.g.rotation.y+z.side*1.15;z.via433={x:z.g.position.x+Math.sin(a)*4,z:z.g.position.z+Math.cos(a)*4,until:t+2.4};}
+      else{z.sideT=(V.heavy||sc>1.2)?2.4:1.8;}z.stuck=0;}}else{z.stuck=Math.max(0,z.stuck-dt);if(moved>sp*.8)z.stuckN=0;}
     z.phase+=dt*(V.name==='runner'?z.speed*2.4:z.speed*3.1)*(z.stag>0?.3:1);poseWalk(z,t,1);}
   else{z.phase+=dt*1.5;poseWalk(z,t,.25);if(canAttack&&z.cool<=0&&(!SV.on||z.tgtKind!=='point')){z.state='atk';z.atkT=0;z.atkHit=false;groan(z,'atk');}}
   if(((d<V.reach*sc&&(!SV.on||z.tgtKind!=='point'))||pieceNear(z))&&canAttack&&z.cool<=0&&z.state!=='atk'){z.state='atk';z.atkT=0;z.atkHit=false;groan(z,'atk');}
@@ -2200,7 +2211,8 @@ function update(dt){game.time+=dt;const t=game.time;
   const sy=Math.sin(player.yaw),cy=Math.cos(player.yaw);
   _mv.set((mx*cy+mz*sy)*maxSp,0,(-mx*sy+mz*cy)*maxSp);
   const accel=_mv.lengthSq()>player.vel.lengthSq()?11:8.5;player.vel.x=damp(player.vel.x,_mv.x,accel,dt);player.vel.z=damp(player.vel.z,_mv.z,accel,dt);
-  player.pos.addScaledVector(player.vel,dt);collide(player.pos,player.r);
+  const _px=player.pos.x,_pz=player.pos.z;player.pos.addScaledVector(player.vel,dt);collide(player.pos,player.r);
+  if(dt>1e-4){const vx=(player.pos.x-_px)/dt,vz=(player.pos.z-_pz)/dt;if(player.vel.x*vx<0)player.vel.x=0;else if(Math.abs(vx)<Math.abs(player.vel.x))player.vel.x=vx;if(player.vel.z*vz<0)player.vel.z=0;else if(Math.abs(vz)<Math.abs(player.vel.z))player.vel.z=vz;}
   const spd=Math.hypot(player.vel.x,player.vel.z);player.moveAmt=clamp(spd/4.4,0,1.5);player.bob+=dt*spd*2.1;
   // --- smoothed look ---
   player.yaw=damp(player.yaw,player.tYaw,isTouch?22:35,dt);player.pitch=damp(player.pitch,player.tPitch,isTouch?22:35,dt);
@@ -2385,12 +2397,12 @@ const MEDAL=['🥇','🥈','🥉'],PRIZE=[20,10,5];
 function rowHTML(x,i,week){return '<div class="rk"><span class="pos">'+(i<3?MEDAL[i]:(i+1))+'</span><span class="nm">'+esc(x.n)+' <small style="opacity:.6">· '+x.g+(x.g===1?' partita':' partite')+' · migliore '+x.bk+'☠️</small></span><span class="kv">'+x.k+' ☠️</span>'+(week&&i<3?'<span class="prize">'+PRIZE[i]+'💎</span>':'')+'</div>';}
 let rankMode='week';
 function renderRank(){document.querySelectorAll('#rankScreen .tab').forEach(b=>b.classList.toggle('on',b.dataset.r===rankMode));const rows=rankRows(rankMode,10);
-  $('rankList').innerHTML=rows.length?rows.map((x,i)=>rowHTML(x,i,rankMode==='week')).join(''):'<div class="rk empty">Nessuna partita '+(rankMode==='week'?'questa settimana':'ancora')+': gioca per entrare in classifica!</div>';
-  $('rankFoot').innerHTML='🌍 Classifica globale: scrivi <b>/classifica</b> al bot<br><span style="opacity:.75">La settimana si azzera lunedì alle 00:00 (tra '+resetIn()+')</span>';}
+  $('rankList').innerHTML=rows.length?rows.map((x,i)=>rowHTML(x,i,rankMode==='week')).join(''):'<div class="rk empty">Nessuno in classifica: uccidi degli zombie per entrare.</div>';
+  $('rankFoot').innerHTML='🌍 Classifica uccisioni'+(rankMode==='week'?' · dal server, si aggiorna da sola':'');}
 function openRank(){rankMode='week';renderRank();$('rankScreen').classList.remove('hidden');}
 $('rankScreen').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b){rankMode=b.dataset.r;renderRank();}});
 function miniRow422(x,i){return '<div class="rk mini422'+(x.id===myId()?' me':'')+'"><span class="pos">'+MEDAL[i]+'</span><span class="nm"><span class="nmT">'+esc(x.n)+'</span><small>'+x.g+(x.g===1?' partita':' partite')+'</small></span><span class="kv">'+x.k+' ☠️</span><span class="prize">'+PRIZE[i]+'💎</span></div>';}
-function renderMini(){const rows=rankRows('week',3);$('miniReset').textContent='reset tra '+resetIn();
+function renderMini(){const rows=rankRows('week',3);$('miniReset').textContent='';
   let hh=rows.map((x,i)=>miniRow422(x,i)).join('');for(let i=rows.length;i<3;i++)hh+='<div class="rk ph"><span class="pos">'+MEDAL[i]+'</span><span class="nm">posto libero</span><span class="prize">'+PRIZE[i]+'💎</span></div>';$('miniList').innerHTML=hh;}
 
 // ---------- menu ----------
@@ -3112,8 +3124,8 @@ function updateFires(dt,t){fireTk-=dt;let near=null,nd=1e9;for(const f of fireLi
 const hemiL=scene.children.find(o=>o.isHemisphereLight);
 // v4.1: torch = plain PointLight just ahead of the camera (the SpotLight cone rendered as a black half-disc on some mobile GPUs)
 const flash=new T.PointLight(0xfff0d8,0,17,1.2);flash.position.set(0,.25,-.8);camera.add(flash);
-const LDAY={hemi:1.0,sun:1.15,fog:new T.Color(0x939dac),near:9,far:56,sky:new T.Color(0xffffff),hc:new T.Color(0xc4d0e8),disc:.5},
- LDUSK={hemi:.6,sun:.7,fog:new T.Color(0x8a7078),near:7,far:47,sky:new T.Color(0xd0a0a0),hc:new T.Color(0xe0b0a0),disc:.7},
+const LDAY={hemi:1.0,sun:1.15,fog:new T.Color(0x939dac),near:10,far:72,sky:new T.Color(0xffffff),hc:new T.Color(0xc4d0e8),disc:.5},
+ LDUSK={hemi:.6,sun:.7,fog:new T.Color(0x8a7078),near:8,far:54,sky:new T.Color(0xd0a0a0),hc:new T.Color(0xe0b0a0),disc:.7},
  LNIGHT={hemi:.2,sun:.08,fog:new T.Color(0x0c1220),near:4,far:33,sky:new T.Color(0x1c2436),hc:new T.Color(0x6a7cb0),disc:.12};
 const _lc=new T.Color();
 function mixL(a,b,k){scene.fog.color.copy(a.fog).lerp(b.fog,k);scene.fog.near=lerp(a.near,b.near,k);scene.fog.far=lerp(a.far,b.far,k);sky.material.color.copy(a.sky).lerp(b.sky,k);
@@ -3243,8 +3255,8 @@ function svGameOver(){game.state='over';firing=false;resetTouchState();if(docume
   $('overStats').innerHTML='<div class="bigScore">'+SV.streak+'</div><div class="small" style="opacity:.7;letter-spacing:2px">NOTTI SOPRAVVISSUTE · '+DIFF().label.toUpperCase()+'</div>'+(SV.streak>0&&SV.streak>=best?'<div class="recBadge">★ NUOVO RECORD ★</div>':'')+
    '<div class="statGrid"><div><b>'+SV.day+'</b>Giorno</div><div><b>'+game.kills+'</b>Uccisi</div><div><b>'+PIECES.filter(p=>p.alive).length+'</b>Pezzi base</div><div><b>+'+S.gemsRun+'</b>💎 Guadagnati</div></div><div class="bestLine">🏆 Record: '+best+' notti sopravvissute di fila</div><div class="sub2" style="margin-top:6px">Con «Riprova dalla base» tieni base e cassa, ma perdi lo zaino.</div>';
   $('restartBtn').textContent='↻ Riprova dalla base';$('newRunBtn').style.display='';$('sendScoreBtn').style.display=TG.W?'':'none';queueScore();setTimeout(()=>scoreAfterRun(),900);$('overScreen').classList.remove('hidden');play('over');}
-function svMenuInfo(){const s=svLoadData();$('survSub').textContent=s?'Continua · Giorno '+s.day+' · '+((s.pc||[]).length)+' pezzi base':'Nuova partita · giorno e notte';$('btnNewRun').style.display=s?'':'none';
-  const b=LS.get('zc_best_surv',0)|0;$('menuBest').innerHTML=(b?'🏆 Record: <b>'+b+'</b> notti sopravvissute':'Sopravvivi alla notte: costruisci la base prima del tramonto')+(LS.get('zc_best',{}).kills?' · ☠️ '+LS.get('zc_best',{}).kills+' uccisi':'');}
+function svMenuInfo(){const s=svLoadData();$('survSub').textContent=s?'Continua · base salvata':'Nuova partita';$('btnNewRun').style.display=s?'':'none';
+  const k=LS.get('zc_best',{}).kills|0;$('menuBest').innerHTML=k?'☠️ Record: <b>'+k+'</b> zombie uccisi':'Uccidi più zombie che puoi';}
 
 // ======================= v4 glue: HUD, input, per-frame update =======================
 let hudSig='';
@@ -5053,7 +5065,7 @@ TH43.cbs=[];
 if(typeof renderThumbsIdle==='function')renderThumbsIdle=function(cb){if(THUMBS&&!TH43.stale){if(cb)cb();return;}if(cb)TH43.cbs.push(cb);thumbs43();};
 if(typeof thumbsPartial422==='function')thumbsPartial422=function(){if(!THUMBS||TH43.stale){const P=pre43();if(P){TH43.job++;TH43.busy=false;THUMBS=null;TH43.stale=false;thumbs43();return THUMBS||P;}}return (TH43.busy&&TH43.ctx)?TH43.ctx.out:(THUMBS||{});};
 if(typeof thumbOne422==='function')thumbOne422=function(){};
-window.GAME_VER='4.3.17';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.17');}catch(e){}
+window.GAME_VER='4.3.18';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.18');}catch(e){}
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;
 setTimeout(()=>{try{Object.assign(window.__game,{GFX43,gfxSet43,W43,TH43,VM,vmScene,vmCam,warmShaders42,thumbs43});}catch(e){}},0);
@@ -5100,11 +5112,8 @@ FL431.tick=function(raw,now){if(!(raw>0&&raw<400))return;
   // Missed vsyncs keep stepping the scale down to the quality floor, even when the frame is mostly JavaScript.
   if(w.t>=2000){const pct=w.miss/w.n,c=fl431Caps(),L=fl431Levels(c),i=fl431Lvl(L);
     FL431.cpuBound=(FL431.cpuMs||0)>budget*.7;
-    if(FL431.cap==='max'&&FL431.period<14.5){const cms=FL431.cpuMs||0,hot=FL431.period*.92,cool=FL431.period*.85;
-      if((typeof LD431!=='undefined'&&LD431&&(LD431.on||LD431.hold||LD431.cover))||now-(FL431.playT||0)<8000){FL431.cpu60=false;FL431.c60n=0;FL431.c60u=0;}
-      else if(!FL431.cpu60){if(cms>hot){FL431.c60n=(FL431.c60n|0)+1;if(FL431.c60n>=4&&now-(FL431.cpu60Off||-1e9)>10000){FL431.cpu60=true;FL431.cpu60T=now;FL431.lastDraw=now;FL431.capT=now;FL431.win={n:0,miss:0,t:0};}}else FL431.c60n=0;}
-      else if(cms<cool){FL431.c60u=(FL431.c60u|0)+(cms<FL431.period*.6?2:1);if(FL431.c60u>=3){FL431.cpu60=false;FL431.c60n=0;FL431.c60u=0;FL431.cpu60Off=now;FL431.capT=now;FL431.win={n:0,miss:0,t:0};}}
-      else FL431.c60u=0;}else FL431.cpu60=false;
+    // FPS Max never skips a vsync. A hot CPU used to lock the phone at 45 fps; the resolution scaler below is what keeps it smooth.
+    if(FL431.cap==='max'){FL431.cpu60=false;FL431.c60n=0;FL431.c60u=0;}else FL431.cpu60=false;
     if(pct>.05){if(FL431.raised&&now-FL431.raised<6000)FL431.lockUp=now+45000;FL431.clean=0;
       // JS time above 70% of a vsync used to pin the scale at 1. Missed vsyncs are still late frames,
       // so keep stepping the resolution down until they stop or the quality floor is reached.
@@ -5508,11 +5517,12 @@ function svTarget433(z){const tg=svTarget(z);if(!z.alive||z.dead)return tg;const
   const R=z.r433||(z.r433={x:P.x,z:P.z,t:t,lvl:0});
   if(t-R.t>=2){const mv=Math.hypot(P.x-R.x,P.z-R.z),dT=Math.hypot(P.x-tg.x,P.z-tg.z);
     if(mv<.35&&dT>2.5&&z.tgtKind!=='piece'){R.lvl++;
-      if(R.lvl===1){if(t-(z.sideLT||-9)>4)z.side=-(z.side||1);z.sideLT=t;z.sideT=(z.V.heavy||z.V.scale>1.2)?2.6:1.8;rec433Log(z,1,'passo laterale');}
+      if(R.lvl===1){if(!z.side)z.side=Math.random()<.5?-1:1;z.sideLT=t;z.sideT=(z.V.heavy||z.V.scale>1.2)?2.6:2.2;rec433Log(z,1,'passo laterale');}
       else{let door=null;if(R.lvl>=3){let bd=10;for(const p of PIECES){if(!p.alive||p.type!=='door'||!p.open)continue;const d=Math.hypot(p.x-P.x,p.z-P.z);if(d<bd){bd=d;door=p;}}}
         if(door){z.via433={x:door.x,z:door.z,until:t+5};rec433Log(z,3,'verso la porta aperta');}
-        else{const a=Math.atan2(tg.x-P.x,tg.z-P.z);let ok=false;for(const s of [1,-1,2,-2]){const b=a+s*Math.PI/3,x=P.x+Math.sin(b)*4,zz=P.z+Math.cos(b)*4;if(freeSpot(x,zz,.5)){z.via433={x,z:zz,until:t+3};ok=true;rec433Log(z,2,'giro attorno all\'ostacolo');break;}}
-          if(!ok){z.side=-(z.side||1);z.sideT=2.4;}}
+        else{const a=Math.atan2(tg.x-P.x,tg.z-P.z)+(z.side||1)*Math.PI/2;const x=P.x+Math.sin(a)*4,zz=P.z+Math.cos(a)*4;
+          if(freeSpot(x,zz,.5)){z.via433={x,z:zz,until:t+2.8};z.sideT=0;rec433Log(z,2,'giro attorno all\'ostacolo');}
+          else{const b=Math.atan2(tg.x-P.x,tg.z-P.z);let ok=false;for(const s of [1,-1]){const ang=b+s*Math.PI/3,xx=P.x+Math.sin(ang)*4,yz=P.z+Math.cos(ang)*4;if(freeSpot(xx,yz,.5)){z.via433={x:xx,z:yz,until:t+2.8};z.sideT=0;ok=true;break;}}if(!ok)z.sideT=0;}}
         if(R.lvl>=4)R.lvl=0;}}
     else if(mv>1)R.lvl=0;
     R.x=P.x;R.z=P.z;R.t=t;}
@@ -5649,16 +5659,16 @@ function zs439Top(cb){if(!ZS_API){cb(null);return;}if(ONL439.data&&Date.now()-ON
   const me=myId(),fin=d=>{ONL439.busy=false;const L=ONL439.cbs;ONL439.cbs=[];for(const f of L)try{f(d);}catch(e){}};
   fetch(zs439Base()+'/top?wk=current&nc='+Date.now()+(me!=='local'?'&uid='+encodeURIComponent(me):''),ctl?{signal:ctl.signal}:{}).then(r=>r.ok?r.json():null)
     .then(j=>{if(j&&Array.isArray(j.top)){try{zs439Archive(j);}catch(e){}ONL439.data=j;ONL439.t=Date.now();fin(j);}else fin(ONL439.data||null);}).catch(()=>fin(ONL439.data||null));}
-function zs439Rows(d){return d.top.map(x=>({id:String(x.uid),n:x.name,k:x.k|0,s:x.s|0,g:x.n|0,bk:x.bk|0,w:x.bw|0}));}
+function zs439Rows(d){return d.top.map(x=>({id:String(x.uid),n:x.name,k:x.k|0,s:x.s|0,g:x.n|0,bk:x.bk|0,w:x.bw|0})).sort((a,b)=>b.k-a.k||b.s-a.s);}
 function zs439PaintRank(d){const me=myId(),rows=zs439Rows(d);
-  $('rankList').innerHTML=rows.length?rows.map((x,i)=>{const h=rowHTML(x,i,true);return x.id===me?h.replace('<div class="rk">','<div class="rk me">'):h;}).join(''):'<div class="rk empty">Nessuna partita questa settimana: gioca per entrare in classifica!</div>';
+  $('rankList').innerHTML=rows.length?rows.map((x,i)=>{const h=rowHTML(x,i,true);return x.id===me?h.replace('<div class="rk">','<div class="rk me">'):h;}).join(''):'<div class="rk empty">Nessuno in classifica: uccidi degli zombie per entrare.</div>';
   const inTop=rows.some(x=>x.id===me);
-  $('rankFoot').innerHTML='🌍 Classifica online · <b>'+(d.players|0)+'</b> '+((d.players|0)===1?'giocatore':'giocatori')+(d.me?' · 📍 sei <b>'+d.me.pos+'°</b>'+(inTop?'':' ('+d.me.k+' ☠️)'):' · gioca una partita per entrare')+
-    '<br><span style="opacity:.75">Si aggiorna da sola · la settimana si azzera lunedì alle 00:00 (tra '+resetIn()+')</span>';}
+  $('rankFoot').innerHTML='🌍 Uccisioni dal server · <b>'+(d.players|0)+'</b> '+((d.players|0)===1?'giocatore':'giocatori')+(d.me?' · 📍 sei <b>'+d.me.pos+'°</b> con <b>'+(d.me.k|0)+'</b> ☠️':(inTop?'':' · gioca una partita per entrare'))+
+    '<br><span style="opacity:.75">Si aggiorna da sola mentre gli altri giocano. I premi della settimana si azzerano lunedì (tra '+resetIn()+').</span>';}
 function zs439PaintAll(){const me=myId(),rows=zs439LifeRows().slice(0,20);
   $('rankList').innerHTML=rows.length?rows.map((x,i)=>{const h=rowHTML(x,i,false);return x.id===me?h.replace('<div class="rk">','<div class="rk me">'):h;}).join(''):'<div class="rk empty">Ancora nessun giocatore. Chi compare in settimana resta qui anche dopo il lunedì.</div>';
-  $('rankFoot').innerHTML='🌍 Classifica di sempre · <b>'+rows.length+'</b> '+(rows.length===1?'giocatore':'giocatori')+'<br><span style="opacity:.75">Si aggiorna da sola. Il lunedì la settimana riparte, qui i nomi restano.</span>';}
-function zs439PaintMini(d){const rows=zs439Rows(d).slice(0,3);let hh=rows.map((x,i)=>miniRow422(x,i)).join('');
+  $('rankFoot').innerHTML='🌍 Uccisioni di sempre · <b>'+rows.length+'</b> '+(rows.length===1?'giocatore':'giocatori')+'<br><span style="opacity:.75">Somma gli zombie uccisi. I nomi che il server ha mandato restano anche dopo il lunedì.</span>';}
+function zs439PaintMini(d){const rows=zs439Rows(d).slice(0,3);$('miniReset').textContent='';let hh=rows.map((x,i)=>miniRow422(x,i)).join('');
   for(let i=rows.length;i<3;i++)hh+='<div class="rk ph"><span class="pos">'+MEDAL[i]+'</span><span class="nm">posto libero</span><span class="prize">'+PRIZE[i]+'💎</span></div>';$('miniList').innerHTML=hh;}
 {const _rr=renderRank;renderRank=function(){_rr.apply(this,arguments);if(!ZS_API)return;
   zs439Top(d=>{try{if($('rankScreen').classList.contains('hidden'))return;if(rankMode==='week'){if(d)zs439PaintRank(d);}else zs439PaintAll();}catch(e){}});};}
@@ -5811,8 +5821,8 @@ body.homeXC #startScreen .playRow .mBtn.zombie small{white-space:normal!importan
 /* 4.3.15: the home is a fixed screen. Closing a sheet must not scroll it or fall through onto Negozio. */
 #startScreen.overlay{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important}
 #startScreen .menuL{overflow:hidden!important;touch-action:manipulation!important;overscroll-behavior:none!important;max-height:100%!important}
-body.inmenu #zdbgB{left:auto!important;right:calc(var(--sar,0px) + 8px)!important;top:32%!important;bottom:auto!important;transform:none!important}
-body.inmenu #zdbgP.show{left:auto!important;right:calc(var(--sar,0px) + 6px)!important;top:calc(var(--sat,0px) + 6px)!important;bottom:auto!important;transform:none!important;width:min(300px,calc(100vw - min(54vw,430px) - 18px))!important;max-height:calc(100vh - 12px)!important}
+body.inmenu #zdbgB{left:auto!important;right:calc(var(--sar,0px) + 12px)!important;top:calc(var(--sat,0px) + 56px)!important;bottom:auto!important;width:auto!important;height:36px!important;transform:none!important}
+body.inmenu #zdbgP.show{left:auto!important;right:calc(var(--sar,0px) + 8px)!important;top:calc(var(--sat,0px) + 100px)!important;bottom:auto!important;transform:none!important;width:min(210px,40vw)!important;max-height:120px!important}
 /* 4.3.17: keep the level and record lines above the gesture bar */
 body.inmenu #startScreen .menuL{padding-bottom:calc(8px + max(var(--sab,0px), 22px))!important}
 
