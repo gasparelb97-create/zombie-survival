@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05e",
+ "rev": "2026-10-05f",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,14 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.16",
+   "date": "5 ott",
+   "items": [
+    "🐞 Il debug aperto sta sul paesaggio a destra: Gioca, Negozio, Opzioni e Audio restano toccabili",
+    "⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"
+   ]
+  },
   {
    "ver": "4.3.15",
    "date": "5 ott",
