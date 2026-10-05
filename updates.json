@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05f",
+ "rev": "2026-10-05g",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,17 @@
   }
  ],
  "recent": [
+   {
+   "ver": "4.3.17",
+   "date": "5 ott",
+   "items": [
+    "🏠 Livello e record stanno tutti in home, sopra la barra in basso",
+    "🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì",
+    "🎵 Il vento non copre più la musica: in home è spento",
+    "🐞 Nel debug c’è solo Problemi, e un problema già visto non viene ricontato",
+    "🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"
+   ]
+  },
   {
    "ver": "4.3.16",
    "date": "5 ott",
