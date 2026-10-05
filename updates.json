@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05p",
+ "rev": "2026-10-05q",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.27",
+   "date": "5 ott",
+   "items": [
+    "⚡ Se un fotogramma non arriva, il gioco riparte da solo e non resta fermo per 5 secondi",
+    "🎵 Resta acceso un solo tema: la musica non si spezza quando il telefono si blocca un attimo",
+    "👟 Passi e tocchi non creano più migliaia di suoni, la partita resta più fluida"
+   ]
+  },
   {
    "ver": "4.3.26",
    "date": "5 ott",
@@ -307,15 +316,6 @@
     "Home più pulita: niente scelta difficoltà, pulsanti Classifica e Arena leggibili",
     "In partita livello, monete e missioni stanno insieme in alto al centro",
     "Menu più reattivo all'avvio (meno blocchi)"
-   ]
-  },
-  {
-   "ver": "4.2.1",
-   "date": "3 ott",
-   "items": [
-    "Comandi più puliti: il chip delle missioni non copre più il joystick",
-    "Pannello missioni compatto con ✕, si chiude da solo quando ti muovi",
-    "Nuova bacheca 📰 Novità: guarda cosa arriva nel gioco"
    ]
   }
  ]
