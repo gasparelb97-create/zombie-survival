@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05c",
+ "rev": "2026-10-05d",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,16 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.14",
+   "date": "5 ott",
+   "items": [
+    "🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo",
+    "🐞 Il debug a ogni apertura conta solo i problemi nuovi, non quelli già sistemati",
+    "🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma",
+    "🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"
+   ]
+  },
   {
    "ver": "4.3.13",
    "date": "5 ott",
