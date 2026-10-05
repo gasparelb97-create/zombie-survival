@@ -1,0 +1,7 @@
+Kenney (CC0) — Car Kit, City Kit Suburban, City Kit Roads
+https://kenney.nl/assets
+Models: sedan, suv, van, taxi, hatchback-sports, light-curved, dumpster, building-type-b, building-type-d, building-type-f
+
+Poly Haven (CC0) — photo textures
+https://polyhaven.com
+brick_wall_001, brown_planks_05, clay_roof_tiles, worn_plaster_wall, asphalt_02, brick_pavement_02
