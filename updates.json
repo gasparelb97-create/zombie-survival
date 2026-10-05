@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-05s",
+  "rev": "2026-10-05t",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.30",
+      "date": "5 ott",
+      "items": [
+        "🏠 Tetto e pavimento sono una superficie continua: il muro ha la sua texture, il pavimento la sua, il tetto la sua",
+        "🪟 La finestra fissa e quella apribile hanno un'apertura pulita. La tenda si mette su entrambe",
+        "💡 La lampada di casa è appesa e illumina la stanza",
+        "🏙️ In città auto, casse e panchine non sono più incastrate nei muri",
+        "🐞 Il debug fa copiare l'errore, anche quando ne ha appena trovato uno"
+      ]
+    },
     {
       "ver": "4.3.29",
       "date": "5 ott",
@@ -299,25 +310,6 @@
         "Negozio: le etichette non coprono più le immagini, la lista resta dov'era e le schede rispondono meglio al tocco",
         "Nuova opzione 🎯 FPS in Impostazioni: Auto / 60 / Max",
         "Risoluzione adattiva e ombre più leggere: si abbassa un poco solo quando serve"
-      ]
-    },
-    {
-      "ver": "4.3",
-      "date": "4 ott",
-      "items": [
-        "🎯 Armi rifatte in 3D: canne, mirini, calcio e caricatori dettagliati, materiali metallo/legno e accenti per rarità",
-        "Animazioni nuove: fiammata con luce, bossoli, rinculo, ricarica col caricatore, minigun che gira, fiamme e plasma",
-        "🌄 Grafica nuova: ombre vere di sole e luna, texture per neve, legno, mattoni, asfalto e corteccia, nebbia e luci più belle",
-        "Zombie più dettagliati con movimenti più fluidi, più neve, impronte, sangue e scintille",
-        "🎨 Impostazioni → Grafica Bassa / Media / Alta: la tua scelta resta salvata",
-        "🏗️ Nuove costruzioni: torre di guardia, torretta automatica, banco da lavoro, generatore, faro, recinto elettrico, punte, imposte, raccoglitore d'acqua e arredi",
-        "Menu Costruisci diviso in Muri, Difesa, Utilità e Decorazioni",
-        "Anteprima 3D che ruota nel Negozio (Prova)",
-        "🎒 Zaino e orologio del giorno ora in alto a destra, accanto ai pulsanti di Telegram",
-        "Più spazio libero sullo schermo durante la partita",
-        "Liste del Negozio e delle Novità: scorrono sempre trascinando col dito",
-        "Avvio partita e Negozio più fluidi: niente blocchi al primo frame",
-        "Due tocchi rapidi di fila non vengono più persi"
       ]
     }
   ]
