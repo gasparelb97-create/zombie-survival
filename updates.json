@@ -1,5 +1,5 @@
 {
- "rev": "2026-10-05j",
+ "rev": "2026-10-05k",
  "upcoming": [
   {
    "icon": "🆕",
@@ -10,6 +10,15 @@
   }
  ],
  "recent": [
+  {
+   "ver": "4.3.21",
+   "date": "5 ott",
+   "items": [
+    "🏠 I tetti delle case e dei depositi sono a spiovente, con il colmo in alto",
+    "🚗 Le auto parcheggiate hanno carrozzeria, vetri e ruote, e stanno a bordo strada",
+    "🚑 Il bus e l'ambulanza hanno le ruote. L'ambulanza ha la croce"
+   ]
+  },
   {
    "ver": "4.3.20",
    "date": "5 ott",
