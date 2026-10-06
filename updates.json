@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06n",
+  "rev": "2026-10-06o",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.47",
+      "date": "6 ott",
+      "items": [
+        "Lo schermo di Telegram mostra il gioco e la home per intero",
+        "L'arma in mano si vede anche in orizzontale",
+        "Gli zombie subiscono i colpi delle armi"
+      ]
+    },
     {
       "ver": "4.3.46",
       "date": "6 ott",
