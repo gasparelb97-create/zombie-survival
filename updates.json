@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06z",
+  "rev": "2026-10-07a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.59",
+      "date": "7 ott",
+      "items": [
+        "Nuova città 3D disponibile dal tasto Città nuova: 35 edifici accessibili e quartieri collegati; prima versione giocabile con salvataggi separati",
+        "Fari accesi, fumo animato, auto distrutte e ribaltate, asfalto rovinato, sangue, scheletri e ossa",
+        "Incroci senza superfici stradali sovrapposte; passaggi e interni verificati; la partita attuale resta accessibile"
+      ]
+    },
     {
       "ver": "4.3.58",
       "date": "6 ott",

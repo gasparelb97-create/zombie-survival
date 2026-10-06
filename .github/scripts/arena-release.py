@@ -24,34 +24,43 @@ def client_online():
     version = notes['game_version']
     stamp = os.environ.get('GITHUB_SHA', 'check')
     def read(path):
-        request = Request(f'{GAME_URL}/{path}?release={stamp}',
-                          headers={'User-Agent': 'ZombieSurvival-Release/1.0'})
+        request = Request(f'{GAME_URL}/{path}?release={stamp}&check={time.time_ns()}',
+                          headers={'User-Agent': 'ZombieSurvival-Release/1.0', 'Cache-Control': 'no-cache'})
         with urlopen(request, timeout=10) as response:
             return response.read().decode('utf-8')
-    if read('version.txt').strip() != version:
-        return False
+    actual = read('version.txt').strip()
+    if actual != version:
+        raise ValueError(f'Gioco online {actual}, atteso {version}')
     news = json.loads(read('updates.json'))
     if not news.get('recent') or news['recent'][0].get('ver') != version:
-        return False
-    return f"window.GAME_VER='{version}'" in read('game.html')
+        raise ValueError(f'Bacheca non ancora aggiornata a {version}')
+    if f"window.GAME_VER='{version}'" not in read('game.html'):
+        raise ValueError(f'Client non ancora aggiornato a {version}')
+    return True
 
 
 def verify():
     expected = expected_version()
-    for attempt in range(36):
+    last_issue = 'Controllo non eseguito'
+    for attempt in range(72):
         try:
-            url = f'{ARENA_URL}/?release={os.environ.get("GITHUB_SHA", "check")}'
-            request = Request(url, headers={'User-Agent': 'ZombieSurvival-Release/1.0'})
+            url = f'{ARENA_URL}/?release={os.environ.get("GITHUB_SHA", "check")}&check={time.time_ns()}'
+            request = Request(url, headers={'User-Agent': 'ZombieSurvival-Release/1.0', 'Cache-Control': 'no-cache'})
             with urlopen(request, timeout=10) as response:
                 data = json.load(response)
             if data.get('ok') is True and data.get('arena') is True and data.get('v') == expected and client_online():
                 print(f'Gioco e bacheca online: {json.loads(Path("arena/release-notes.json").read_text())["game_version"]}; Arena {expected}')
                 return
-        except Exception:
-            pass
-        if attempt < 35:
+            last_issue = f'Arena online {data.get("v")}, attesa {expected}'
+        except ValueError as error:
+            last_issue = str(error)
+        except Exception as error:
+            last_issue = f'Connessione non pronta ({type(error).__name__})'
+        if attempt % 6 == 0:
+            print(f'Attesa pubblicazione: {last_issue}', flush=True)
+        if attempt < 71:
             time.sleep(5)
-    raise RuntimeError('La versione pubblicata non risponde: nessuna notifica di successo inviata')
+    raise RuntimeError(f'Verifica pubblicazione fallita: {last_issue}. Nessuna notifica di successo inviata')
 
 
 def notification_text():

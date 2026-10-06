@@ -1,9 +1,9 @@
 {
-  "version": 458,
-  "game_version": "4.3.58",
+  "version": 459,
+  "game_version": "4.3.59",
   "changes": [
-    "Mappa rinnovata con quartieri residenziali e industriali, nuovi palazzi e officine, strade collegate a base, stazione e ospedale",
-    "Facciate rovinate, asfalto crepato, marciapiedi e segnaletica; cespugli, pozzanghere, sangue, scheletri e cadaveri ambientali",
-    "Passaggi verificati e nuove costruzioni compatibili con le strutture già salvate; risorse e casse conservano la loro posizione"
+    "Nuova città 3D disponibile dal tasto Città nuova: 35 edifici accessibili e quartieri collegati; prima versione giocabile con salvataggi separati",
+    "Fari accesi, fumo animato, auto distrutte e ribaltate, asfalto rovinato, sangue, scheletri e ossa",
+    "Incroci senza superfici stradali sovrapposte; passaggi e interni verificati; la partita attuale resta accessibile"
   ]
 }
