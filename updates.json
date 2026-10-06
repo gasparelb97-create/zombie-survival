@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06x",
+  "rev": "2026-10-06y",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.57",
+      "date": "6 ott",
+      "items": [
+        "Zaino ridisegnato: schede Risorse e munizioni ed Equipaggiamento a tutta larghezza, senza pannelli schiacciati",
+        "Oggetti più grandi con nome, rarità e livello; dettagli, confronto e azioni visibili selezionando un oggetto",
+        "Scorrimento completo su telefono, layout adattato a verticale e orizzontale; chiusura sempre accessibile"
+      ]
+    },
     {
       "ver": "4.3.56",
       "date": "6 ott",
