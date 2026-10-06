@@ -20,17 +20,17 @@ def expected_version():
 
 def verify():
     expected = expected_version()
-    for attempt in range(12):
+    for attempt in range(36):
         try:
             url = f'{ARENA_URL}/?release={os.environ.get("GITHUB_SHA", "check")}'
-            with urlopen(url, timeout=10) as response:
+            with urlopen(url, timeout=5) as response:
                 data = json.load(response)
             if data.get('ok') is True and data.get('arena') is True and data.get('v') == expected:
                 print(f'Arena online: versione {expected}')
                 return
         except Exception:
             pass
-        if attempt < 11:
+        if attempt < 35:
             time.sleep(5)
     raise RuntimeError('La versione pubblicata non risponde: nessuna notifica di successo inviata')
 

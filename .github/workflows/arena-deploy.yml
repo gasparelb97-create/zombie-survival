@@ -48,6 +48,10 @@ jobs:
       - name: Pubblica su Cloudflare
         if: steps.credentials.outputs.configured == 'true'
         run: npx --yes wrangler@4.148.0 deploy --config arena/wrangler.toml
+      - name: Registra versione pubblicata
+        if: steps.credentials.outputs.configured == 'true'
+        continue-on-error: true
+        run: npx --yes wrangler@4.148.0 deployments list --config arena/wrangler.toml
       - name: Verifica versione online
         if: steps.credentials.outputs.configured == 'true'
         run: python3 .github/scripts/arena-release.py verify
