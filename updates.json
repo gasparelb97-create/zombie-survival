@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-05v",
+  "rev": "2026-10-06a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,14 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.33",
+      "date": "6 ott",
+      "items": [
+        "🏛️ Architetto è nella home, sotto Negozio: lo vedi solo tu",
+        "🏗️ In partita il tasto sta in basso al centro, non più coperto dal debug"
+      ]
+    },
     {
       "ver": "4.3.32",
       "date": "5 ott",
@@ -288,16 +296,6 @@
         "🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita",
         "🎒 Zaino leggibile con scorrimento verticale quando serve",
         "🛠️ Piccole correzioni di grafica e interfaccia"
-      ]
-    },
-    {
-      "ver": "4.3.3",
-      "date": "4 ott",
-      "items": [
-        "⚡ Più fluido sui telefoni: la risoluzione si adatta subito quando la grafica rallenta",
-        "🔊 Audio più leggero: meno suoni sovrapposti, meno scatti",
-        "🧟 Gli zombie bloccati trovano un'altra strada (anche dalla porta aperta)",
-        "🎒 Zaino più in alto e su due colonne: ogni slot dell'equipaggiamento ha il suo spazio"
       ]
     }
   ]
