@@ -4374,9 +4374,7 @@ setInterval(joy421Tick,250);setTimeout(()=>{try{homeJoy();joy421Tick();}catch(e)
 window.__joy421=JOY421;
 
 // ======================= v4.2 economy: power ladder, coin sinks, soft hints =======================
-// ---- power ladder: coin weapons (raro SMG, epico AR) < 💎/⭐ epico < 💎/⭐ leggendario (≈1.6-1.9x the best coin weapon) ----
-const W_TUNE={thunder:{dmg:20},sniper:{dmg:360},glauncher:{dmg:260},plasma:{dmg:108},minigun:{dmg:22},flamer:{dmg:21}};
-for(const id in W_TUNE){const w=WEAPONS.find(q=>q.id===id);if(w)Object.assign(w,W_TUNE[id]);}
+// ---- power ladder: the numbers on each weapon are the base. Coins add up to +50%, gear up to +35%.
 // sustained single-target DPS (magazine + reload; 75% pellet hit rate for shotguns; flamer includes burn)
 function dps42(w){if(!w||w.melee||!w.mag)return 0;const eff=w.pellets>1?.75:1;let d=w.dmg*w.pellets*eff*w.mag/(w.mag*w.rate+(w.reload||0));if(w.kind==='flame')d+=16;return Math.round(d);}
 const COIN_W=['smg','ar'];
@@ -4417,7 +4415,7 @@ function hintTarget(){const cur=heldW42(),cd=dps42(cur)||1;let best=null;for(con
 function hint42(why){if(HINT42.run)return false;const h=hintTarget();if(!h)return false;HINT42.run=true;const e=$('tip42');if(!e)return false;
   tipShow42((why==='boss'?'☠ Boss in arrivo · ':'')+'Con il <b>'+esc(h.w.name)+'</b> avresti fatto <b>×'+h.x.toFixed(1)+'</b> danno. <small>Solo con 💎</small>',why==='boss'?6000:9000);return true;}
 if(typeof bossIntro2==='function'){const _bi=bossIntro2;bossIntro2=function(){const r=_bi.apply(this,arguments);setTimeout(()=>hint42('boss'),3500);return r;};}
-window.__econ42={dps42,bestCoinDps,W_TUNE,SVC42,svcBuy,hint42,hintTarget,COS42,get hintShown(){return HINT42.run;}};
+window.__econ42={dps42,bestCoinDps,SVC42,svcBuy,hint42,hintTarget,COS42,get hintShown(){return HINT42.run;}};
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
 
 // ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
