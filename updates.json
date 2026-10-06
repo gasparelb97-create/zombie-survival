@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06s",
+  "rev": "2026-10-06t",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.52",
+      "date": "6 ott",
+      "items": [
+        "Il mondo si disegna in Full HD, 1920 per 1080",
+        "Quando trovi un oggetto lo selezioni: Cambia oppure Scarta",
+        "Casse, equipaggiamento e zaino pieno non si riempiono più da soli"
+      ]
+    },
     {
       "ver": "4.3.51",
       "date": "6 ott",
