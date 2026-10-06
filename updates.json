@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06d",
+  "rev": "2026-10-06e",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,13 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.37",
+      "date": "6 ott",
+      "items": [
+        "📱 L'app Android si apre e resta sul menu"
+      ]
+    },
     {
       "ver": "4.3.36",
       "date": "6 ott",
