@@ -132,7 +132,6 @@ body.inmenu #hud,body.inmenu #controls,body.inmenu #vig{display:none!important}
 .mBtn.zombie{background:linear-gradient(135deg,#e2601a,#a8300f);border-color:rgba(255,170,110,.55);animation:none}
 .mBtn.online{background:rgba(14,16,22,.62)}
 .menuRow{display:flex;gap:calc(8*var(--u));max-width:calc(330*var(--u))}.menuRow .mBtn{padding:calc(8*var(--u)) calc(12*var(--u))}
-#archRow[hidden]{display:none!important}
 .menuFoot{font-size:calc(11.5*var(--u));opacity:.75;margin-top:calc(4*var(--u));text-shadow:0 1px 2px #000}
 .menuFoot b{color:#ffb070}
 #helpScreen .card{max-width:520px;padding:16px}
@@ -944,7 +943,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 </div>
 <div id="startScreen" class="overlay titleArt"><div class="shade"></div><div class="menuL">
   <h1 class="ztitle">Zombie<span>Survival</span></h1>
-  <div class="ver422 homeVer">Zombie Survival v4.3.33</div>
+  <div class="ver422 homeVer">Zombie Survival v4.3.34</div>
   <div class="ztag">Taglia legna, costruisci la base e resisti all'orda della notte.</div>
   <div class="playRow"><button class="mBtn zombie" id="btnZombie"><span class="ic">🏕️</span><span><b>Gioca</b><small id="survSub">Nuova partita · giorno e notte</small></span></button><button class="mBtn icon newRun" id="btnNewRun" aria-label="Nuova partita" style="display:none"><span class="ic">↺</span></button></div>
   <div class="menuRow one">
@@ -955,8 +954,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
     <button class="mBtn icon" id="btnHelp" aria-label="Impostazioni"><span class="ic">⚙️</span><small class="lb422">Opzioni</small></button>
     <button class="mBtn icon" id="btnMute" aria-label="Audio"><span class="ic" id="muteIc">🔊</span><small class="lb422">Audio</small></button>
   </div>
-  <div class="menuRow one" id="archRow" hidden><button class="mBtn" id="btnArch" type="button"><span class="ic">🏛️</span><span><b>Architetto</b><small>Sposta i palazzi e aggiungi cose. Resta salvato sul tuo telefono</small></span></button></div>
-  <div class="menuRow one" id="sugRow"><button class="mBtn" id="btnSug" type="button"><span class="ic">💡</span><span><b>Suggerimenti</b><small>Manda un consiglio: lo legge solo chi gestisce il gioco</small></span></button></div>
+  <div class="menuRow one" id="sugRow"><button class="mBtn" id="btnSug" type="button"><span class="ic">💡</span><span><b>Suggerimenti</b><small>Manda un consiglio: arriva nella chat privata di chi gestisce il gioco</small></span></button></div>
   <div class="menuFoot" id="menuBest"></div>
 </div>
 <div id="miniRank"><h4>🏆 Più zombie <small id="miniReset"></small></h4><div id="miniList"></div></div>
@@ -977,12 +975,12 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
     <div><b>💻 PC</b><br>WASD · Shift corri · mouse guarda<br>Click spara · tasto destro mira<br>E usa · C crafting · G granata · R ricarica<br>B costruisci · R/T ruota · X smonta · 1-8 pezzi<br>1-8 / Q / rotella: armi · P / Esc pausa</div>
     <div><b>🌙 Survival</b><br>Il giorno dura 7 minuti: 🪓 legna dagli alberi, ⛏️ pietra, ferro e carbone dalle rocce.<br>Al tramonto torna alla base: di notte l'orda attacca i muri. Ogni 5 notti arriva il boss.<br>Monete 🪙 da zombie, casse e missioni · 💎 dalle missioni e dai boss.</div>
   </div>
-  <div class="ver422">Zombie Survival v4.3.33</div>
+  <div class="ver422">Zombie Survival v4.3.34</div>
   <div class="btnRow"><button class="act ghost" id="helpBack">← Indietro</button></div>
 </div></div>
 <div id="sugScreen" class="overlay sheetBg hidden"><div class="sheet" style="max-width:460px">
   <h2>💡 Suggerimenti</h2>
-  <div class="sub2" id="sugLead">Scrivi un consiglio. Lo legge solo chi gestisce il gioco.</div>
+  <div class="sub2" id="sugLead">Scrivi un consiglio. Arriva nella chat privata di chi gestisce il gioco.</div>
   <textarea id="sugText" maxlength="400" placeholder="Il tuo consiglio, per intero"></textarea>
   <div class="sub2" id="sugMsg"></div>
   <div class="btnRow"><button class="act" id="sugSend" type="button">Invia</button><button class="act ghost" id="sugBack" type="button">← Indietro</button></div>
@@ -1068,7 +1066,6 @@ function tgUser(){try{var W=window.Telegram&&window.Telegram.WebApp;if(!W)return
 function hashUser(){try{return idIn(location.hash)||idIn(location.search);}catch(e){return null;}}
 // true = owner, false = someone else, null = Telegram has not delivered the id yet
 function ownerNow(){var a=tgUser();if(a!==null)return a===OWNER;var h=hashUser();return h===null?null:h===OWNER;}
-try{window.ownerNow=ownerNow;}catch(e){}
 if(ownerNow()===false)return;
 if(ownerNow()!==true){var nWait=0,wIv=setInterval(function(){var o=ownerNow();if(o===true){clearInterval(wIv);bootDbg();}else if(o===false||++nWait>80)clearInterval(wIv);},200);}
 else bootDbg();
@@ -1169,7 +1166,7 @@ function stats(){var n=D.fn,a=[],sum=0,cs=0,rs=0;for(var i=0;i<n;i++){var v=D.fr
 function sysObj(){var o={};SYS.forEach(function(k){o[k]=+D.sys[k].toFixed(2);});return o;}
 function report(){var m=performance.memory,s=stats();return {v:VER,app:(window.GAME_VER||''),quando:new Date().toISOString(),durata_s:Math.round((now()-D.start)/1000),perf:s,sistemi:sysOn?sysObj():'non agganciati',
   stato:state(),memoria:m?{usataMB:+(m.usedJSHeapSize/1048576).toFixed(1),totMB:+(m.totalJSHeapSize/1048576).toFixed(1),limiteMB:Math.round(m.jsHeapSizeLimit/1048576),trend:D.heap.slice(-30)}:'non disponibile',
-  device:device(),fluidita:(function(){try{return window.__fl431?window.__fl431.rep():null;}catch(e){return null;}})(),contestoPerso:D.ctxLost,avvio:bootMarks(),fps10s:FH.hist.slice(),top3:top3(),costoDebugMs:dqCost(),musica:(function(){try{return window.__mus436?__mus436.rep():null;}catch(e){return null;}})(),crash:(function(){try{return window.__crash4310?__crash4310.rep():null;}catch(e){return null;}})(),costruzione:build434Rep(),problemi:probSorted().slice(0,80).map(function(x){return {liv:x.sev,tipo:x.k,dove:x.w,cosa:x.msg,volte:x.n,primo:new Date(x.first).toLocaleString('it-IT'),ultimo:new Date(x.last).toLocaleString('it-IT'),questaSessione:x.s===SID,dati:x.x};}),sessioni:PB.sess.slice(-8),errori:D.errors.slice(),ultimiFrame:Array.prototype.slice.call(D.frames,0,D.fn).map(function(v){return Math.round(v*10)/10;}),architetto:(function(){try{return window.__arch32?window.__arch32.rep():null;}catch(e){return null;}})(),extra29:(function(){try{return window.__rep29?window.__rep29():null;}catch(e){return String(e&&e.message||e);}})()};}
+  device:device(),fluidita:(function(){try{return window.__fl431?window.__fl431.rep():null;}catch(e){return null;}})(),contestoPerso:D.ctxLost,avvio:bootMarks(),fps10s:FH.hist.slice(),top3:top3(),costoDebugMs:dqCost(),musica:(function(){try{return window.__mus436?__mus436.rep():null;}catch(e){return null;}})(),crash:(function(){try{return window.__crash4310?__crash4310.rep():null;}catch(e){return null;}})(),costruzione:build434Rep(),problemi:probSorted().slice(0,80).map(function(x){return {liv:x.sev,tipo:x.k,dove:x.w,cosa:x.msg,volte:x.n,primo:new Date(x.first).toLocaleString('it-IT'),ultimo:new Date(x.last).toLocaleString('it-IT'),questaSessione:x.s===SID,dati:x.x};}),sessioni:PB.sess.slice(-8),errori:D.errors.slice(),ultimiFrame:Array.prototype.slice.call(D.frames,0,D.fn).map(function(v){return Math.round(v*10)/10;}),lettura:(function(){try{return typeof leggi==='function'?leggi():[];}catch(e){return [];}})(),extra29:(function(){try{return window.__rep29?window.__rep29():null;}catch(e){return String(e&&e.message||e);}})()};}
 function summary(){var r=report(),s=r.perf,st=r.stato||{},e=r.errori;var L=['🐞 Zombie debug '+VER+' '+new Date().toLocaleString('it-IT'),
   'FPS '+s.fps+' · media '+s.avg+'ms · p95 '+s.p95+' · peggiore '+s.worst+'ms · >50ms: '+s.long50,
   'CPU/frame '+s.cpu+'ms (render '+s.render+' / update '+s.update+')'+(sysOn?' · '+SYS.map(function(k){return k+' '+r.sistemi[k];}).join(' '):''),
@@ -1255,7 +1252,22 @@ var CAUSE={longtask:['Lavoro JS sincrono troppo lungo (compilazione shader, uplo
  errore:['Eccezione JavaScript','file/riga nel messaggio'],promise:['Promise rifiutata non gestita','fetch/cloud/audio async'],webgl:['Contesto WebGL perso (memoria GPU o app in background)','ridurre texture/qualità; gestione webglcontextrestored'],
  sessione:['La sessione precedente non si è chiusa normalmente (crash/kill per memoria)','controllare memoria e problemi della sessione precedente'],stuck:['Entità bloccata','collide()/keepOut, pezzi base, navigazione zombie'],
  nan:['Posizione non valida (NaN)','fisica/movimento: divisione per zero'],audio:['Audio non in esecuzione','AU.ctx resume dopo gesto utente / interruzione'],memoria:['Memoria in crescita costante (possibile leak)','geometrie/texture non liberate, array che crescono'],risorsa:['Risorsa non caricata','rete/percorso file'],hook:['Hook debug non agganciato','riga __DBG.sys']};
-CAUSE.crash=['Errore intercettato: quel frame è stato saltato e il gioco continua','loop0 / crash4310'];CAUSE.potenziamento=['Un potenziamento non è andato a buon fine','Crafting, scheda Potenzia armi'];CAUSE.suggerimento=['Un suggerimento non è arrivato al bot','Home, Suggerimenti, POST /suggest'];CAUSE.neve=['Errore mentre la neve scende','updateSnow / snow2Tick'];CAUSE.critico=['Errore nel colpo critico','damageZombie'];CAUSE.zaino=['Una scritta dello zaino è tagliata','layout della borsa'];var SW={err:100,warn:10,info:1};
+CAUSE.crash=['Errore intercettato: quel frame è stato saltato e il gioco continua','loop0 / crash4310'];CAUSE.potenziamento=['Un potenziamento non è andato a buon fine','Crafting, scheda Potenzia armi'];CAUSE.suggerimento=['Un suggerimento non è arrivato nella chat privata','Home, Suggerimenti, POST /suggest'];CAUSE.neve=['Errore mentre la neve scende','updateSnow / snow2Tick'];CAUSE.critico=['Errore nel colpo critico','damageZombie'];CAUSE.zaino=['Una scritta dello zaino è tagliata','layout della borsa'];var SW={err:100,warn:10,info:1};
+function leggi(){var out=[],L=probSorted(),s=null;try{s=stats();}catch(e){}
+  var err=L.filter(function(x){return x.sev==='err';}),warn=L.filter(function(x){return x.sev==='warn';});
+  var boot=L.filter(function(x){return x.k==='longtask'&&/avvio|init|caric|menu/i.test((x.w||'')+' '+(x.msg||''));});
+  if(boot.length){var ms=0;boot.forEach(function(x){var m=/(\d+(?:\.\d+)?)\s*ms/.exec(x.msg||'');if(m)ms=Math.max(ms,+m[1]);});out.push('All\'apertura il telefono resta fermo'+(ms?' circa '+Math.round(ms)+' ms':'')+': sta preparando la mappa. Non è un guasto durante la partita.');}
+  if(s&&s.fps>0&&s.fps<35)out.push('In partita va piano ('+Math.round(s.fps)+' fps). Il limite è il processore del telefono, non una texture mancante.');
+  var mus=L.filter(function(x){return /music|audio/i.test(x.k||'');});
+  if(mus.length)out.push('Audio: '+mus[0].msg+'. Se capita solo all\'avvio, il tema è ripartito da solo.');
+  var crash=L.filter(function(x){return x.k==='crash'||x.k==='errore'||x.k==='promise';});
+  if(crash.length)out.push('Errore da correggere nel codice: «'+crash[0].msg+'». Non è il telefono che è lento.');
+  var stuck=L.filter(function(x){return x.k==='stuck'||/incastr/i.test(x.msg||'');});
+  if(stuck.length)out.push('Qualcosa resta incastrato. '+stuck[0].msg);
+  if(s&&s.longTasks>2&&!boot.length)out.push('Durante il gioco ci sono stati '+s.longTasks+' blocchi lunghi. Il più pesante è '+(s.longTaskMax||'?')+' ms.');
+  if(!out.length)out.push(err.length?('Ci sono '+err.length+' errori. Il primo: '+err[0].msg):'Nessun guasto. I numeri sono la misura del telefono, non un bug da inseguire.');
+  if(warn.length&&out.length<4)out.push('Avvisi: '+warn.slice(0,2).map(function(x){return x.msg;}).join(' · '));
+  return out.slice(0,5);}
 function top3(){var L=PB.list.slice().sort(function(a,b){return (SW[b.sev]*Math.log2(1+b.n)+(b.s===SID?5:0))-(SW[a.sev]*Math.log2(1+a.n)+(a.s===SID?5:0));});
   return L.slice(0,3).map(function(x,i){var c=CAUSE[x.k]||['?','?'];return {n:i+1,liv:x.sev,cosa:x.msg,dove:x.w,volte:x.n,causaProbabile:c[0],doveCorreggere:c[1]};});}
 function probSorted(){return PB.list.slice().sort(function(a,b){return SW[b.sev]-SW[a.sev]||b.n-a.n;});}
@@ -1390,7 +1402,7 @@ function paint(force){if(!ui||!open)return;if(tab==='err'||!ui.tabs[tab])tab='pr
     h+=kv('pos',st.pos.join(','))+' '+kv('hp',st.hp)+' '+kv('uccisi',st.uccisi)+'\n'+kv('arma',st.arma)+' '+kv('pezzi base',st.pezziBase)+'\n';
     var au=st.audio||{};h+=kv('audio',au.stato,au.stato==='running'?'g':'w')+' '+(au.sr?kv('sr',au.sr)+' '+kv('lat',au.lat+'/'+au.outLat)+'\n':'\n')+kv('src attive',au.sorgenti)+' '+kv('picco',au.picco)+' '+kv('nodi',au.nodiCreati);
     if(st.err)h+='\n<span class="r">'+esc(st.err)+'</span>';}}
-  else if(tab==='prob'){var PL=probSorted();h='<span class="k">Problemi nuovi: '+PL.length+' · un problema già visto non viene ricontato</span>';
+  else if(tab==='prob'){var PL=probSorted();var LG=[];try{LG=leggi();}catch(e){}h='<div class="er"><b>Lettura</b><br>'+(LG.length?LG.map(esc).join('<br>'):'In attesa di misure.')+'</div>';h+='<span class="k">Problemi nuovi: '+PL.length+' · un problema già visto non viene ricontato</span>';
     if(!PL.length)h+='\n<span class="g">Nessun problema rilevato 👍</span>';
     else h+=PL.slice(0,80).map(function(x,i){var d=new Date(x.last),tt=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);var c=CAUSE[x.k];return '<div class="er">'+SEV[x.sev]+' <span class="k">'+tt+(x.s===SID?'':' (prec.)')+' · '+esc(x.w)+'</span>'+(x.n>1?' <span class="w">×'+x.n+'</span>':'')+' '+esc(x.msg)+'<div><button type="button" class="cp" data-cpi="'+i+'">Copia errore</button></div>'+(c?'<div class="k">causa: '+esc(c[0])+'<br>dove: '+esc(c[1])+'</div>':'')+'</div>';}).join('')+(PL.length>80?'<span class="k">…altri '+(PL.length-80)+' nel report copiato</span>':'');}
   else if(tab==='dev'){var d=device(),g=d.gpu||{};h+=kv('GPU',g.renderer||'?')+'\n'+kv('vendor',g.vendor||'?')+'\n'+kv('GL',(g.webgl2?'WebGL2':'WebGL1')+' maxTex '+g.maxTex+' aa '+g.aa)+'\n';
@@ -1592,13 +1604,14 @@ const TXR22=(()=>{
 function txApply22(m,map,hex){if(!m||!map)return;m.map=map;if(hex!=null)m.color.setHex(hex);m.needsUpdate=true;}
 txApply22(MAT.brick,TXR22.brick,0xffffff);txApply22(MAT.plank,TXR22.wood,0xffffff);txApply22(MAT.roof,TXR22.tile,0xffffff);
 txApply22(MAT.wood,TXR22.wood,0xffffff);txApply22(MAT.pine,TXR22.pine,0xffffff);txApply22(MAT.trunk,TXR22.bark,0xffffff);
-{const hillTex=canvasTex(256,256,function(g,w,h){let s=43341;const r=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
-  g.fillStyle='#5c6574';g.fillRect(0,0,w,h);
-  for(let i=0;i<90;i++){const v=70+r()*50;g.fillStyle='rgb('+(v|0)+','+(v+6|0)+','+(v+16|0)+')';g.beginPath();g.moveTo(r()*w,r()*h);g.lineTo(r()*w,r()*h);g.lineTo(r()*w,r()*h);g.fill();}
-  g.fillStyle='rgba(28,32,40,.35)';for(let i=0;i<18;i++){g.beginPath();g.moveTo(r()*w,0);g.lineTo(r()*w,h);g.lineWidth=1+r()*2;g.strokeStyle='rgba(24,28,36,.45)';g.stroke();}
-  const sn=g.createLinearGradient(0,0,0,h*.62);sn.addColorStop(0,'rgba(246,250,255,.96)');sn.addColorStop(.45,'rgba(226,234,244,.72)');sn.addColorStop(1,'rgba(226,234,244,0)');g.fillStyle=sn;g.fillRect(0,0,w,h*.62);
-  g.fillStyle='rgba(255,255,255,.8)';for(let i=0;i<30;i++)g.fillRect(r()*w,r()*h*.4,3+r()*8,2);
-  g.fillStyle='rgba(40,48,58,.22)';for(let y=0;y<h;y+=28)g.fillRect(0,y,w,2);},2,2);
+{const hillTex=canvasTex(512,512,function(g,w,h){let s=43341;const r=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
+  const sky=g.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#8b93a1');sky.addColorStop(.45,'#5e6876');sky.addColorStop(1,'#3d4550');g.fillStyle=sky;g.fillRect(0,0,w,h);
+  for(let i=0;i<26;i++){const y=r()*h,v=48+r()*40;g.strokeStyle='rgba('+(v|0)+','+(v+8|0)+','+(v+18|0)+',.55)';g.lineWidth=2+r()*7;g.beginPath();g.moveTo(0,y);for(let x=0;x<=w;x+=28)g.lineTo(x,y+(r()-.5)*16);g.stroke();}
+  for(let i=0;i<140;i++){const v=62+r()*70;g.fillStyle='rgb('+(v|0)+','+(v+4|0)+','+(v+14|0)+')';g.beginPath();g.moveTo(r()*w,r()*h);g.lineTo(r()*w,r()*h);g.lineTo(r()*w,r()*h);g.fill();}
+  for(let i=0;i<40;i++){g.fillStyle='rgba(28,32,38,'+(.15+r()*.35)+')';g.beginPath();g.ellipse(r()*w,r()*h,4+r()*18,2+r()*6,r()*3,0,6.3);g.fill();}
+  const sn=g.createLinearGradient(0,0,0,h*.7);sn.addColorStop(0,'rgba(250,252,255,.98)');sn.addColorStop(.28,'rgba(236,242,248,.9)');sn.addColorStop(.55,'rgba(214,224,234,.45)');sn.addColorStop(1,'rgba(214,224,234,0)');g.fillStyle=sn;g.fillRect(0,0,w,h*.7);
+  g.strokeStyle='rgba(186,198,212,.55)';g.lineWidth=1.2;for(let i=0;i<18;i++){g.beginPath();g.moveTo(r()*w,r()*h*.35);g.lineTo(r()*w,r()*h*.55);g.stroke();}
+  g.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<80;i++)g.fillRect(r()*w,r()*h*.42,2+r()*10,1+r()*2);},2,2);
  MAT.hill.map=hillTex;MAT.hill.color.setHex(0xffffff);}
 txApply22(MAT.metal,TXR22.metal,0xffffff);txApply22(MAT.rust,TXR22.scratch,null);txApply22(MAT.rust2,TXR22.scratch,null);
 txApply22(road.material,TXR22.asphalt,0xffffff);
@@ -1719,8 +1732,15 @@ for(let n=0,t=0;n<40&&t<3000;t++){const x=(rnd()*2-1)*(CORE-3),z=(rnd()*2-1)*(CO
 for(const k in NIM){NIM[k].instanceMatrix.needsUpdate=true;NIM[k].computeBoundingSphere&&NIM[k].computeBoundingSphere();}
 
 // distant silhouettes moved farther for the bigger map
-for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=108+Math.random()*10,sx=7+Math.random()*5,sy=3+Math.random()*4,sz=7+Math.random()*5,px=Math.cos(a)*r,pz=Math.sin(a)*r,h=mesh(G.pine,MAT.hill,px,3,pz,sx,sy,sz,null,false);h.receiveShadow=false;const cap=mesh(G.pine,MAT.snow,px,3+sy*.42,pz,sx*.62,sy*.38,sz*.62,null,false);cap.castShadow=false;cap.receiveShadow=false;}
-for(let i=0;i<14;i++){const a=Math.random()*Math.PI*2,r=104+Math.random()*8,sx=3+Math.random()*3,sy=4.4+Math.random()*3,px=Math.cos(a)*r,pz=Math.sin(a)*r;const m=mesh(G.box,MAT.hill,px,2.2,pz,sx,sy,3,null,false);m.rotation.y=a;const cap=mesh(G.box,MAT.snow,px,2.2+sy*.5,pz,sx*.72,.28,2.4,null,false);cap.castShadow=false;cap.receiveShadow=false;}
+for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=112+Math.random()*6,sx=7+Math.random()*5,sy=3+Math.random()*4,sz=7+Math.random()*5,px=Math.cos(a)*r,pz=Math.sin(a)*r;
+  const h=mesh(G.pine,MAT.hill,px,sy*.85,pz,sx*1.2,sy*2.05,sz*1.2,null,false);h.receiveShadow=false;
+  const sh=mesh(G.pine,MAT.hill,px+Math.cos(a+1.15)*sx*.85,sy*.45,pz+Math.sin(a+1.15)*sz*.85,sx*.85,sy*1.05,sz*.85,null,false);sh.castShadow=false;sh.receiveShadow=false;
+  const rk=mesh(G.box,MAT.hill,px,sy*.16,pz,sx*.8,.42,sz*.8,null,false);rk.rotation.y=a;rk.castShadow=false;rk.receiveShadow=false;
+  const cap=mesh(G.pine,MAT.snow,px,sy*1.22,pz,sx*.42,sy*.36,sz*.42,null,false);cap.castShadow=false;cap.receiveShadow=false;}
+for(let i=0;i<14;i++){const a=Math.random()*Math.PI*2,r=110+Math.random()*6,sx=3+Math.random()*3,sy=4.4+Math.random()*3,px=Math.cos(a)*r,pz=Math.sin(a)*r;
+  const m=mesh(G.pine,MAT.hill,px,sy*.5,pz,sx*1.55,sy*1.15,sx*1.15,null,false);m.rotation.y=a;m.receiveShadow=false;
+  const m2=mesh(G.pine,MAT.hill,px+Math.cos(a)*sx*.85,sy*.3,pz+Math.sin(a)*sx*.85,sx*.72,sy*.55,sx*.6,null,false);m2.castShadow=false;m2.receiveShadow=false;
+  const cap=mesh(G.pine,MAT.snow,px,sy*1.02,pz,sx*.5,sy*.26,sx*.42,null,false);cap.castShadow=false;cap.receiveShadow=false;}
 // ---- merge static meshes by material/shadow/cell: keeps draw calls low on phones ----
 function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new Map();scene.updateMatrixWorld(true);const _p=new T.Vector3();
   scene.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||skip.has(o)||o.userData.dyn)return;const m=o.material;if(Array.isArray(m)||m.transparent)return;let p=o.parent;while(p&&p!==scene){if(p.isCamera)return;p=p.parent;}
@@ -1773,19 +1793,20 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
     let inH=false;for(const h of HOUSE_RECTS)if(Math.abs(x-h[0])<h[2]+1.4&&Math.abs(z-h[1])<h[3]+1.4)inH=true;if(inH)continue;
     const s=cR(.5,.95),m=mesh(ico,MAT.bush,x,s*.42,z,s,s*.6,s);m.rotation.y=cr()*6;const sn=mesh(ico,MAT.snow,x,s*.68,z,s*.55,s*.2,s*.55,null,false);sn.rotation.y=m.rotation.y;}}
  // abandoned city past the old fence. Streets first, then blocks that face them. Own meshes, no global Math.random, so the old town stays put.
- {const CITY={plots:[],roads:[],arch:[]};window.CITY4319=CITY;const wins=[];
-  const ARCHK='zs_arch32',ARCHL='zs_arch_live',ARCHD='zs_arch_draft';
-  const ARCH_LIVE=(()=>{try{return sessionStorage.getItem(ARCHL)==='1';}catch(e){return false;}})();
-  function archParse(raw){try{const s=JSON.parse(raw||'null');if(s&&s.v===1&&s.plots&&Array.isArray(s.props))return s;}catch(e){}return null;}
-  function archPub(){try{const x=new XMLHttpRequest();x.open('GET','map.json',false);x.send();if(x.status>=200&&x.status<300)return archParse(x.responseText);}catch(e){}return null;}
-  function archEff(){let d=null,s=null;try{if(ARCH_LIVE)d=archParse(sessionStorage.getItem(ARCHD));}catch(e){}try{s=archParse(localStorage.getItem(ARCHK));}catch(e){}if(d)return d;if(s)return s;return archPub()||{v:1,plots:{},props:[]};}
-  const ARCH32=archEff();let archN=0,archTag=null,archKeep=null;
-  if(ARCH_LIVE){const mesh0=mesh;mesh=function(){const m=mesh0.apply(this,arguments);if(archTag){m.userData.dyn=1;m.userData.aid=archTag;if(archKeep)archKeep.push(m);}return m;};}
+ {const CITY={plots:[],roads:[]};window.CITY4319=CITY;const wins=[];
   const face=(mat,x,y,z,w,h,d)=>{const m=mesh(G.box,mat,x,y,z,w,h,d);m.castShadow=false;return m;};
   MAT.hosp=new T.MeshLambertMaterial({map:TXR22.plaster,color:0xffffff});MAT.awnG=new T.MeshLambertMaterial({color:0x2c6b45});MAT.awnY=new T.MeshLambertMaterial({color:0xc4a15a});MAT.awnB=new T.MeshLambertMaterial({color:0x3a4e78});MAT.crossB=new T.MeshBasicMaterial({color:0xe10600});
   MAT.leaf=new T.MeshLambertMaterial({color:0x2e5234,flatShading:true});MAT.leaf2=new T.MeshLambertMaterial({color:0x6a7040,flatShading:true});MAT.bulb=new T.MeshBasicMaterial({color:0xffd590});
   MAT.bloodM=new T.MeshLambertMaterial({map:bloodTex,transparent:true,depthWrite:false,opacity:.9});
-  function shell(x,z,w,d,h,door,mat,kind){const id='p'+archN++;const ov=ARCH32.plots[id];if(ov){if(isFinite(ov.x))x=+ov.x;if(isFinite(ov.z))z=+ov.z;if(['n','e','s','w'].indexOf(ov.door)>=0)door=ov.door;}kind=kind||'house';const t=.26,gap=1.7,y=h/2;const keep=[];const winA=wins.length;if(ARCH_LIVE){archTag=id;archKeep=keep;}
+  function abandon(x,z,w,d,h,door,kind){let s=((Math.imul((x*10)|0,374761393)^Math.imul((z*10)|0,668265263))>>>0)||1;const r=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};const v=(r()*6)|0;const nz=door==='n'?-1:door==='s'?1:0,nx=door==='e'?1:door==='w'?-1:0;const fx=nx?x+nx*(w/2+.05):x+(r()-.5)*w*.4,fz=nz?z+nz*(d/2+.05):z+(r()-.5)*d*.4;
+    if(v===0)face(MAT.dark,fx,h*.42,fz,nx?.06:w*.34,h*.32,nz?.06:d*.3);
+    else if(v===1){face(MAT.wood,fx,1.22,fz,nx?.07:.9,.1,nz?.07:.12);face(MAT.wood,fx,1.38,fz,nx?.07:.12,.62,nz?.07:.12);}
+    else if(v===2)face(MAT.rust2,x+(r()-.5)*w*.25,h+.1,z,.6,.08,.42);
+    else if(v===3)face(MAT.leaf,x-w*.4,.75,z,.5,.95,.42);
+    else if(v===4)face(MAT.crate,x+w*.12,.28,z+d*.15,.48,.48,.48);
+    else face(MAT.stoneW,x,.24,z,.5,.4,d*.28);
+    if(kind==='flat'||kind==='shop')face(MAT.dark,x,h*.55,z-(d/2+.02),w*.22,.16,.04);}
+  function shell(x,z,w,d,h,door,mat,kind){kind=kind||'house';const t=.26,gap=1.7,y=h/2;
     const jamb=(horiz,sign)=>{if(horiz){face(mat,x+sign*(w/4+gap/4),y,z+(door==='s'?d/2:-d/2),w/2-gap/2,h,t);}else{face(mat,x+(door==='e'?w/2:-w/2),y,z+sign*(d/4+gap/4),t,h,d/2-gap/2);}};
     if(door==='n'||door==='s'){jamb(true,-1);jamb(true,1);face(mat,x,h-.28,z+(door==='s'?d/2:-d/2),gap,.55,t);}else face(mat,x,y,z-d/2,w,h,t);
     if(door!=='n'&&door!=='s')face(mat,x,y,z+d/2,w,h,t);else if(door==='n')face(mat,x,y,z+d/2,w,h,t);else face(mat,x,y,z-d/2,w,h,t);
@@ -1795,6 +1816,7 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
       else{const a=face(MAT.roof,x-span/4,h+rise,z,half,.11,d+.4),b=face(MAT.roof,x+span/4,h+rise,z,half,.11,d+.4);a.rotation.z=ang;b.rotation.z=-ang;face(MAT.snow,x,h+rise*1.85,z,.35,.05,d*.55);}
       return h+rise*2;};
     if(kind==='house'){const peak=gable(.55);face(mat,x+w*.22,peak+.28,z,.28,.62,.28);}
+    else if(kind==='ruin'){face(MAT.roof,x-w*.12,h-.02,z-d*.06,w*.58,.12,d*.5);face(MAT.stoneW,x+w*.16,.32,z,.5,.55,.65);face(MAT.wood,x-w*.04,h*.32,z-d*.08,.12,.75,.12);}
     else if(kind==='flat'){face(MAT.roof,x,h+.08,z,w+.25,.12,d+.25);face(MAT.stoneW,x,h+.28,z-d/2,w+.15,.22,.12);face(MAT.stoneW,x,h+.28,z+d/2,w+.15,.22,.12);face(MAT.stoneW,x-w/2,h+.28,z,.12,.22,d);face(MAT.stoneW,x+w/2,h+.28,z,.12,.22,d);}
     else if(kind==='shop'){face(MAT.roof,x,h+.06,z,w+.2,.1,d+.2);const col=[MAT.redPaint,MAT.awnY,MAT.awnG,MAT.awnB][((x*3+z)|0)%4],aw=1.15,sy=h-.3,ay=Math.max(2.25,h-.4);
       if(door==='e'){face(col,x+w/2+aw*.42,ay,z,aw,.06,Math.min(d*.7,3.1));face(MAT.sign,x+w/2+.05,sy,z+1.15,.06,.32,1.15);}
@@ -1820,15 +1842,15 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
     else if(kind==='station'){for(const i of [-2,-1,1,2])win(x+w/2+.03,1.65,z+i*1.7,.04,.65,.6);win(x-w/2-.03,1.6,z,.04,.7,1.1);}
     else if(kind==='house'){for(const s of [-1,1]){win(x+s*w*.28,1.3,z-d/2-.02,.48,.58,.04);win(x+s*w*.24,1.35,z+d/2+.02,.42,.52,.04);}win(x-w/2-.02,1.4,z,.04,.5,.45);win(x+w/2+.02,1.45,z,.04,.46,.42);}
     else{win(x+(door==='e'?w/2+.03:-w/2-.03),1.3,z+1.35,.04,.55,.55);}
-    const th=.32;const recBoxes=[];
-    const wbox=(ax,az,bx,bz)=>{if(bx<ax){const q=ax;ax=bx;bx=q;}if(bz<az){const q=az;az=bz;bz=q;}const b={x0:ax,x1:bx,z0:az,z1:bz};boxes.push(b);recBoxes.push(b);};
+    const th=.32;
+    const wbox=(ax,az,bx,bz)=>{if(bx<ax){const q=ax;ax=bx;bx=q;}if(bz<az){const q=az;az=bz;bz=q;}boxes.push({x0:ax,x1:bx,z0:az,z1:bz});};
     if(door==='n'||door==='s'){const zd=door==='n'?z-d/2:z+d/2;wbox(x-w/2,zd-th/2,x-gap/2,zd+th/2);wbox(x+gap/2,zd-th/2,x+w/2,zd+th/2);const zo=door==='n'?z+d/2:z-d/2;wbox(x-w/2,zo-th/2,x+w/2,zo+th/2);wbox(x-w/2-th/2,z-d/2,x-w/2+th/2,z+d/2);wbox(x+w/2-th/2,z-d/2,x+w/2+th/2,z+d/2);}
     else{const xd=door==='w'?x-w/2:x+w/2;wbox(xd-th/2,z-d/2,xd+th/2,z-gap/2);wbox(xd-th/2,z+gap/2,xd+th/2,z+d/2);const xo=door==='w'?x+w/2:x-w/2;wbox(xo-th/2,z-d/2,xo+th/2,z+d/2);wbox(x-w/2,z-d/2-th/2,x+w/2,z-d/2+th/2);wbox(x-w/2,z+d/2-th/2,x+w/2,z+d/2+th/2);}
-    HOUSE_RECTS.push([x,z,w/2+.4,d/2+.4]);const plot={id,x,z,w,d,h,kind,door};CITY.plots.push(plot);CITY.arch.push({id,x,z,w,d,h,kind,door,boxes:recBoxes,hi:HOUSE_RECTS.length-1,meshes:keep,win0:winA,win1:wins.length});if(ARCH_LIVE){archTag=null;archKeep=null;}}
+    abandon(x,z,w,d,h,door,kind);HOUSE_RECTS.push([x,z,w/2+.4,d/2+.4]);CITY.plots.push({x,z,w,d,kind});}
   function roadStrip(x,z,len,horiz){const m=new T.Mesh(new T.PlaneGeometry(horiz?len:7.2,horiz?7.2:len),road.material);m.rotation.x=-Math.PI/2;m.position.set(x,.018,z);m.receiveShadow=true;scene.add(m);
     CITY.roads.push(horiz?[x-len/2,z,x+len/2,z]:[x,z-len/2,x,z+len/2]);}
-  roadStrip(0,-74,70,true);[-24,-10,10,24].forEach((x,i)=>{shell(x,-66,6.2,5.2,[2.7,3.3,2.5,3.5][i],'n',i%2?MAT.brick:MAT.plank,'house');shell(x,-82,6.2,5.2,[3.1,2.6,3.4,2.8][i],'s',i%2?MAT.plank:MAT.brick,'house');});
-  roadStrip(70,-4,80,false);[-16,0,16,32].forEach((z,i)=>{shell(59,z,6.2,5.2,[2.5,3.4,2.7,3.2][i],'e',i%2?MAT.plank:MAT.brick,'shop');shell(81,z,6.2,5.2,[3.2,2.6,3.5,2.8][i],'w',i%2?MAT.brick:MAT.plank,'shop');});
+  roadStrip(0,-74,70,true);
+  roadStrip(70,-4,80,false);[-16,0,16,32].forEach((z,i)=>{shell(59,z,[6.2,5.4,7.4,6.0][i],5.2,[2.6,3.9,2.4,4.5][i],'e',i%2?MAT.plank:MAT.brick,['shop','flat','ruin','shop'][i]);});
   shell(70,-50,12,8,4.6,'s',MAT.hosp,'hosp');
   roadStrip(6,70,64,true);shell(-26,81,14,7,3.6,'n',MAT.rust2,'ware');shell(20,80,8,5,3.0,'n',MAT.plank,'ware');shell(48,79,10,6,3.4,'n',MAT.rust2,'ware');
   roadStrip(-76,-4,46,false);shell(-87,-4,6.4,12,3.5,'e',MAT.brick,'station');shell(-87,-28,5.6,4.2,2.6,'e',MAT.plank,'booth');
@@ -1883,7 +1905,7 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
   const stalls=[[54.2,-8,MAT.redPaint],[54.2,8,MAT.awnY],[54.2,24,MAT.awnG],[86.2,-8,MAT.awnB],[86.2,8,MAT.awnY],[86.2,24,MAT.redPaint]];
   for(const [sx,sz,col] of stalls){face(MAT.plank,sx,.48,sz,1.5,.08,.9);face(MAT.wood,sx,.24,sz-.35,.08,.48,.08);face(MAT.wood,sx,.24,sz+.35,.08,.48,.08);face(col,sx,1.15,sz,1.55,.05,.95);face(MAT.crate,sx,.72,sz,.45,.35,.4);}
   face(MAT.rust2,54.2,.28,-24,.7,.5,1.3);face(MAT.rust2,86.4,.32,40,1.4,.4,.7);face(MAT.wood,86.4,.55,40,.08,.5,.08);
-  const blood=[[2,-74,1.4,.9],[70,-12,1.1,1.6],[70,14,.8,1.2],[-76,2,1.3,.7],[8,70,1.6,.8],[0,-40,1,.7],[-60,-71,.9,1.3],[20,60,1.2,.6],[70,-36,.7,1.1],[-4,8,1.5,.5]];
+  const blood=[[2,-74,1.4,.9],[70,-12,1.1,1.6],[70,14,.8,1.2],[-76,2,1.3,.7],[8,70,1.6,.8],[0,-40,1,.7],[-60,-71,.9,1.3],[20,60,1.2,.6],[70,-36,.7,1.1],[-4,8,1.5,.5],[-24,-70,1.2,.6],[24,-78,.8,1.1],[59,-4,1,.8],[81,20,.9,.7],[-87,-8,1.3,.5],[48,76,.7,1.2]];
   const ibl=new T.InstancedMesh(G.box,MAT.bloodM,blood.length);ibl.castShadow=false;ibl.receiveShadow=false;ibl.frustumCulled=false;
   blood.forEach((c,i)=>{op.position.set(c[0],.03,c[1]);op.rotation.set(-Math.PI/2,0,i*.4);op.scale.set(c[2],c[3],.02);op.updateMatrix();ibl.setMatrixAt(i,op.matrix);});scene.add(ibl);
   {let s=43361;const fr=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
@@ -1906,18 +1928,9 @@ function mergeStatics(){const skip=new Set([ground,road,sky]);const groups=new M
     for(let i=0;i<N;i++){const a=fr()*Math.PI*2,r=100+fr()*10;o.position.set(Math.cos(a)*r,1.1,Math.sin(a)*r);o.rotation.set(0,fr()*6,0);const s=.9+fr()*.7;o.scale.set(s,s*.8,s);o.updateMatrix();im.setMatrixAt(i,o.matrix);}scene.add(im);}
   const smokes=[];const puff=(x,y,z,sc)=>{const sp=new T.Sprite(new T.SpriteMaterial({map:glowTex,color:0xb7bcc4,transparent:true,opacity:.26,depthWrite:false}));sp.position.set(x,y,z);sp.scale.set(sc,sc*.75,1);sp.userData.y0=y;scene.add(sp);smokes.push(sp);};
   puff(70,5.4,-50,2.4);puff(-26,4.4,81,2.8);puff(18,2.8,63.1,1.7);puff(48,4.2,79,2.1);window.SMOKE20=smokes;
-  const archBodyM=new T.MeshLambertMaterial({color:0x3c2e2a});
-  function archDrop(list,o){const i=list.indexOf(o);if(i>=0)list.splice(i,1);}
-  function archSpawn(p){const x=+p.x,z=+p.z,ry=((p.rot|0)%4)*Math.PI/2,g=new T.Group();g.position.set(x,0,z);g.rotation.y=ry;g.userData.dyn=1;scene.add(g);
-    const add=(mat,px,py,pz,sx,sy,sz)=>{const m=mesh(G.box,mat,px,py,pz,sx,sy,sz,g,false);m.castShadow=false;m.userData.dyn=1;return m;};
-    if(p.k==='crate'){add(MAT.crate,0,.55,0,1.05,1.05,1.05);const b={x0:x-.55,x1:x+.55,z0:z-.55,z1:z+.55};boxes.push(b);p._box=b;}
-    else if(p.k==='bench'){add(MAT.wood,0,.42,0,1.3,.1,.38);add(MAT.wood,-.55,.2,0,.08,.4,.08);add(MAT.wood,.55,.2,0,.08,.4,.08);const c={x,z,r:.35};circles.push(c);p._circ=c;}
-    else if(p.k==='barrel'){const m=mesh(G.barrel,MAT.barrel,0,.48,0,1,1,1,g,false);m.castShadow=false;m.userData.dyn=1;const c={x,z,r:.4};circles.push(c);p._circ=c;}
-    else if(p.k==='lamp'){const a=mesh(G.cyl,MAT.metal,0,1.7,0,.1,3.4,.1,g,false);a.castShadow=false;a.userData.dyn=1;const bulb=mesh(G.box,MAT.bulb,0,3.35,0,.32,.16,.32,g,false);bulb.castShadow=false;bulb.userData.dyn=1;const c={x,z,r:.18};circles.push(c);p._circ=c;}
-    else{add(archBodyM,0,.1,0,1.55,.16,.42);p.k='body';}
-    p._g=g;return p;}
-  ARCH32.props.forEach(archSpawn);
-  window.__archCity={ARCH32,CITY,live:ARCH_LIVE,spawn:archSpawn,drop:archDrop};}
+  {let s=43411;const fr=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};const N=28,ip=new T.InstancedMesh(G.box,MAT.wood,N),ir=new T.InstancedMesh(G.box,MAT.rust2,18);ip.castShadow=ir.castShadow=false;ip.frustumCulled=ir.frustumCulled=false;
+    for(let i=0;i<N;i++){const a=fr()*6.2,rad=26+fr()*64,x=Math.cos(a)*rad,z=Math.sin(a)*rad;op.position.set(x,.08,z);op.rotation.set(fr()*.4,fr()*6,fr()*.5);op.scale.set(.15,.08,.7+fr()*.5);op.updateMatrix();ip.setMatrixAt(i,op.matrix);}
+    for(let i=0;i<18;i++){op.position.set((fr()-.5)*150,(fr()<.5)?.12:.28,(fr()-.5)*150);op.rotation.set(0,fr()*6,fr()*.3);op.scale.set(.35+fr()*.3,.12,.22);op.updateMatrix();ir.setMatrixAt(i,op.matrix);}scene.add(ip,ir);}}
 }
 
 const MERGED=mergeStatics();
@@ -2197,7 +2210,7 @@ function P(parent,x,y,z){const g=new T.Group();g.position.set(x,y,z);parent.add(
 const CW=new T.Color(0x4a0808),CB=new T.Color(0xcfc6a8),CM=new T.Color(0x120404),CD=new T.Color(0x151215),CF=new T.Color(0x18181a);
 function z432Mat(m){m.onBeforeCompile=sh=>{sh.uniforms.uZ432=Z432.u;sh.fragmentShader='uniform vec4 uZ432;\n'+sh.fragmentShader.replace('#include <fog_fragment>','{vec3 vd432=normalize(vViewPosition);float fr432=1.-clamp(abs(dot(normalize(normal),vd432)),0.,1.);fr432*=fr432;gl_FragColor.rgb*=1.-uZ432.x*fr432;gl_FragColor.rgb+=vec3(.55,.68,1.)*(uZ432.y*fr432*fr432);}\n'+T.ShaderChunk.fog_fragment.replace(/fogColor,\s*fogFactor\s*\)/,'fogColor, fogFactor*uZ432.z )'));};m.customProgramCacheKey=()=>'z432';return m;}
 function makeZombie(vName){const V=VARIANTS[vName];const z={V,g:new T.Group(),alive:false,dead:false,seed:Math.random()*100};
-  const skin=new T.Color().setHSL(rand(V.skin[0],V.skin[1]),rand(.18,.38),rand(.3,.42)),skinD=skin.clone().multiplyScalar(.7),
+  const skin=new T.Color().setHSL(rand(.06,.18),rand(.12,.3),rand(.2,.34)),skinD=skin.clone().multiplyScalar(.62),
    shirt=new T.Color(SHIRTS[(Math.random()*SHIRTS.length)|0]).multiplyScalar(rand(.7,1)),pants=new T.Color(PANTS[(Math.random()*PANTS.length)|0]);
   if(V.heavy)shirt.set(0x3a3a30);if(V.name=='boss'){shirt.set(0x3a1412);pants.set(0x1e1a1a);}if(V.name=='bloater')shirt.copy(skin).multiplyScalar(.8);
   z.mat=z432Mat(new T.MeshLambertMaterial({vertexColors:true}));const W=V.width,TZ=V.heavy?1.25:1;
@@ -2211,6 +2224,7 @@ function makeZombie(vName){const V=VARIANTS[vName];const z={V,g:new T.Group(),al
   const tl=[[ZG.torso,shirt,[0,0,0],0,0,0,W,1,TZ],[ZG.belly,skin,[rand(-.08,.08)*W,.12,.135*TZ]],[ZG.belly,CW,[rand(-.12,.12)*W,rand(.3,.45),.142*TZ],0,0,0,.45,.8,1],
     [ZG.rag,shirt,[rand(-.15,.15)*W,-.02,.13*TZ],0,0,rand(-.4,.4)],[ZG.belly,skinD,[-.12*W,.4,-.142*TZ],0,0,.3,.6,.9,1]];
   if(Math.random()<.6)for(let i=0;i<3;i++)tl.push([ZG.rib,CB,[.1*W,.36+i*.07,.15*TZ]]);
+  tl.push([ZG.belly,CW,[.04*W,.26,.15*TZ],0,0,.15,.42,.55,1],[ZG.rib,CB,[.15*W,.4,.125*TZ],0,0,.3,.75,2.5,1]);
   if(V.heavy)tl.push([ZG.torso,skinD,[0,.45,-.05],0,0,0,W*1.05,.35,1.1*TZ]);
   if(V.name=='bloater')tl.push([ZG.torso,new T.Color(0x7a9a38),[0,.18,.07],0,0,0,W*1.12,.78,1.75],[ZG.belly,new T.Color(0x9acb3a),[0,.32,.29],0,0,0,1.2,1.6,1],[ZG.belly,new T.Color(0x4a6a1a),[.1,.15,.3],0,0,0,.5,.6,1]);
   if(V.name=='boss'){for(const sd of [-1,1])for(let i=0;i<3;i++)tl.push([ZG.rib,CB,[sd*(.18+i*.07)*W,.66+i*.02,-.02],0,0,sd*(.4+i*.25),1.1,3.2-i*.6,1.4]);tl.push([ZG.belly,CW,[-.1,.3,.15],0,0,.4,.8,1.4,1]);}
@@ -4368,7 +4382,7 @@ window.__econ42={dps42,bestCoinDps,W_TUNE,SVC42,svcBuy,hint42,hintTarget,COS42,g
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
 
 // ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
-const NEWS421_FB={"rev":"2026-10-06a","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.33","date":"6 ott","items":["🏛️ Architetto è nella home, sotto Negozio: lo vedi solo tu","🏗️ In partita il tasto sta in basso al centro, non più coperto dal debug"]},{"ver":"4.3.32","date":"5 ott","items":["🏛️ Architetto: solo chi gestisce il gioco sposta i palazzi e aggiunge casse, panchine, botti, lampioni e corpi","💾 Salva e la mappa resta così, anche se chiudi il gioco. Originale riporta i palazzi di partenza"]},{"ver":"4.3.31","date":"5 ott","items":["🏚️ Nei palazzi con la cassa si entra: il blocco in mezzo alla porta non c’è più, e la tettoia sta sopra la testa","❄️ La neve a terra, le montagne e gli alberi hanno una texture più vera, con neve anche sui rami","🩸 Per le strade ci sono sangue, ossa e corpi, senza chiudere il passaggio","💡 La lampada in casa illumina senza accecare la stanza","🎵 All’avvio la musica riparte da sola se un tema resta a metà"]},{"ver":"4.3.30","date":"5 ott","items":["🏠 Tetto e pavimento sono una superficie continua: il muro ha la sua texture, il pavimento la sua, il tetto la sua","🪟 La finestra fissa e quella apribile hanno un'apertura pulita. La tenda si mette su entrambe","💡 La lampada di casa è appesa e illumina la stanza","🏙️ In città auto, casse e panchine non sono più incastrate nei muri","🐞 Il debug fa copiare l'errore, anche quando ne ha appena trovato uno"]},{"ver":"4.3.29","date":"5 ott","items":["🎒 Lo zaino mostra ogni nome per intero: materiali da una parte, equipaggiamento dall'altra","⚔️ Nel crafting, Potenzia armi: servono tante monete per il massimo. Forza, difesa, critico e velocità si comprano lì, in partita","❄️ La neve scende in modo più naturale. Gli zombie si aprono a ventaglio e si vedono meglio","🔫 Volpe, Rondine, Cervo, Canne mozze e Vespa hanno ognuna il proprio disegno","🐞 Il debug segna gli errori che fermano il gioco, e il report si copia come prima","💡 In home c'è Suggerimenti: scrivi un consiglio, lo legge solo chi gestisce il gioco"]},{"ver":"4.3.28","date":"5 ott","items":["🏠 Costruire è più facile: il pezzo dopo si mette in fila da solo, e dove costruisci non rinasce né un albero né una roccia","💡 Quadri, tende, camino e luci: muro, tetto e pavimento hanno texture nuove e la luce scalda la stanza","🪙 Dal deposito, in partita, spendi le monete per ampliare la cassa e potenziare l'arma in mano"]},{"ver":"4.3.27","date":"5 ott","items":["⚡ Se un fotogramma non arriva, il gioco riparte da solo e non resta fermo per 5 secondi","🎵 Resta acceso un solo tema: la musica non si spezza quando il telefono si blocca un attimo","👟 Passi e tocchi non creano più migliaia di suoni, la partita resta più fluida"]},{"ver":"4.3.26","date":"5 ott","items":["🏆 In classifica c’è anche chi ha giocato dall’altro telefono","⚡ La classifica si rilegge dal server ogni pochi secondi","🎮 I punti passano dal tasto Gioca del menu, non dalla tastiera della chat"]},{"ver":"4.3.25","date":"5 ott","items":["🎵 La musica resta continua, senza scatti né rumori strani","🏆 Ogni partita da Telegram entra in classifica e il server resta aggiornato","💨 Meno voci e scoppiettii a ogni fotogramma, il gioco resta più fluido"]},{"ver":"4.3.24","date":"5 ott","items":["🏗️ Recinto, assi, botte, torcia, cartello, bandiera, sedia, stufa, cassa e vaso","🔫 Negozio più ricco: Volpe, Rondine, Canne mozze, Cervo e Vespa, con kit e munizioni","📦 Il deposito si amplia pagando con le monete","❄️ Sotto un tetto non nevica, e la neve pesa meno sul gioco"]},{"ver":"4.3.23","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco arrivano da foto vere, gratis","🚗 Le auto parcheggiate e i lampioni sono modelli, con ruote e il braccio del faro","🏗️ In costruzione: pilastro, cancello, sacchi di sabbia, lampione, panchina e bidone"]},{"ver":"4.3.22","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco al posto delle superfici piatte","🛣️ L'asfalto, la pietra dei marciapiedi e il metallo arrugginito si leggono da vicino","🏠 I tetti restano a spiovente e le auto restano auto, con la vernice graffiata"]},{"ver":"4.3.21","date":"5 ott","items":["🏠 I tetti delle case e dei depositi sono a spiovente, con il colmo in alto","🚗 Le auto parcheggiate hanno carrozzeria, vetri e ruote, e stanno a bordo strada","🚑 Il bus e l'ambulanza hanno le ruote. L'ambulanza ha la croce"]},{"ver":"4.3.20","date":"5 ott","items":["🏥 Ospedale, mercato, scuola, stazione e case si distinguono: tetti, tende e insegne diversi","🛒 Il mercato ha banchi, tende colorate e vetrine. La città ha fari, cespugli, sangue e un po' di fumo","🌲 Non resti più incastrato nella chioma degli alberi: si passa accanto al tronco","🧟 Gli zombie non attaccano la base, a meno che non ti abbiano visto entrare","🏆 Il tasto Classifica non c'è più: la classifica a destra resta ferma"]},{"ver":"4.3.19","date":"5 ott","items":["🏙️ Città abbandonata: case, scuola, mercato, ospedale, deposito e stazione, collegati da strade","🗺️ Minimappa con i nomi dei quartieri, orientata a nord","🏆 Ogni zombie ucciso entra subito nel totale. Il server riceve il numero esatto e, se non risponde, viene reinviato","⚡ I palazzi nuovi non aggiungono luci: la partita resta fluida"]},{"ver":"4.3.18","date":"5 ott","items":["⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo","🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola","🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto","🐞 Il debug non copre più Novità e Invita","🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"]},{"ver":"4.3.17","date":"5 ott","items":["🏠 Livello e record stanno tutti in home, sopra la barra in basso","🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì","🎵 Il vento non copre più la musica: in home è spento","🐞 Nel debug c’è solo Problemi, e un problema già visto non viene ricontato","🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"]},{"ver":"4.3.16","date":"5 ott","items":["🐞 Il debug aperto sta sul paesaggio a destra: Gioca, Negozio, Opzioni e Audio restano toccabili","⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"]},{"ver":"4.3.15","date":"5 ott","items":["🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio","🐞 Il debug sta sul paesaggio. La lista problemi si scorre e Copia report mette il testo da incollare","☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"]},{"ver":"4.3.14","date":"5 ott","items":["🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo","🐞 Il debug a ogni apertura conta solo i problemi nuovi, non quelli già sistemati","🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma","🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"]},{"ver":"4.3.13","date":"5 ott","items":["⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento","🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta","⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"]},{"ver":"4.3.12","date":"5 ott","items":["⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera","🏷️ Versione visibile nella home","🐞 Debug visibile sotto la barra di Telegram, con la lista problemi scorrevole"]},{"ver":"4.3.11","date":"5 ott","items":["🏷️ La versione del gioco è visibile nella home, sotto il titolo","🐞 Debug di nuovo visibile: il pulsante non finisce più sotto la barra di Telegram","📋 Lista problemi completa e scorrevole, con la causa e dove intervenire","🔢 Il pulsante 🐞 mostra quanti problemi ha trovato in questa sessione"]},{"ver":"4.3.10","date":"4 ott","items":["🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps","🧟 Zombie che camminano senza tremolii avanti e indietro","🕹️ Joystick più stabile: niente scatti di direzione","🎵 La musica riparte da sola se si interrompe","🛡️ Il gioco non si blocca più per un errore: lo salta e continua"]},{"ver":"4.3.9","date":"4 ott","items":["🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo","⚡ Movimento più fluido sui telefoni a 90 e 120 Hz","⏳ Caricamento della partita senza blocchi","📱 Menu che si adatta allo schermo del telefono e del tablet"]},{"ver":"4.3.8","date":"4 ott","items":["📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"]},{"ver":"4.3.7","date":"4 ott","items":["🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare","🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio","🧱 Nessun danno attraverso muri, porte e finestre chiuse"]},{"ver":"4.3.6","date":"4 ott","items":["⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti","📜 Le liste non tornano più in cima da sole dopo lo scorrimento","📱 In verticale compare subito la schermata «Ruota il telefono»","💎 Avviso chiaro quando non hai abbastanza gemme","🛒 Apertura delle schede del negozio più veloce"]},{"ver":"4.3.5","date":"4 ott","items":["⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve","🏠 Anteprima di costruzione più leggera"]},{"ver":"4.3.4","date":"4 ott","items":["🏠 Il tetto si posa esattamente dove miri","🧱 Il tetto deve poggiare su muri, porte, finestre o un altro tetto; se togli l'appoggio crolla (rimborso di parte della legna)","🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita","🎒 Zaino leggibile con scorrimento verticale quando serve","🛠️ Piccole correzioni di grafica e interfaccia"]}]};
+const NEWS421_FB={"rev":"2026-10-06b","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.34","date":"6 ott","items":["🏙️ La città è stata ridisegnata: case, palazzi e ruderi diversi, non più tutti uguali","⛰️ Le montagne sono creste di roccia e neve, con una texture più ricca","🏚️ Modelli 3D di palazzi, sangue, ossa e macerie lungo le strade","🧟 Gli zombie sono più consumati: pelle spenta, ferite e ossa in vista","🪦 In costruzione ci sono tomba, gomme e macerie"]},{"ver":"4.3.32","date":"5 ott","items":["💾 Salva e la mappa resta così, anche se chiudi il gioco. Originale riporta i palazzi di partenza"]},{"ver":"4.3.31","date":"5 ott","items":["🏚️ Nei palazzi con la cassa si entra: il blocco in mezzo alla porta non c’è più, e la tettoia sta sopra la testa","❄️ La neve a terra, le montagne e gli alberi hanno una texture più vera, con neve anche sui rami","🩸 Per le strade ci sono sangue, ossa e corpi, senza chiudere il passaggio","💡 La lampada in casa illumina senza accecare la stanza","🎵 All’avvio la musica riparte da sola se un tema resta a metà"]},{"ver":"4.3.30","date":"5 ott","items":["🏠 Tetto e pavimento sono una superficie continua: il muro ha la sua texture, il pavimento la sua, il tetto la sua","🪟 La finestra fissa e quella apribile hanno un'apertura pulita. La tenda si mette su entrambe","💡 La lampada di casa è appesa e illumina la stanza","🏙️ In città auto, casse e panchine non sono più incastrate nei muri"]},{"ver":"4.3.29","date":"5 ott","items":["🎒 Lo zaino mostra ogni nome per intero: materiali da una parte, equipaggiamento dall'altra","⚔️ Nel crafting, Potenzia armi: servono tante monete per il massimo. Forza, difesa, critico e velocità si comprano lì, in partita","❄️ La neve scende in modo più naturale. Gli zombie si aprono a ventaglio e si vedono meglio","🔫 Volpe, Rondine, Cervo, Canne mozze e Vespa hanno ognuna il proprio disegno","💡 In home c'è Suggerimenti: scrivi un consiglio, lo legge solo chi gestisce il gioco"]},{"ver":"4.3.28","date":"5 ott","items":["🏠 Costruire è più facile: il pezzo dopo si mette in fila da solo, e dove costruisci non rinasce né un albero né una roccia","💡 Quadri, tende, camino e luci: muro, tetto e pavimento hanno texture nuove e la luce scalda la stanza","🪙 Dal deposito, in partita, spendi le monete per ampliare la cassa e potenziare l'arma in mano"]},{"ver":"4.3.27","date":"5 ott","items":["⚡ Se un fotogramma non arriva, il gioco riparte da solo e non resta fermo per 5 secondi","🎵 Resta acceso un solo tema: la musica non si spezza quando il telefono si blocca un attimo","👟 Passi e tocchi non creano più migliaia di suoni, la partita resta più fluida"]},{"ver":"4.3.26","date":"5 ott","items":["🏆 In classifica c’è anche chi ha giocato dall’altro telefono","⚡ La classifica si rilegge dal server ogni pochi secondi","🎮 I punti passano dal tasto Gioca del menu, non dalla tastiera della chat"]},{"ver":"4.3.25","date":"5 ott","items":["🎵 La musica resta continua, senza scatti né rumori strani","🏆 Ogni partita da Telegram entra in classifica e il server resta aggiornato","💨 Meno voci e scoppiettii a ogni fotogramma, il gioco resta più fluido"]},{"ver":"4.3.24","date":"5 ott","items":["🏗️ Recinto, assi, botte, torcia, cartello, bandiera, sedia, stufa, cassa e vaso","🔫 Negozio più ricco: Volpe, Rondine, Canne mozze, Cervo e Vespa, con kit e munizioni","📦 Il deposito si amplia pagando con le monete","❄️ Sotto un tetto non nevica, e la neve pesa meno sul gioco"]},{"ver":"4.3.23","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco arrivano da foto vere, gratis","🚗 Le auto parcheggiate e i lampioni sono modelli, con ruote e il braccio del faro","🏗️ In costruzione: pilastro, cancello, sacchi di sabbia, lampione, panchina e bidone"]},{"ver":"4.3.22","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco al posto delle superfici piatte","🛣️ L'asfalto, la pietra dei marciapiedi e il metallo arrugginito si leggono da vicino","🏠 I tetti restano a spiovente e le auto restano auto, con la vernice graffiata"]},{"ver":"4.3.21","date":"5 ott","items":["🏠 I tetti delle case e dei depositi sono a spiovente, con il colmo in alto","🚗 Le auto parcheggiate hanno carrozzeria, vetri e ruote, e stanno a bordo strada","🚑 Il bus e l'ambulanza hanno le ruote. L'ambulanza ha la croce"]},{"ver":"4.3.20","date":"5 ott","items":["🏥 Ospedale, mercato, scuola, stazione e case si distinguono: tetti, tende e insegne diversi","🛒 Il mercato ha banchi, tende colorate e vetrine. La città ha fari, cespugli, sangue e un po' di fumo","🌲 Non resti più incastrato nella chioma degli alberi: si passa accanto al tronco","🧟 Gli zombie non attaccano la base, a meno che non ti abbiano visto entrare","🏆 Il tasto Classifica non c'è più: la classifica a destra resta ferma"]},{"ver":"4.3.19","date":"5 ott","items":["🏙️ Città abbandonata: case, scuola, mercato, ospedale, deposito e stazione, collegati da strade","🗺️ Minimappa con i nomi dei quartieri, orientata a nord","🏆 Ogni zombie ucciso entra subito nel totale. Il server riceve il numero esatto e, se non risponde, viene reinviato","⚡ I palazzi nuovi non aggiungono luci: la partita resta fluida"]},{"ver":"4.3.18","date":"5 ott","items":["⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo","🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola","🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto","🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"]},{"ver":"4.3.17","date":"5 ott","items":["🏠 Livello e record stanno tutti in home, sopra la barra in basso","🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì","🎵 Il vento non copre più la musica: in home è spento","🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"]},{"ver":"4.3.16","date":"5 ott","items":["⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"]},{"ver":"4.3.15","date":"5 ott","items":["🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio","☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"]},{"ver":"4.3.14","date":"5 ott","items":["🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo","🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma","🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"]},{"ver":"4.3.13","date":"5 ott","items":["⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento","🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta","⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"]},{"ver":"4.3.12","date":"5 ott","items":["⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera","🏷️ Versione visibile nella home"]},{"ver":"4.3.11","date":"5 ott","items":["🏷️ La versione del gioco è visibile nella home, sotto il titolo","📋 Lista problemi completa e scorrevole, con la causa e dove intervenire"]},{"ver":"4.3.10","date":"4 ott","items":["🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps","🧟 Zombie che camminano senza tremolii avanti e indietro","🕹️ Joystick più stabile: niente scatti di direzione","🎵 La musica riparte da sola se si interrompe","🛡️ Il gioco non si blocca più per un errore: lo salta e continua"]},{"ver":"4.3.9","date":"4 ott","items":["🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo","⚡ Movimento più fluido sui telefoni a 90 e 120 Hz","⏳ Caricamento della partita senza blocchi","📱 Menu che si adatta allo schermo del telefono e del tablet"]},{"ver":"4.3.8","date":"4 ott","items":["📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"]},{"ver":"4.3.7","date":"4 ott","items":["🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare","🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio","🧱 Nessun danno attraverso muri, porte e finestre chiuse"]},{"ver":"4.3.6","date":"4 ott","items":["⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti","📜 Le liste non tornano più in cima da sole dopo lo scorrimento","📱 In verticale compare subito la schermata «Ruota il telefono»","💎 Avviso chiaro quando non hai abbastanza gemme","🛒 Apertura delle schede del negozio più veloce"]},{"ver":"4.3.5","date":"4 ott","items":["⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve","🏠 Anteprima di costruzione più leggera"]},{"ver":"4.3.4","date":"4 ott","items":["🏠 Il tetto si posa esattamente dove miri","🧱 Il tetto deve poggiare su muri, porte, finestre o un altro tetto; se togli l'appoggio crolla (rimborso di parte della legna)","🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita","🎒 Zaino leggibile con scorrimento verticale quando serve","🛠️ Piccole correzioni di grafica e interfaccia"]}]};
 let NEWS421=NEWS421_FB;const NEWS421_K='zc_news_seen';
 function news421Esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function news421Dot(){const b=document.getElementById('newsBtn');if(!b)return;let seen='';try{seen=localStorage.getItem(NEWS421_K)||'';}catch(e){}b.classList.toggle('new',!!NEWS421.rev&&seen!==NEWS421.rev);}
@@ -5367,6 +5381,10 @@ Object.assign(PDEF,{
  luce:{n:'Lampada appesa',i:'💡',cost:{wood:2,coal:1},hp:80,cell:'l',lamp:1,ly:1.82,lv:1,parts:[['metal',0,2.58,0,.08,.1,.08],['dark',0,2.12,0,.035,.84,.035],['dark',0,1.74,0,.48,.16,.48],['metal',0,1.64,0,.36,.05,.36],['glow',0,1.58,0,.18,.1,.18]]}
 });
 PORDER.push('quadro','tenda','camino','luce');
+PDEF.grave={n:'Tomba',i:'🪦',cost:{stone:6,wood:2},hp:420,cell:'o',box:[.8,1.7],parts:[['stone',0,.16,0,.72,.32,1.62],['stone',0,.58,-.72,.64,.72,.14],['dark',0,.24,0,.52,.08,1.22],['wood',0,.98,-.64,.08,.52,.08]]};
+PDEF.tires={n:'Gomme',i:'🛞',cost:{metal:3},hp:240,edge:1,box:[2,.7],parts:[['dark',-.5,.3,0,.62,.55,.62],['dark',.5,.3,0,.62,.55,.62],['dark',0,.78,0,.62,.55,.62],['metal',0,.32,0,1.7,.08,.1]]};
+PDEF.rubble={n:'Macerie',i:'🪨',cost:{stone:3,wood:2},hp:300,cell:'o',box:[1.5,1.2],parts:[['stone',-.15,.22,0,1.25,.4,1.05],['stone',.4,.5,.08,.72,.36,.62],['plank',.05,.64,-.15,.95,.1,.28,0,.35,.15],['wood',-.35,.42,.18,.12,.58,.12,.25,0,.35]]};
+PORDER.push('grave','tires','rubble');
 BCAT43[0][2].splice(4,0,'tenda');BCAT43[3][2].push('quadro','luce','camino');
 function nodeRad28(n){const c=n.circle?n.circle.r:.4;if(n.type==='pine')return Math.max(c,1.15);if(n.type==='dead')return Math.max(c,.9);return c;}
 function buildCovers28(x,z,rad){const R=rad||.4;for(const p of PIECES){if(!p.alive)continue;const D=PDEF[p.type];if(!D)continue;
@@ -5588,22 +5606,25 @@ Promise.all([
     im.instanceMatrix.needsUpdate=true;bulbs.instanceMatrix.needsUpdate=true;scene.add(im);info.lamps=spots.length;}
   let fs=43231;const fr=()=>{fs=(fs*16807)%2147483647;return fs/2147483647;};
   const sizes=[[1.828,1.14],[1.756,1.028],[1.428,1.406]],scales=[3.5,3.5,3.8];
-  const tries=[[88,-28],[90,46],[-92,30],[46,90],[-46,90],[88,-86],[-90,-78],[28,-90]];
-  for(const [x,z] of tries){if(info.houses>=3)break;const k=info.houses%3,sc=scales[k],hw=sizes[k][0]*sc/2,hd=sizes[k][1]*sc/2;
+  const tries=[[-28,-64.5,Math.PI],[-14,-64.5,0],[14,-64.5,Math.PI],[28,-64.5,0],[-28,-84,0],[-14,-84,Math.PI],[14,-84,0],[28,-84,Math.PI],[81,-8,Math.PI/2],[81,24,-Math.PI/2],[81,-24,Math.PI/2],[81,8,-Math.PI/2]];
+  const placed=[[],[],[]];
+  for(const t of tries){if(placed[0].length+placed[1].length+placed[2].length>=12)break;const x=t[0],z=t[1],k=(placed[0].length+placed[1].length+placed[2].length)%3,sc=scales[k],hw=sizes[k][0]*sc/2,hd=sizes[k][1]*sc/2;
     if(!freeSpot(x,z,Math.max(hw,hd)+.8))continue;if(Math.hypot(x+18,z+23)<22)continue;if(Math.abs(x)<hw+5.2||Math.abs(z+24)<hd+5.2)continue;
     let hit=false;const roads=(window.CITY4319&&CITY4319.roads)||[];
     for(const r of roads){const horiz=Math.abs(r[1]-r[3])<.01;
       if(horiz){if(Math.abs(z-r[1])<hd+5.6&&x+hw>Math.min(r[0],r[2])-2&&x-hw<Math.max(r[0],r[2])+2)hit=true;}
       else if(Math.abs(x-r[0])<hw+5.6&&z+hd>Math.min(r[1],r[3])-2&&z-hd<Math.max(r[1],r[3])+2)hit=true;}
-    if(hit)continue;const yaw=fr()<.5?0:Math.PI/2;const m=new T.Mesh(bGeos[k],subMat);m.position.set(x,0,z);m.rotation.y=yaw;m.scale.set(sc,sc,sc);m.castShadow=false;m.receiveShadow=true;scene.add(m);
-    const a=yaw?hd:hw,b=yaw?hw:hd;boxes.push({x0:x-a,x1:x+a,z0:z-b,z1:z+b});info.houses++;info.at.push([+x.toFixed(1),+z.toFixed(1)]);}
+    if(hit)continue;const yaw=t[2];const a=yaw?hd:hw,b=yaw?hw:hd;placed[k].push({x,z,yaw,sc,a,b});info.at.push([+x.toFixed(1),+z.toFixed(1)]); }
+  placed.forEach((list,k)=>{if(!list.length)return;const im=new T.InstancedMesh(bGeos[k],subMat,list.length);im.castShadow=false;im.receiveShadow=true;im.frustumCulled=false;const o=new T.Object3D();
+    list.forEach((p,i)=>{o.position.set(p.x,0,p.z);o.rotation.y=p.yaw;o.scale.set(p.sc,p.sc,p.sc);o.updateMatrix();im.setMatrixAt(i,o.matrix);boxes.push({x0:p.x-p.a,x1:p.x+p.a,z0:p.z-p.b,z1:p.z+p.b});});
+    scene.add(im);info.houses+=list.length;});
   const binAt=[[-34,88],[10,90],[38,90],[90,50],[-92,-40],[56,90]];
   for(const [x,z] of binAt){if(info.bins>=3)break;if(!freeSpot(x,z,1.35))continue;
     const m=new T.Mesh(dumpG,roadMat);m.position.set(x,0,z);m.rotation.y=fr()*6.2;m.scale.set(4.2,4.2,4.2);m.castShadow=false;m.receiveShadow=true;scene.add(m);circles.push({x,z,r:.75});info.bins++;}
   info.ready=1;try{bakeShadows();}catch(e){}
 }).catch(e=>{info.err=String(e&&e.message||e);console.warn('cc0',info.err);});}
 
-window.GAME_VER='4.3.33';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.33');}catch(e){}
+window.GAME_VER='4.3.34';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.34');}catch(e){}
 window.__zs424={snowCovered,chestCap,setChest(n){P42.cu.chest=n|0;return chestCap();},tick(dt){const t=performance.now()/1000;updateSnow(dt||.016,t);snow2Tick(dt||.016,t);},get snowOn(){return snow.visible},get snow2On(){return snow2.visible},CSHOP,PORDER};
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;
@@ -6425,12 +6446,12 @@ function sug29Send(){const box=$('sugText'),msg=$('sugMsg'),btn=$('sugSend');if(
   SUG29.last=nowMs;if(btn)btn.disabled=true;if(msg)msg.textContent='Invio in corso…';
   let name='';try{name=pname();}catch(e){}
   const W=window.Telegram&&Telegram.WebApp;const init=W&&W.initData||'';
-  fetch(ZS_API+'/suggest',{method:'POST',mode:'cors',headers:{'content-type':'text/plain'},body:JSON.stringify({initData:init,text:raw.slice(0,400),name:String(name||'').slice(0,32),v:'4.3.33'})}).then(function(r){return r.json().catch(function(){return {};}).then(function(j){return {st:r.status,j:j};});}).then(function(x){
+  fetch(ZS_API+'/suggest',{method:'POST',mode:'cors',headers:{'content-type':'text/plain'},body:JSON.stringify({initData:init,text:raw.slice(0,400),name:String(name||'').slice(0,32),v:'4.3.34',chat:7780175131})}).then(function(r){return r.json().catch(function(){return {};}).then(function(j){return {st:r.status,j:j};});}).then(function(x){
     if(btn)btn.disabled=false;const j=x.j||{};
-    if(x.st>=200&&x.st<300&&j.ok){SUG29.ok++;SUG29.err='';box.value='';if(msg)msg.textContent='Inviato. Lo legge solo chi gestisce il gioco.';return;}
+    if(x.st>=200&&x.st<300&&j.ok){SUG29.ok++;SUG29.err='';box.value='';if(msg)msg.textContent='Inviato nella chat privata di chi gestisce il gioco.';return;}
     SUG29.fail++;SUG29.err=String(j.err||('HTTP '+x.st)).slice(0,160);
     dbg29('err','suggerimento','Suggerimento non inviato: '+SUG29.err);
-    if(msg)msg.textContent='Non è arrivato al bot ('+SUG29.err+'). Il testo è ancora qui: riprova tra poco.';
+    if(msg)msg.textContent='Non è arrivato nella chat ('+SUG29.err+'). Il testo è ancora qui: riprova tra poco.';
   }).catch(function(e){if(btn)btn.disabled=false;SUG29.fail++;SUG29.err=String(e&&e.message||e).slice(0,160);dbg29('err','suggerimento','Suggerimento non inviato: '+SUG29.err);if(msg)msg.textContent='Non è arrivato. Controlla la rete e riprova.';});}
 const bSug=$('btnSug');if(bSug)bSug.addEventListener('click',sug29Open);
 const bBack=$('sugBack');if(bBack)bBack.addEventListener('click',sug29Close);
@@ -6440,56 +6461,6 @@ window.__rep29=function(){try{return {potenziamenti:{forza:(P42.cu.atk|0),difesa
 window.__sug29={open:sug29Open,send:sug29Send,rep:sug29Rep};
 try{const q29=(typeof GFX43!=='undefined'&&GFX43.q)||'media';zMode43(q29!=='bassa');}catch(e){dbg29('err','zombie',e&&e.message||e);}
 window.__zs429={up29HTML:up29HTML,up29Buy:up29Buy,WU28:WU28,zLook29:zLook29,bag29Check:bag29Check,hide:function(){return CSHOP.filter(function(c){return c.hide29;}).map(function(c){return c.id;});}};
-// ===== 4.3.32: architect. The owner moves city buildings and adds props. Save writes the map the game builds next time. =====
-{const C=window.__archCity;if(C){
-  const KN={house:'Casa',shop:'Negozio',hosp:'Ospedale',ware:'Deposito',station:'Stazione',booth:'Chiosco',school:'Scuola',flat:'Palazzo',crate:'Cassa',bench:'Panchina',barrel:'Botte',lamp:'Lampione',body:'Corpo'};
-  const ghost=new T.Mesh(new T.BoxGeometry(1,2.6,1),new T.MeshBasicMaterial({color:0x8dff9a,transparent:true,opacity:.33,depthWrite:false}));
-  ghost.visible=false;ghost.userData.dyn=1;scene.add(ghost);
-  let sel=null,resetArm=0,shown='';
-  function pack(){return {v:1,plots:C.ARCH32.plots,props:C.ARCH32.props.map(function(p){return {k:p.k,x:+(+p.x).toFixed(2),z:+(+p.z).toFixed(2),rot:p.rot|0};})};}
-  function writeDraft(){try{sessionStorage.setItem('zs_arch_draft',JSON.stringify(pack()));}catch(e){}}
-  function reload(auto){try{if(auto)sessionStorage.setItem('zs_arch_auto','1');}catch(e){}location.reload();}
-  function owner(){try{var fn=window.ownerNow;return typeof fn==='function'&&fn()===true;}catch(e){return false;}}
-  function showGhost(){if(!sel){ghost.visible=false;return;}if(sel.k==='plot'){const r=sel.r;ghost.position.set(r.x,1.3,r.z);ghost.scale.set(Math.max(.4,r.w),1,Math.max(.4,r.d));}else{ghost.position.set(sel.p.x,.7,sel.p.z);ghost.scale.set(1.3,.45,1.3);}ghost.visible=true;}
-  function label(){const e=$('archLbl');if(!e)return;if(!sel){e.textContent='Scegli un palazzo vicino';return;}e.textContent=sel.k==='plot'?(KN[sel.r.kind]||sel.r.kind):(KN[sel.p.k]||sel.p.k);}
-  function choose(){let best=null,bd=22;const px=player.pos.x,pz=player.pos.z;
-    for(const r of C.CITY.arch){const d=Math.hypot(r.x-px,r.z-pz);if(d<bd){bd=d;best={k:'plot',r};}}
-    C.ARCH32.props.forEach(function(p,i){const d=Math.hypot(p.x-px,p.z-pz);if(d<bd&&d<8){bd=d;best={k:'prop',i:i,p:p};}});
-    sel=best;showGhost();label();try{sessionStorage.setItem('zs_arch_sel',sel?(sel.k==='plot'?sel.r.id:'i'+sel.i):'');}catch(e){}if(!sel)toast('Nessun palazzo qui vicino',1100);}
-  function shiftPlot(r,dx,dz){r.x+=dx;r.z+=dz;for(const b of r.boxes){b.x0+=dx;b.x1+=dx;b.z0+=dz;b.z1+=dz;}const h=HOUSE_RECTS[r.hi];if(h){h[0]+=dx;h[1]+=dz;}
-    const plot=C.CITY.plots.find(function(q){return q.id===r.id;});if(plot){plot.x+=dx;plot.z+=dz;}
-    for(const m of r.meshes){m.position.x+=dx;m.position.z+=dz;}
-    const wins=C.CITY.wins,iw=C.CITY.winMesh;if(wins&&iw&&r.win1>r.win0){const o=new T.Object3D();for(let i=r.win0;i<r.win1;i++){const w=wins[i];if(!w)continue;w[0]+=dx;w[2]+=dz;o.position.set(w[0],w[1],w[2]);o.rotation.set(0,0,0);o.scale.set(w[3],w[4],w[5]);o.updateMatrix();iw.setMatrixAt(i,o.matrix);}iw.instanceMatrix.needsUpdate=true;}
-    const slot=C.ARCH32.plots[r.id]||(C.ARCH32.plots[r.id]={});slot.x=+r.x.toFixed(2);slot.z=+r.z.toFixed(2);slot.door=r.door;writeDraft();showGhost();}
-  function shiftProp(p,dx,dz){p.x=+p.x+dx;p.z=+p.z+dz;if(p._g){p._g.position.x+=dx;p._g.position.z+=dz;}if(p._box){p._box.x0+=dx;p._box.x1+=dx;p._box.z0+=dz;p._box.z1+=dz;}if(p._circ){p._circ.x+=dx;p._circ.z+=dz;}writeDraft();showGhost();}
-  function nudge(dx,dz){if(!C.live)return;if(!sel)choose();if(!sel)return;const L=HALF-8;if(sel.k==='plot'){if(Math.abs(sel.r.x+dx)>L||Math.abs(sel.r.z+dz)>L){toast('Sei al bordo della mappa',1000);return;}shiftPlot(sel.r,dx,dz);}else shiftProp(sel.p,dx,dz);}
-  function turn(){if(!sel)choose();if(!sel)return;if(sel.k==='plot'){const order=['n','e','s','w'],i=Math.max(0,order.indexOf(sel.r.door));sel.r.door=order[(i+1)%4];const slot=C.ARCH32.plots[sel.r.id]||(C.ARCH32.plots[sel.r.id]={});slot.x=sel.r.x;slot.z=sel.r.z;slot.door=sel.r.door;writeDraft();try{sessionStorage.setItem('zs_arch_sel',sel.r.id);}catch(e){}reload(true);return;}
-    sel.p.rot=((sel.p.rot|0)+1)%4;if(sel.p._g)sel.p._g.rotation.y=sel.p.rot*Math.PI/2;writeDraft();}
-  const kinds=['crate','bench','barrel','lamp','body'];let kindI=0;
-  function addLabel(){const b=bar.querySelector('[data-a="add"]');if(b)b.textContent=KN[kinds[kindI%kinds.length]]||'Aggiungi';}
-  function addProp(){if(!C.live)return;if(C.ARCH32.props.length>=40){toast('Troppe aggiunte: massimo 40',1200);return;}const fx=-Math.sin(player.yaw),fz=-Math.cos(player.yaw);
-    const p={k:kinds[kindI%kinds.length],x:Math.round(player.pos.x+fx*1.8),z:Math.round(player.pos.z+fz*1.8),rot:0};kindI++;C.spawn(p);C.ARCH32.props.push(p);sel={k:'prop',i:C.ARCH32.props.length-1,p:p};writeDraft();showGhost();label();addLabel();toast((KN[p.k]||p.k)+' messo davanti a te',1000);}
-  function removeSel(){if(!sel||sel.k!=='prop'){toast('Si toglie solo una cosa che hai aggiunto',1300);return;}const p=sel.p;if(p._g)scene.remove(p._g);if(p._box)C.drop(boxes,p._box);if(p._circ)C.drop(circles,p._circ);C.ARCH32.props.splice(sel.i,1);sel=null;writeDraft();showGhost();label();}
-  function enter(){try{sessionStorage.setItem('zs_arch_live','1');sessionStorage.setItem('zs_arch_draft',localStorage.getItem('zs_arch32')||'{"v":1,"plots":{},"props":[]}');}catch(e){}reload(true);}
-  function save(){try{localStorage.setItem('zs_arch32',JSON.stringify(pack()));sessionStorage.removeItem('zs_arch_live');sessionStorage.removeItem('zs_arch_draft');sessionStorage.removeItem('zs_arch_sel');}catch(e){}reload(true);}
-  function leave(){try{sessionStorage.removeItem('zs_arch_live');sessionStorage.removeItem('zs_arch_draft');sessionStorage.removeItem('zs_arch_sel');}catch(e){}reload(true);}
-  function resetMap(){const n=Date.now();if(n-resetArm>4000){resetArm=n;toast('Premi di nuovo Originale per tornare alla mappa di partenza',2000);return;}try{localStorage.removeItem('zs_arch32');sessionStorage.removeItem('zs_arch_live');sessionStorage.removeItem('zs_arch_draft');sessionStorage.removeItem('zs_arch_sel');}catch(e){}reload(true);}
-  const st=document.createElement('style');st.textContent='#archGo{position:fixed;z-index:40;left:50%;bottom:calc(12px + var(--sab));transform:translateX(-50%);height:42px;padding:0 16px;border-radius:14px;border:1px solid rgba(255,255,255,.35);background:rgba(10,12,18,.9);color:#fff;font:700 15px ZRaj,sans-serif;display:none;align-items:center;justify-content:center;pointer-events:auto;box-shadow:0 2px 12px rgba(0,0,0,.5)}#archBar{position:fixed;z-index:41;left:calc(var(--sal) + 6px);right:calc(var(--sar) + 6px);top:calc(46px + var(--sat));display:none;gap:4px;align-items:center;padding:5px;border-radius:12px;background:rgba(8,10,16,.88);border:1px solid rgba(255,255,255,.16);pointer-events:auto;flex-wrap:wrap;justify-content:center}#archBar button{font:600 11px inherit;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:5px 7px}#archLbl{font:600 11px inherit;color:#d7ffe4;padding:0 4px}';
-  document.head.appendChild(st);
-  const go=document.createElement('button');go.id='archGo';go.type='button';go.textContent='🏛️ Architetto';go.setAttribute('aria-label','Architetto');
-  const bar=document.createElement('div');bar.id='archBar';bar.innerHTML='<span id="archLbl">Architetto</span><button type="button" data-n="0,-2">Nord</button><button type="button" data-n="0,2">Sud</button><button type="button" data-n="-2,0">Ovest</button><button type="button" data-n="2,0">Est</button><button type="button" data-a="pick">Scegli</button><button type="button" data-a="rot">Porta</button><button type="button" data-a="add">Cassa</button><button type="button" data-a="del">Togli</button><button type="button" data-a="save">Salva</button><button type="button" data-a="exit">Esci</button><button type="button" data-a="reset">Originale</button>';
-  document.body.appendChild(go);document.body.appendChild(bar);
-  go.addEventListener('click',function(){if(owner())enter();});
-  const bArch=$('btnArch');if(bArch)bArch.addEventListener('click',function(){if(owner())enter();});
-  bar.addEventListener('click',function(e){const b=e.target.closest('button');if(!b)return;if(b.dataset.n){const a=b.dataset.n.split(',');nudge(+a[0],+a[1]);return;}const k=b.dataset.a;if(k==='pick')choose();else if(k==='rot')turn();else if(k==='add')addProp();else if(k==='del')removeSel();else if(k==='save')save();else if(k==='exit')leave();else if(k==='reset')resetMap();});
-  function paint(){const play=game.state==='play',own=owner(),row=$('archRow');if(row){const hide=!own;if(row.hidden!==hide){row.hidden=hide;try{if(!hide&&window.__safe42)__safe42.fit();}catch(e){}}}const mode=(own&&play&&!C.live?'go':'')+(C.live&&play?'bar':'');window.__archPaint=(window.__archPaint|0)+1;if(mode===shown)return;shown=mode;go.style.display=mode.indexOf('go')>=0?'flex':'none';bar.style.display=mode.indexOf('bar')>=0?'flex':'none';}
-  TICK42.push(function(){try{paint();}catch(e){window.__archErr=String(e&&e.message||e);}});
-  setInterval(function(){try{paint();}catch(e){window.__archErr=String(e&&e.message||e);}},400);
-  paint();
-  if(C.live){try{const id=sessionStorage.getItem('zs_arch_sel');if(id){const r=C.CITY.arch.find(function(q){return q.id===id;});if(r)sel={k:'plot',r:r};}}catch(e){}showGhost();label();}
-  try{if(sessionStorage.getItem('zs_arch_auto')==='1'){sessionStorage.removeItem('zs_arch_auto');setTimeout(function(){try{startGame();}catch(e){}},400);}}catch(e){}
-  window.__arch32={rep:function(){const p=pack();return {live:!!C.live,palazzi:Object.keys(p.plots).length,aggiunte:p.props.length,mappa:p};},pack:pack,enter:enter,save:save,reset:resetMap,nudge:nudge,choose:choose,add:addProp};
-}}
 
 })();
 </script>
@@ -6667,9 +6638,8 @@ body.hudBandR424 #bagBtn{font-size:17px!important;align-items:flex-start!importa
 #craftScreen .recipe .name,#craftScreen .recipe .cost,#craftScreen #craftTabs .tab{white-space:normal;overflow:visible;text-overflow:clip}
 #sugText{width:100%;min-height:96px;box-sizing:border-box;margin:8px 0;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.35);color:#fff;font:16px/1.35 ZRaj,sans-serif;padding:10px;resize:vertical}
 #sugLead,#sugMsg{white-space:normal}
-#archRow[hidden]{display:none!important}
-#btnSug small,#btnArch small{white-space:normal!important;line-height:1.15}
-body.homeXC #startScreen #sugRow,body.homeXC #startScreen #archRow,body.homeXXC #startScreen #archRow{grid-column:1/-1}
+#btnSug small{white-space:normal!important;line-height:1.15}
+body.homeXC #startScreen #sugRow{grid-column:1/-1}
 @media (max-width:760px){#bagScreen .bagSheet.bagSheet{grid-template-columns:1fr;grid-template-areas:"hd" "cap" "grid" "note" "eq";row-gap:2px;padding:6px 10px!important}#bagScreen #bagGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:2px 6px}#bagScreen .bgI{padding:1px 6px!important}}
 @media (max-height:430px) and (min-width:700px){#bagScreen .bagSheet.bagSheet{grid-template-columns:1fr;grid-template-areas:"hd" "cap" "grid" "eq" "note";row-gap:1px;padding:2px 8px!important}#bagScreen #bagGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:1px 6px}#bagScreen .bgI{padding:0 4px!important}#bagScreen .bgI i{font-size:13px!important}#bagScreen .bgI span,#bagScreen .bgI b{font-size:12px!important;line-height:1.05!important}#bagScreen .eqSlots{grid-template-columns:repeat(7,minmax(0,1fr))!important}#bagScreen .eqStats{grid-template-columns:repeat(6,minmax(0,1fr))!important;padding:0 4px!important}#bagScreen .gS{min-height:0!important;padding:0 2px!important}#bagScreen .gS small{font-size:10px!important;line-height:1.05!important}#bagScreen .bagHd h2{font-size:15px;line-height:1}#bagScreen .gEmpty,#bagScreen .eqSub,#bagScreen .eqHead{font-size:11px;line-height:1.05;margin:0!important;padding:0!important}}
 </style>

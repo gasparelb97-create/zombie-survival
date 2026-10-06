@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06a",
+  "rev": "2026-10-06b",
   "upcoming": [
     {
       "icon": "🆕",
@@ -11,18 +11,20 @@
   ],
   "recent": [
     {
-      "ver": "4.3.33",
+      "ver": "4.3.34",
       "date": "6 ott",
       "items": [
-        "🏛️ Architetto è nella home, sotto Negozio: lo vedi solo tu",
-        "🏗️ In partita il tasto sta in basso al centro, non più coperto dal debug"
+        "🏙️ La città è stata ridisegnata: case, palazzi e ruderi diversi, non più tutti uguali",
+        "⛰️ Le montagne sono creste di roccia e neve, con una texture più ricca",
+        "🏚️ Modelli 3D di palazzi, sangue, ossa e macerie lungo le strade",
+        "🧟 Gli zombie sono più consumati: pelle spenta, ferite e ossa in vista",
+        "🪦 In costruzione ci sono tomba, gomme e macerie"
       ]
     },
     {
       "ver": "4.3.32",
       "date": "5 ott",
       "items": [
-        "🏛️ Architetto: solo chi gestisce il gioco sposta i palazzi e aggiunge casse, panchine, botti, lampioni e corpi",
         "💾 Salva e la mappa resta così, anche se chiudi il gioco. Originale riporta i palazzi di partenza"
       ]
     },
@@ -44,8 +46,7 @@
         "🏠 Tetto e pavimento sono una superficie continua: il muro ha la sua texture, il pavimento la sua, il tetto la sua",
         "🪟 La finestra fissa e quella apribile hanno un'apertura pulita. La tenda si mette su entrambe",
         "💡 La lampada di casa è appesa e illumina la stanza",
-        "🏙️ In città auto, casse e panchine non sono più incastrate nei muri",
-        "🐞 Il debug fa copiare l'errore, anche quando ne ha appena trovato uno"
+        "🏙️ In città auto, casse e panchine non sono più incastrate nei muri"
       ]
     },
     {
@@ -56,7 +57,6 @@
         "⚔️ Nel crafting, Potenzia armi: servono tante monete per il massimo. Forza, difesa, critico e velocità si comprano lì, in partita",
         "❄️ La neve scende in modo più naturale. Gli zombie si aprono a ventaglio e si vedono meglio",
         "🔫 Volpe, Rondine, Cervo, Canne mozze e Vespa hanno ognuna il proprio disegno",
-        "🐞 Il debug segna gli errori che fermano il gioco, e il report si copia come prima",
         "💡 In home c'è Suggerimenti: scrivi un consiglio, lo legge solo chi gestisce il gioco"
       ]
     },
@@ -161,7 +161,6 @@
         "⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo",
         "🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola",
         "🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto",
-        "🐞 Il debug non copre più Novità e Invita",
         "🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"
       ]
     },
@@ -172,7 +171,6 @@
         "🏠 Livello e record stanno tutti in home, sopra la barra in basso",
         "🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì",
         "🎵 Il vento non copre più la musica: in home è spento",
-        "🐞 Nel debug c’è solo Problemi, e un problema già visto non viene ricontato",
         "🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"
       ]
     },
@@ -180,7 +178,6 @@
       "ver": "4.3.16",
       "date": "5 ott",
       "items": [
-        "🐞 Il debug aperto sta sul paesaggio a destra: Gioca, Negozio, Opzioni e Audio restano toccabili",
         "⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"
       ]
     },
@@ -189,7 +186,6 @@
       "date": "5 ott",
       "items": [
         "🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio",
-        "🐞 Il debug sta sul paesaggio. La lista problemi si scorre e Copia report mette il testo da incollare",
         "☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"
       ]
     },
@@ -198,7 +194,6 @@
       "date": "5 ott",
       "items": [
         "🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo",
-        "🐞 Il debug a ogni apertura conta solo i problemi nuovi, non quelli già sistemati",
         "🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma",
         "🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"
       ]
@@ -217,8 +212,7 @@
       "date": "5 ott",
       "items": [
         "⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera",
-        "🏷️ Versione visibile nella home",
-        "🐞 Debug visibile sotto la barra di Telegram, con la lista problemi scorrevole"
+        "🏷️ Versione visibile nella home"
       ]
     },
     {
@@ -226,9 +220,7 @@
       "date": "5 ott",
       "items": [
         "🏷️ La versione del gioco è visibile nella home, sotto il titolo",
-        "🐞 Debug di nuovo visibile: il pulsante non finisce più sotto la barra di Telegram",
-        "📋 Lista problemi completa e scorrevole, con la causa e dove intervenire",
-        "🔢 Il pulsante 🐞 mostra quanti problemi ha trovato in questa sessione"
+        "📋 Lista problemi completa e scorrevole, con la causa e dove intervenire"
       ]
     },
     {
