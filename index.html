@@ -41,6 +41,7 @@
       go(t);
     }).catch(function(){go('');});
   }
+  if(window.__zsApk||/[?&]apk=1(?:&|$)/.test(location.search)){start();return;}
   if(window.Telegram&&window.Telegram.WebApp)start();
   else{
     var s=document.createElement('script');

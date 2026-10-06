@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06c",
+  "rev": "2026-10-06d",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.36",
+      "date": "6 ott",
+      "items": [
+        "📱 L'app Android usa tutto lo schermo",
+        "✨ Sull'app l'immagine è più nitida e i movimenti più fluidi",
+        "🎒 Lo zaino dell'app ha un tasto Chiudi grande",
+        "💶 Nel negozio dell'app i prezzi sono in euro"
+      ]
+    },
     {
       "ver": "4.3.35",
       "date": "6 ott",
