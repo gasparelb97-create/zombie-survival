@@ -1,9 +1,9 @@
 {
-  "version": 457,
-  "game_version": "4.3.57",
+  "version": 458,
+  "game_version": "4.3.58",
   "changes": [
-    "Zaino ridisegnato: schede Risorse e munizioni ed Equipaggiamento a tutta larghezza, senza pannelli schiacciati",
-    "Oggetti più grandi con nome, rarità e livello; dettagli, confronto e azioni visibili selezionando un oggetto",
-    "Scorrimento completo su telefono, layout adattato a verticale e orizzontale; chiusura sempre accessibile"
+    "Mappa rinnovata con quartieri residenziali e industriali, nuovi palazzi e officine, strade collegate a base, stazione e ospedale",
+    "Facciate rovinate, asfalto crepato, marciapiedi e segnaletica; cespugli, pozzanghere, sangue, scheletri e cadaveri ambientali",
+    "Passaggi verificati e nuove costruzioni compatibili con le strutture già salvate; risorse e casse conservano la loro posizione"
   ]
 }

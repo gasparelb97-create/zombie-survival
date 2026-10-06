@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06y",
+  "rev": "2026-10-06z",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.58",
+      "date": "6 ott",
+      "items": [
+        "Mappa rinnovata con quartieri residenziali e industriali, nuovi palazzi e officine, strade collegate a base, stazione e ospedale",
+        "Facciate rovinate, asfalto crepato, marciapiedi e segnaletica; cespugli, pozzanghere, sangue, scheletri e cadaveri ambientali",
+        "Passaggi verificati e nuove costruzioni compatibili con le strutture già salvate; risorse e casse conservano la loro posizione"
+      ]
+    },
     {
       "ver": "4.3.57",
       "date": "6 ott",
