@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06j",
+  "rev": "2026-10-06k",
   "upcoming": [
     {
       "icon": "🆕",
@@ -11,14 +11,13 @@
   ],
   "recent": [
     {
-      "ver": "4.3.42",
+      "ver": "4.3.43",
       "date": "6 ott",
       "items": [
-        "Molti più palazzi, alcuni in fiamme e fumo",
-        "Gli zombie camminano e cadono in modo naturale: un colpo in testa fa scoppiare la testa, alle braccia e alle gambe le stacca e loro zoppicano, al busto escono gli organi",
-        "Porta della casa ridisegnata e dodici pezzi nuovi, prima quelli già usabili e poi quelli da sbloccare di livello",
-        "Ascia e piccone sempre a portata di mano, al massimo due armi scelte",
-        "La home resta fissa e il caricamento mostra subito quella attuale"
+        "Gli zombie camminano e cadono in modo naturale",
+        "In testa scoppia la testa ed esce il cervello, braccia e gambe si staccano e loro zoppicano, al busto escono gli organi e il sangue",
+        "La porta della casa è ridisegnata",
+        "Home, caricamento, armi, costruzioni e mappa sono quelli di prima"
       ]
     },
     {
