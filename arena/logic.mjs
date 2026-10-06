@@ -1,0 +1,518 @@
+// Arena 3v3 — authoritative room. Shared by the Node server and the Cloudflare Durable Object.
+// Map blockers must stay in sync with the client list in game.html (arena454).
+
+export const MATCH_MS = 180000;
+export const NEED = 6;
+export const RESPAWN_MS = 5000;
+export const INVULN_MS = 1500;
+export const ARENA_R = 32.6;
+
+export const COVERS = [
+  [-14, -7, 3.4, 0.8, 1.7],
+  [-14, 7, 3.4, 0.8, 1.7],
+  [14, -7, 3.4, 0.8, 1.7],
+  [14, 7, 3.4, 0.8, 1.7],
+  [-7, -14, 0.8, 3.4, 1.5],
+  [7, -14, 0.8, 3.4, 1.5],
+  [-7, 14, 0.8, 3.4, 1.5],
+  [7, 14, 0.8, 3.4, 1.5],
+  [0, -9, 5.2, 0.9, 1.25],
+  [0, 9, 5.2, 0.9, 1.25],
+  [-9, 0, 0.9, 3.6, 2.15],
+  [9, 0, 0.9, 3.6, 2.15],
+  [-20, 12, 2.2, 2.2, 1.3],
+  [20, -12, 2.2, 2.2, 1.3],
+  [-20, -12, 2.4, 1.1, 1.45],
+  [20, 12, 2.4, 1.1, 1.45],
+  [-4, 4, 1.4, 1.4, 1.1],
+  [4, -4, 1.4, 1.4, 1.1],
+  [4, 4, 1.1, 1.6, 1.8],
+  [-4, -4, 1.6, 1.1, 1.8]
+];
+
+export const PILLARS = [[-22, 0], [22, 0], [0, -22], [0, 22], [-18, -18], [18, 18], [-18, 18], [18, -18]];
+
+export const SPOTS = [
+  [0, 0], [0, 5], [0, -5],
+  [-11, -11], [11, 11], [-11, 11], [11, -11],
+  [-6, 16], [6, -16], [16, 6], [-16, -6],
+  [-24, 10], [24, -10], [-24, -10], [24, 10],
+  [0, 16], [0, -16], [12, 0], [-12, 0],
+  [8, -8], [-8, 8]
+];
+
+export const SPAWNS = [
+  [[-26.5, -5.5], [-26.5, 0], [-26.5, 5.5]],
+  [[26.5, -5.5], [26.5, 0], [26.5, 5.5]]
+];
+
+export const GUNS = {
+  knife: { dmg: 28, rate: 0.46, range: 2.4, pellets: 1, mag: 0, reserve: 0, melee: 1 },
+  pistol: { dmg: 22, rate: 0.3, range: 60, pellets: 1, mag: 12, reserve: 72 },
+  shotgun: { dmg: 9, rate: 0.9, range: 22, pellets: 9, mag: 6, reserve: 24, fall: 0.95, fmin: 0.2 },
+  laser: { dmg: 11, rate: 0.1, range: 70, pellets: 1, mag: 30, reserve: 120 },
+  smg: { dmg: 9, rate: 0.072, range: 42, pellets: 1, mag: 35, reserve: 140 },
+  ar: { dmg: 16, rate: 0.11, range: 70, pellets: 1, mag: 30, reserve: 120 },
+  thunder: { dmg: 7, rate: 0.3, range: 24, pellets: 8, mag: 10, reserve: 40, fall: 0.75, fmin: 0.26 },
+  plasma: { dmg: 30, rate: 0.24, range: 75, pellets: 1, mag: 20, reserve: 60 },
+  revolver: { dmg: 46, rate: 0.55, range: 70, pellets: 1, mag: 6, reserve: 30 },
+  dbarrel: { dmg: 8, rate: 0.32, range: 16, pellets: 12, mag: 2, reserve: 20, fall: 1.05, fmin: 0.14 },
+  crossbow: { dmg: 64, rate: 0.4, range: 90, pellets: 1, mag: 1, reserve: 16 },
+  sniper: { dmg: 92, rate: 1.15, range: 150, pellets: 1, mag: 5, reserve: 20 },
+  glauncher: { dmg: 74, rate: 0.7, range: 55, pellets: 1, mag: 6, reserve: 12 },
+  flamer: { dmg: 5, rate: 0.05, range: 8, pellets: 1, mag: 120, reserve: 240 },
+  minigun: { dmg: 8, rate: 0.048, range: 55, pellets: 1, mag: 200, reserve: 400 },
+  fox: { dmg: 24, rate: 0.24, range: 75, pellets: 1, mag: 18, reserve: 72 },
+  burst: { dmg: 12, rate: 0.082, range: 52, pellets: 1, mag: 28, reserve: 112 },
+  saw: { dmg: 11, rate: 0.58, range: 12, pellets: 7, mag: 2, reserve: 20, fall: 1.1, fmin: 0.12 },
+  hunt: { dmg: 58, rate: 0.78, range: 120, pellets: 1, mag: 8, reserve: 32 },
+  vespa: { dmg: 46, rate: 0.9, range: 40, pellets: 1, mag: 3, reserve: 12 }
+};
+
+const KIND_CYCLE = ['dmg', 'ammo', 'med', 'spd', 'ammo', 'med', 'arm', 'ammo'];
+const BUFF_MS = { dmg: 12000, spd: 10000, arm: 12000 };
+
+function blocks() {
+  const out = [];
+  for (const c of COVERS) out.push({ x0: c[0] - c[2] / 2, x1: c[0] + c[2] / 2, z0: c[1] - c[3] / 2, z1: c[1] + c[3] / 2, h: c[4] });
+  for (const p of PILLARS) out.push({ x0: p[0] - 0.6, x1: p[0] + 0.6, z0: p[1] - 0.6, z1: p[1] + 0.6, h: 3.4 });
+  return out;
+}
+const BLOCKS = blocks();
+
+function send(ws, obj) {
+  try { ws.send(JSON.stringify(obj)); } catch (e) {}
+}
+
+function cleanName(s) {
+  const t = String(s || 'Giocatore').replace(/[\u0000-\u001f<>]/g, '').trim();
+  return (t || 'Giocatore').slice(0, 18);
+}
+
+function cleanId(s) {
+  const t = String(s || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 32);
+  return t;
+}
+
+function gunOf(id) {
+  return GUNS[id] || GUNS.knife;
+}
+
+function rayAabb(ox, oy, oz, dx, dy, dz, box, maxT) {
+  let tmin = 0, tmax = maxT;
+  const min = [box.x0, 0, box.z0], max = [box.x1, box.h, box.z1];
+  const o = [ox, oy, oz], d = [dx, dy, dz];
+  for (let i = 0; i < 3; i++) {
+    if (Math.abs(d[i]) < 1e-8) {
+      if (o[i] < min[i] || o[i] > max[i]) return null;
+    } else {
+      let t1 = (min[i] - o[i]) / d[i], t2 = (max[i] - o[i]) / d[i];
+      if (t1 > t2) { const s = t1; t1 = t2; t2 = s; }
+      if (t1 > tmin) tmin = t1;
+      if (t2 < tmax) tmax = t2;
+      if (tmin > tmax) return null;
+    }
+  }
+  if (tmax < 0) return null;
+  return tmin >= 0 ? tmin : 0;
+}
+
+function capsule(ox, oy, oz, dx, dy, dz, tx, tz, range) {
+  let best = null;
+  const heights = [0.9, 1.25, 1.62];
+  for (let i = 0; i < heights.length; i++) {
+    const yy = heights[i];
+    const lx = tx - ox, ly = yy - oy, lz = tz - oz;
+    const along = lx * dx + ly * dy + lz * dz;
+    if (along < 0.35 || along > range) continue;
+    const qx = lx - dx * along, qy = ly - dy * along, qz = lz - dz * along;
+    const rad = yy > 1.5 ? 0.4 : 0.62;
+    if (qx * qx + qy * qy + qz * qz < rad * rad) {
+      if (!best || along < best.along) best = { along: along, part: yy > 1.5 ? 'head' : 'body' };
+    }
+  }
+  return best;
+}
+
+export function createHub() {
+  const lobby = new Map();
+  const bySock = new Map();
+  let match = null;
+  let pid = 1;
+  let spotCursor = 0;
+  const hub = {
+    poke: null,
+    tick,
+    hot,
+    connect
+  };
+  const timer = setInterval(tick, 100);
+  if (timer.unref) timer.unref();
+  return hub;
+
+  function hot() {
+    return !!(match || lobby.size);
+  }
+
+  function wake() {
+    if (hub.poke) { try { hub.poke(); } catch (e) {} }
+  }
+
+  function lobbyMsg() {
+    const names = [];
+    for (const p of lobby.values()) names.push({ id: p.id, name: p.name });
+    return { t: 'lobby', n: names.length, need: NEED, names: names, busy: !!match };
+  }
+
+  function tellLobby() {
+    const msg = lobbyMsg();
+    for (const p of lobby.values()) send(p.ws, msg);
+  }
+
+  function connect(ws) {
+    const conn = { ws: ws, msgs: 0, win: Date.now(), id: null };
+    bySock.set(ws, conn);
+    const onMsg = (ev) => {
+      const now = Date.now();
+      if (now - conn.win > 1000) { conn.win = now; conn.msgs = 0; }
+      conn.msgs++;
+      if (conn.msgs > 40) return;
+      let data = ev && ev.data != null ? ev.data : ev;
+      if (typeof data !== 'string') {
+        try { data = String(data); } catch (e) { return; }
+      }
+      let msg;
+      try { msg = JSON.parse(data); } catch (e) { return; }
+      if (!msg || typeof msg.t !== 'string') return;
+      onClient(conn, msg);
+    };
+    const onClose = () => dropSock(ws);
+    if (ws.addEventListener) {
+      ws.addEventListener('message', onMsg);
+      ws.addEventListener('close', onClose);
+      ws.addEventListener('error', onClose);
+    } else {
+      ws.onmessage = onMsg;
+      ws.onclose = onClose;
+    }
+    wake();
+  }
+
+  function dropSock(ws) {
+    const conn = bySock.get(ws);
+    bySock.delete(ws);
+    if (!conn || !conn.id) return;
+    if (lobby.has(conn.id) && lobby.get(conn.id).ws === ws) {
+      lobby.delete(conn.id);
+      tellLobby();
+    }
+    if (match && match.players.has(conn.id)) {
+      const p = match.players.get(conn.id);
+      if (p.ws === ws) {
+        match.players.delete(conn.id);
+        if (match.players.size === 0) match = null;
+      }
+    }
+    wake();
+  }
+
+  function findPlayer(id) {
+    if (match && match.players.has(id)) return match.players.get(id);
+    if (lobby.has(id)) return lobby.get(id);
+    return null;
+  }
+
+  function onClient(conn, msg) {
+    if (msg.t === 'join' || msg.t === 'ready') return join(conn, msg);
+    const p = conn.id ? findPlayer(conn.id) : null;
+    if (!p || p.ws !== conn.ws) return;
+    if (msg.t === 'arm') return setArm(p, msg);
+    if (msg.t === 'pos') return setPos(p, msg);
+    if (msg.t === 'shot') return onShot(p, msg);
+    if (msg.t === 'claim') return onClaim(p, msg);
+    if (msg.t === 'leave') {
+      try { conn.ws.close(); } catch (e) {}
+      dropSock(conn.ws);
+    }
+  }
+
+  function join(conn, msg) {
+    const id = cleanId(msg.id);
+    const name = cleanName(msg.name);
+    const weapon = GUNS[msg.weapon] ? msg.weapon : 'knife';
+    if (!id) { send(conn.ws, { t: 'err', m: 'Identità mancante' }); return; }
+    const oldL = lobby.get(id);
+    if (oldL && oldL.ws !== conn.ws) { send(oldL.ws, { t: 'kick', m: 'Connessione sostituita' }); try { oldL.ws.close(); } catch (e) {} }
+    if (match && match.players.has(id)) {
+      const old = match.players.get(id);
+      if (old.ws !== conn.ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); }
+    }
+    conn.id = id;
+    const p = {
+      id: id, name: name, weapon: weapon, ws: conn.ws,
+      team: -1, x: 0, z: 0, yaw: 0, pitch: 0,
+      hp: 100, alive: false, ammo: 0, magSize: 0,
+      buffs: { dmg: 0, spd: 0, arm: 0 },
+      lastShot: 0, respawnAt: 0, invuln: 0, tp: 0, slot: 0
+    };
+    lobby.set(id, p);
+    tellLobby();
+    tryStart();
+    wake();
+  }
+
+  function setArm(p, msg) {
+    if (!lobby.has(p.id) || (match && match.players.has(p.id))) return;
+    if (GUNS[msg.weapon]) p.weapon = msg.weapon;
+    tellLobby();
+  }
+
+  function tryStart() {
+    if (match || lobby.size < NEED) return;
+    const picked = [];
+    for (const p of lobby.values()) {
+      picked.push(p);
+      if (picked.length === NEED) break;
+    }
+    for (const p of picked) lobby.delete(p.id);
+    const now = Date.now();
+    match = {
+      id: now,
+      t0: now,
+      ends: now + MATCH_MS,
+      scores: [0, 0],
+      players: new Map(),
+      pickups: [],
+      nextSpawn: now + 7000,
+      seq: 1,
+      teams: [0, 0]
+    };
+    picked.forEach((p, i) => {
+      const team = i % 2;
+      p.team = team;
+      p.slot = match.teams[team]++;
+      const sp = SPAWNS[team][p.slot % 3];
+      p.x = sp[0];
+      p.z = sp[1];
+      p.yaw = team === 0 ? -Math.PI / 2 : Math.PI / 2;
+      p.pitch = 0;
+      p.hp = 100;
+      p.alive = true;
+      p.invuln = now + INVULN_MS;
+      p.respawnAt = 0;
+      p.buffs = { dmg: 0, spd: 0, arm: 0 };
+      const g = gunOf(p.weapon);
+      p.magSize = g.mag || 0;
+      p.ammo = g.melee ? -1 : (g.mag + g.reserve);
+      p.tp = 1;
+      match.players.set(p.id, p);
+    });
+    for (let n = 0; n < 6; n++) spawnPickup(match, true);
+    for (const p of match.players.values()) {
+      send(p.ws, {
+        t: 'start',
+        team: p.team,
+        slot: p.slot,
+        x: p.x, z: p.z, yaw: p.yaw,
+        ends: match.ends,
+        left: MATCH_MS,
+        scores: match.scores,
+        weapon: p.weapon,
+        mag: p.magSize,
+        ammo: p.ammo,
+        players: roster(match),
+        pickups: pickupList(match)
+      });
+      p.tp = 0;
+    }
+    tellLobby();
+  }
+
+  function roster(m) {
+    const arr = [];
+    for (const p of m.players.values()) arr.push({ id: p.id, name: p.name, team: p.team, weapon: p.weapon });
+    return arr;
+  }
+
+  function pickupList(m) {
+    return m.pickups.map((q) => ({ id: q.id, k: q.k, x: q.x, z: q.z }));
+  }
+
+  function spawnPickup(m, force) {
+    if (!force && m.pickups.length >= 10) { m.nextSpawn = Date.now() + 4000; return; }
+    let guard = 0;
+    let spot = SPOTS[spotCursor % SPOTS.length];
+    spotCursor++;
+    while (guard < SPOTS.length && m.pickups.some((q) => Math.hypot(q.x - spot[0], q.z - spot[1]) < 3)) {
+      spot = SPOTS[spotCursor % SPOTS.length];
+      spotCursor++;
+      guard++;
+    }
+    const k = KIND_CYCLE[(m.seq + spotCursor) % KIND_CYCLE.length];
+    const item = { id: m.seq++, k: k, x: spot[0], z: spot[1] };
+    m.pickups.push(item);
+    m.nextSpawn = Date.now() + 8000;
+    if (!force) {
+      for (const p of m.players.values()) send(p.ws, { t: 'spawn', pickup: item });
+    }
+  }
+
+  function setPos(p, msg) {
+    if (!match || !match.players.has(p.id) || !p.alive) return;
+    const x = +msg.x, z = +msg.z;
+    if (!Number.isFinite(x) || !Number.isFinite(z)) return;
+    const dx = x - p.x, dz = z - p.z;
+    if (dx * dx + dz * dz > 64) return;
+    const d = Math.hypot(x, z);
+    if (d > ARENA_R) {
+      p.x = x * (ARENA_R / d);
+      p.z = z * (ARENA_R / d);
+    } else {
+      p.x = x;
+      p.z = z;
+    }
+    if (Number.isFinite(+msg.yaw)) p.yaw = +msg.yaw;
+    if (Number.isFinite(+msg.pitch)) p.pitch = Math.max(-1.4, Math.min(1.4, +msg.pitch));
+  }
+
+  function onShot(p, msg) {
+    if (!match || !match.players.has(p.id) || !p.alive) return;
+    const now = Date.now();
+    const g = gunOf(p.weapon);
+    if (now - p.lastShot < g.rate * 1000 * 0.82) return;
+    if (!g.melee && p.ammo === 0) return;
+    let dx = +msg.dx, dy = +msg.dy, dz = +msg.dz;
+    const len = Math.hypot(dx, dy, dz);
+    if (!(len > 0.2)) return;
+    dx /= len; dy /= len; dz /= len;
+    const ox = +msg.x, oy = +msg.y, oz = +msg.z;
+    if (!Number.isFinite(ox) || !Number.isFinite(oy) || !Number.isFinite(oz)) return;
+    if (Math.hypot(ox - p.x, oz - p.z) > 3 || oy < 0.6 || oy > 2.4) return;
+    p.lastShot = now;
+    if (!g.melee) p.ammo = Math.max(0, p.ammo - 1);
+    let best = null;
+    let bestId = null;
+    for (const o of match.players.values()) {
+      if (o.id === p.id || !o.alive || o.team === p.team) continue;
+      if (now < o.invuln) continue;
+      const hit = capsule(ox, oy, oz, dx, dy, dz, o.x, o.z, g.range);
+      if (!hit) continue;
+      if (!best || hit.along < best.along) { best = hit; bestId = o.id; }
+    }
+    if (best) {
+      let blocked = false;
+      for (const b of BLOCKS) {
+        const t = rayAabb(ox, oy, oz, dx, dy, dz, b, best.along);
+        if (t != null && t < best.along - 0.35) { blocked = true; break; }
+      }
+      if (blocked) best = null;
+    }
+    if (!best) return;
+    const victim = match.players.get(bestId);
+    let dmg = g.dmg;
+    if (g.pellets > 1) dmg *= Math.min(g.pellets, 6);
+    if (g.fall) dmg *= Math.max(g.fmin || 0.2, 1 - best.along / Math.max(1, g.range) * g.fall);
+    if (best.part === 'head') dmg *= 2;
+    if (p.buffs.dmg > now) dmg *= 1.4;
+    if (victim.buffs.arm > now) dmg *= 0.62;
+    dmg = Math.max(1, Math.round(dmg));
+    victim.hp -= dmg;
+    const fx = { t: 'fx', by: p.id, victim: victim.id, part: best.part, dmg: dmg, hp: Math.max(0, victim.hp) };
+    if (victim.hp <= 0) {
+      victim.hp = 0;
+      victim.alive = false;
+      victim.respawnAt = now + RESPAWN_MS;
+      victim.buffs = { dmg: 0, spd: 0, arm: 0 };
+      match.scores[p.team] += 1;
+      fx.kill = 1;
+      fx.scores = match.scores.slice();
+    }
+    for (const o of match.players.values()) send(o.ws, fx);
+  }
+
+  function onClaim(p, msg) {
+    if (!match || !match.players.has(p.id) || !p.alive) return;
+    const id = msg.id | 0;
+    const ix = match.pickups.findIndex((q) => q.id === id);
+    if (ix < 0) return;
+    const item = match.pickups[ix];
+    if (Math.hypot(p.x - item.x, p.z - item.z) > 2.3) return;
+    const now = Date.now();
+    if (item.k === 'med' && p.hp >= 100) { send(p.ws, { t: 'no', m: 'Vita già piena' }); return; }
+    if (item.k === 'ammo' && !gunOf(p.weapon).melee) {
+      const g = gunOf(p.weapon);
+      const cap = g.mag + g.reserve * 2;
+      if (p.ammo >= cap) { send(p.ws, { t: 'no', m: 'Munizioni piene' }); return; }
+      p.ammo = Math.min(cap, p.ammo + g.mag * 2);
+    }
+    if (item.k === 'med') p.hp = Math.min(100, p.hp + 45);
+    if (item.k === 'dmg' || item.k === 'spd' || item.k === 'arm') p.buffs[item.k] = now + BUFF_MS[item.k];
+    match.pickups.splice(ix, 1);
+    for (const o of match.players.values()) send(o.ws, { t: 'taken', id: id, by: p.id, k: item.k });
+  }
+
+  function tick() {
+    const now = Date.now();
+    if (!match) return;
+    for (const p of match.players.values()) {
+      if (!p.alive && p.respawnAt && now >= p.respawnAt) {
+        const sp = SPAWNS[p.team][p.slot % 3];
+        p.x = sp[0];
+        p.z = sp[1];
+        p.yaw = p.team === 0 ? -Math.PI / 2 : Math.PI / 2;
+        p.hp = 100;
+        p.alive = true;
+        p.invuln = now + INVULN_MS;
+        p.respawnAt = 0;
+        p.tp = 1;
+      }
+    }
+    if (now >= match.nextSpawn) spawnPickup(match, false);
+    if (now >= match.ends) { endMatch(); return; }
+    if (match.lastSnap && now - match.lastSnap < 80) return;
+    match.lastSnap = now;
+    const basePlayers = [];
+    for (const p of match.players.values()) {
+      basePlayers.push({
+        id: p.id, name: p.name, team: p.team, weapon: p.weapon,
+        x: +p.x.toFixed(2), z: +p.z.toFixed(2), yaw: +p.yaw.toFixed(3), pitch: +p.pitch.toFixed(3),
+        hp: p.hp | 0, alive: p.alive ? 1 : 0
+      });
+    }
+    const left = Math.max(0, match.ends - now);
+    const scores = match.scores.slice();
+    const picks = pickupList(match);
+    for (const p of match.players.values()) {
+      const you = {
+        hp: p.hp | 0,
+        ammo: p.ammo | 0,
+        alive: p.alive ? 1 : 0,
+        respawnIn: (!p.alive && p.respawnAt) ? Math.max(0, p.respawnAt - now) : 0,
+        buffs: {
+          dmg: Math.max(0, p.buffs.dmg - now),
+          spd: Math.max(0, p.buffs.spd - now),
+          arm: Math.max(0, p.buffs.arm - now)
+        },
+        tp: p.tp ? 1 : 0,
+        x: +p.x.toFixed(2),
+        z: +p.z.toFixed(2),
+        yaw: +p.yaw.toFixed(3)
+      };
+      send(p.ws, { t: 'snap', players: basePlayers, scores: scores, left: left, you: you, pickups: picks });
+      p.tp = 0;
+    }
+  }
+
+  function endMatch() {
+    const m = match;
+    if (!m) return;
+    match = null;
+    const winner = m.scores[0] === m.scores[1] ? -1 : (m.scores[0] > m.scores[1] ? 0 : 1);
+    for (const p of m.players.values()) {
+      send(p.ws, { t: 'end', scores: m.scores.slice(), winner: winner });
+    }
+    tryStart();
+    tellLobby();
+    wake();
+  }
+}
