@@ -23,7 +23,8 @@ def verify():
     for attempt in range(36):
         try:
             url = f'{ARENA_URL}/?release={os.environ.get("GITHUB_SHA", "check")}'
-            with urlopen(url, timeout=5) as response:
+            request = Request(url, headers={'User-Agent': 'ZombieSurvival-Release/1.0'})
+            with urlopen(request, timeout=10) as response:
                 data = json.load(response)
             if data.get('ok') is True and data.get('arena') is True and data.get('v') == expected:
                 print(f'Arena online: versione {expected}')
