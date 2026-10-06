@@ -964,7 +964,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 </div>
 <div id="startScreen" class="overlay titleArt"><div class="shade"></div><div class="menuL">
   <h1 class="ztitle">Zombie<span>Survival</span></h1>
-  <div class="ver422 homeVer">Zombie Survival v4.3.52</div>
+  <div class="ver422 homeVer">Zombie Survival v4.3.53</div>
   <div class="ztag">Taglia legna, costruisci la base e resisti all'orda della notte.</div>
   <div class="playRow"><button class="mBtn zombie" id="btnZombie"><span class="ic">🏕️</span><span><b>Gioca</b><small id="survSub">Nuova partita · giorno e notte</small></span></button><button class="mBtn icon newRun" id="btnNewRun" aria-label="Nuova partita" style="display:none"><span class="ic">↺</span></button></div>
   <div class="menuRow one">
@@ -996,7 +996,7 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
     <div><b>💻 PC</b><br>WASD · Shift corri · mouse guarda<br>Click spara · tasto destro mira<br>E usa · C crafting · G granata · R ricarica<br>B costruisci · R/T ruota · X smonta · 1-8 pezzi<br>1-8 / Q / rotella: armi · P / Esc pausa</div>
     <div><b>🌙 Survival</b><br>Il giorno dura 7 minuti: 🪓 legna dagli alberi, ⛏️ pietra, ferro e carbone dalle rocce.<br>Al tramonto torna alla base: di notte l'orda attacca i muri. Ogni 5 notti arriva il boss.<br>Monete 🪙 da zombie, casse e missioni · 💎 dalle missioni e dai boss.</div>
   </div>
-  <div class="ver422">Zombie Survival v4.3.52</div>
+  <div class="ver422">Zombie Survival v4.3.53</div>
   <div class="btnRow"><button class="act ghost" id="helpBack">← Indietro</button></div>
 </div></div>
 <div id="sugScreen" class="overlay sheetBg hidden"><div class="sheet" style="max-width:460px">
@@ -4034,7 +4034,7 @@ function renderEq(){const e=$('eqPanel');if(!e)return;const S2=ST42;
      '<div class="btnRow">'+(eqSel.w==='bag'?(it.l>P42.L?'<button class="act ghost" disabled>🔒 Serve Liv. '+it.l+'</button>':'<button class="act" data-gact="equip">Equipaggia</button>')+'<button class="act ghost" data-gact="drop">Scarta</button>':'<button class="act" data-gact="unequip">Togli</button>')+(it.r<=1?'<button class="act ghost'+(P42.c<REROLL42[it.r]?' poor':'')+'" data-gact="reroll">🎲 Rilancia 🪙 '+REROLL42[it.r]+'</button>':'')+'</div></div>';}}
   e.innerHTML=h;}
 {const BS=$('bagScreen');let y0=0,x0=0,mv=0,mt=0;BS.addEventListener('touchstart',e=>{const t=e.touches[0];if(t){x0=t.clientX;y0=t.clientY;mv=0;}},{passive:true,capture:true});BS.addEventListener('touchmove',e=>{const t=e.touches[0];if(t&&Math.hypot(t.clientX-x0,t.clientY-y0)>8){mv=1;mt=performance.now();}},{passive:true,capture:true});BS.addEventListener('click',e=>{if(mv&&performance.now()-mt<450){mv=0;e.stopPropagation();e.preventDefault();}},true);}
-$('bagScreen').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!$('eqPanel').contains(b))return;
+$('bagScreen').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!$('bagScreen').contains(b)||b.id==='bagClose'||b.id==='bagCloseApk')return;
   if(b.dataset.dropinfo){dropInfo();return;}
   if(b.dataset.gact){const it=eqSel&&(eqSel.w==='eq'?P42.eq[eqSel.i]:P42.gb[eqSel.i]);if(!it)return;const a=b.dataset.gact;
     if(a==='equip'&&it.l<=P42.L){const cur=P42.eq[it.s];P42.gb.splice(eqSel.i,1);if(cur)P42.gb.push(cur);P42.eq[it.s]=it;play('gear');}
@@ -4476,7 +4476,7 @@ window.__econ42={dps42,bestCoinDps,SVC42,svcBuy,hint42,hintTarget,COS42,get hint
 window.__econ42T={WEAPONS,SHOP_W,get PROF(){return PROF;},addPiece,removePiece,PDEF,res,mag,player,SV,enterPhase,gems:()=>PROF.gems};
 
 // ---- 4.2.1: Bacheca aggiornamenti (Novità). Live content from updates.json (same site, ?nc= cache-bust); bundled fallback below ----
-const NEWS421_FB={"rev":"2026-10-06t","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.52","date":"6 ott","items":["Il mondo si disegna in Full HD, 1920 per 1080","Quando trovi un oggetto lo selezioni: Cambia oppure Scarta","Casse, equipaggiamento e zaino pieno non si riempiono più da soli"]},{"ver":"4.3.51","date":"6 ott","items":["L'interfaccia segue lo schermo, dal telefono lungo al tablet","La barra della vita e il pulsante di sparo restano interi","Mira, fuoco e granata non si coprono tra loro"]},{"ver":"4.3.50","date":"6 ott","items":["Lo zaino si scorre: materiali, munizioni e attrezzi si leggono tutti","Ogni arma mostra il caricatore e la riserva, senza tagliare il nome","I materiali a zero restano in elenco, più discreti"]},{"ver":"4.3.49","date":"6 ott","items":["Sangue, scie e fendenti si vedono meglio nei combattimenti","Cespugli e piantine riempiono la città, con criterio","Pozzanghere di fango, scure e bagnate, lungo le strade"]},{"ver":"4.3.48","date":"6 ott","items":["L'ascia taglia in avanti, verso gli alberi","Lo zombie colpito a una gamba cade e si trascina"]},{"ver":"4.3.47","date":"6 ott","items":["Lo schermo di Telegram mostra il gioco e la home per intero","L'arma in mano si vede anche in orizzontale","Gli zombie subiscono i colpi delle armi"]},{"ver":"4.3.46","date":"6 ott","items":["📱 Su Telegram c'è lo stesso gioco dell'app: città, mappa e zombie","⭐ Il negozio si paga con le stelle, non con i soldi","🎒 Zaino, menu e le altre schermate restano sopra il tasto Chiudi"]},{"ver":"4.3.45","date":"6 ott","items":["🏙️ Sull'app la home è subito la città, senza il lampo della neve","📌 Tornando al menu la schermata resta ferma, anche in basso","⭐ Su Telegram il negozio si paga con le stelle","🎒 Lo zaino lascia libero lo spazio dei tasti di Telegram"]},{"ver":"4.3.44","date":"6 ott","items":["⚖️ Le armi all'inizio fanno meno: la potenza vera arriva potenziandole con le monete","🎯 Ogni arma ha il suo mirino, e in mira il colpo è più fermo","🔫 Rinculo e dispersione più veri: la pompa cala con la distanza","🧥 Elmo, giacca, guanti e gli altri pezzi contano sulla forza, con un tetto"]},{"ver":"4.3.43","date":"6 ott","items":["🧟 Gli zombie camminano e cadono in modo naturale","💥 In testa scoppia la testa ed esce il cervello, braccia e gambe si staccano e loro zoppicano, al busto escono gli organi e il sangue","🚪 La porta della casa è ridisegnata","↩️ Home, caricamento, armi, costruzioni e mappa sono quelli di prima"]},{"ver":"4.3.41","date":"6 ott","items":["🏙️ Il campo è un quartiere, con strade e marciapiedi","🏚️ Palazzi distrutti e macerie al posto delle cripte","🚫 Gli oggetti non si sovrappongono"]},{"ver":"4.3.40","date":"6 ott","items":["🪓 L'ascia punta il filo verso l'albero","🧟 Gli zombie ti vengono incontro, senza il giro laterale","🎒 I pezzi nuovi stanno a sinistra e la schermata non si stringe","🪦 Cadaveri, sangue, alberi e palazzi distrutti da modelli gratuiti","🪵 Gli alberi ricrescono con calma e le munizioni trovate non riempiono tutto"]},{"ver":"4.3.39","date":"6 ott","items":["🏙️ Sull'app la home è una città infestata","🎒 Lo zaino entra tutto nello schermo, senza nomi tagliati","🧟 Più zombie di giorno, cadono in modo naturale, e la mappa ha bidoni, cadaveri e sangue"]},{"ver":"4.3.38","date":"6 ott","items":["🌫️ Sull'app la città è asciutta, con una foschia leggera al posto della neve"]},{"ver":"4.3.37","date":"6 ott","items":["📱 L'app Android si apre e resta sul menu"]},{"ver":"4.3.36","date":"6 ott","items":["📱 L'app Android usa tutto lo schermo","✨ Sull'app l'immagine è più nitida e i movimenti più fluidi","🎒 Lo zaino dell'app ha un tasto Chiudi grande","💶 Nel negozio dell'app i prezzi sono in euro"]},{"ver":"4.3.35","date":"6 ott","items":["📱 Il gioco è anche un'app Android: si muove più fluido sul telefono","🎵 La musica non sgrana più e non fa vibrare l'altoparlante"]},{"ver":"4.3.34","date":"6 ott","items":["🏙️ La città è stata ridisegnata: case, palazzi e ruderi diversi, non più tutti uguali","⛰️ Le montagne sono creste di roccia e neve, con una texture più ricca","🏚️ Modelli 3D di palazzi, sangue, ossa e macerie lungo le strade","🧟 Gli zombie sono più consumati: pelle spenta, ferite e ossa in vista","🪦 In costruzione ci sono tomba, gomme e macerie"]},{"ver":"4.3.32","date":"5 ott","items":["💾 Salva e la mappa resta così, anche se chiudi il gioco. Originale riporta i palazzi di partenza"]},{"ver":"4.3.31","date":"5 ott","items":["🏚️ Nei palazzi con la cassa si entra: il blocco in mezzo alla porta non c’è più, e la tettoia sta sopra la testa","❄️ La neve a terra, le montagne e gli alberi hanno una texture più vera, con neve anche sui rami","🩸 Per le strade ci sono sangue, ossa e corpi, senza chiudere il passaggio","💡 La lampada in casa illumina senza accecare la stanza","🎵 All’avvio la musica riparte da sola se un tema resta a metà"]},{"ver":"4.3.30","date":"5 ott","items":["🏠 Tetto e pavimento sono una superficie continua: il muro ha la sua texture, il pavimento la sua, il tetto la sua","🪟 La finestra fissa e quella apribile hanno un'apertura pulita. La tenda si mette su entrambe","💡 La lampada di casa è appesa e illumina la stanza","🏙️ In città auto, casse e panchine non sono più incastrate nei muri"]},{"ver":"4.3.29","date":"5 ott","items":["🎒 Lo zaino mostra ogni nome per intero: materiali da una parte, equipaggiamento dall'altra","⚔️ Nel crafting, Potenzia armi: servono tante monete per il massimo. Forza, difesa, critico e velocità si comprano lì, in partita","❄️ La neve scende in modo più naturale. Gli zombie si aprono a ventaglio e si vedono meglio","🔫 Volpe, Rondine, Cervo, Canne mozze e Vespa hanno ognuna il proprio disegno","💡 In home c'è Suggerimenti: scrivi un consiglio, lo legge solo chi gestisce il gioco"]},{"ver":"4.3.28","date":"5 ott","items":["🏠 Costruire è più facile: il pezzo dopo si mette in fila da solo, e dove costruisci non rinasce né un albero né una roccia","💡 Quadri, tende, camino e luci: muro, tetto e pavimento hanno texture nuove e la luce scalda la stanza","🪙 Dal deposito, in partita, spendi le monete per ampliare la cassa e potenziare l'arma in mano"]},{"ver":"4.3.27","date":"5 ott","items":["⚡ Se un fotogramma non arriva, il gioco riparte da solo e non resta fermo per 5 secondi","🎵 Resta acceso un solo tema: la musica non si spezza quando il telefono si blocca un attimo","👟 Passi e tocchi non creano più migliaia di suoni, la partita resta più fluida"]},{"ver":"4.3.26","date":"5 ott","items":["🏆 In classifica c’è anche chi ha giocato dall’altro telefono","⚡ La classifica si rilegge dal server ogni pochi secondi","🎮 I punti passano dal tasto Gioca del menu, non dalla tastiera della chat"]},{"ver":"4.3.25","date":"5 ott","items":["🎵 La musica resta continua, senza scatti né rumori strani","🏆 Ogni partita da Telegram entra in classifica e il server resta aggiornato","💨 Meno voci e scoppiettii a ogni fotogramma, il gioco resta più fluido"]},{"ver":"4.3.24","date":"5 ott","items":["🏗️ Recinto, assi, botte, torcia, cartello, bandiera, sedia, stufa, cassa e vaso","🔫 Negozio più ricco: Volpe, Rondine, Canne mozze, Cervo e Vespa, con kit e munizioni","📦 Il deposito si amplia pagando con le monete","❄️ Sotto un tetto non nevica, e la neve pesa meno sul gioco"]},{"ver":"4.3.23","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco arrivano da foto vere, gratis","🚗 Le auto parcheggiate e i lampioni sono modelli, con ruote e il braccio del faro","🏗️ In costruzione: pilastro, cancello, sacchi di sabbia, lampione, panchina e bidone"]},{"ver":"4.3.22","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco al posto delle superfici piatte","🛣️ L'asfalto, la pietra dei marciapiedi e il metallo arrugginito si leggono da vicino","🏠 I tetti restano a spiovente e le auto restano auto, con la vernice graffiata"]},{"ver":"4.3.21","date":"5 ott","items":["🏠 I tetti delle case e dei depositi sono a spiovente, con il colmo in alto","🚗 Le auto parcheggiate hanno carrozzeria, vetri e ruote, e stanno a bordo strada","🚑 Il bus e l'ambulanza hanno le ruote. L'ambulanza ha la croce"]},{"ver":"4.3.20","date":"5 ott","items":["🏥 Ospedale, mercato, scuola, stazione e case si distinguono: tetti, tende e insegne diversi","🛒 Il mercato ha banchi, tende colorate e vetrine. La città ha fari, cespugli, sangue e un po' di fumo","🌲 Non resti più incastrato nella chioma degli alberi: si passa accanto al tronco","🧟 Gli zombie non attaccano la base, a meno che non ti abbiano visto entrare","🏆 Il tasto Classifica non c'è più: la classifica a destra resta ferma"]},{"ver":"4.3.19","date":"5 ott","items":["🏙️ Città abbandonata: case, scuola, mercato, ospedale, deposito e stazione, collegati da strade","🗺️ Minimappa con i nomi dei quartieri, orientata a nord","🏆 Ogni zombie ucciso entra subito nel totale. Il server riceve il numero esatto e, se non risponde, viene reinviato","⚡ I palazzi nuovi non aggiungono luci: la partita resta fluida"]},{"ver":"4.3.18","date":"5 ott","items":["⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo","🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola","🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto","🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"]},{"ver":"4.3.17","date":"5 ott","items":["🏠 Livello e record stanno tutti in home, sopra la barra in basso","🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì","🎵 Il vento non copre più la musica: in home è spento","🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"]},{"ver":"4.3.16","date":"5 ott","items":["⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"]},{"ver":"4.3.15","date":"5 ott","items":["🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio","☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"]},{"ver":"4.3.14","date":"5 ott","items":["🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo","🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma","🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"]},{"ver":"4.3.13","date":"5 ott","items":["⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento","🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta","⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"]},{"ver":"4.3.12","date":"5 ott","items":["⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera","🏷️ Versione visibile nella home"]},{"ver":"4.3.11","date":"5 ott","items":["🏷️ La versione del gioco è visibile nella home, sotto il titolo","📋 Lista problemi completa e scorrevole, con la causa e dove intervenire"]},{"ver":"4.3.10","date":"4 ott","items":["🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps","🧟 Zombie che camminano senza tremolii avanti e indietro","🕹️ Joystick più stabile: niente scatti di direzione","🎵 La musica riparte da sola se si interrompe","🛡️ Il gioco non si blocca più per un errore: lo salta e continua"]},{"ver":"4.3.9","date":"4 ott","items":["🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo","⚡ Movimento più fluido sui telefoni a 90 e 120 Hz","⏳ Caricamento della partita senza blocchi","📱 Menu che si adatta allo schermo del telefono e del tablet"]},{"ver":"4.3.8","date":"4 ott","items":["📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"]},{"ver":"4.3.7","date":"4 ott","items":["🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare","🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio","🧱 Nessun danno attraverso muri, porte e finestre chiuse"]},{"ver":"4.3.6","date":"4 ott","items":["⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti","📜 Le liste non tornano più in cima da sole dopo lo scorrimento","📱 In verticale compare subito la schermata «Ruota il telefono»","💎 Avviso chiaro quando non hai abbastanza gemme","🛒 Apertura delle schede del negozio più veloce"]},{"ver":"4.3.5","date":"4 ott","items":["⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve","🏠 Anteprima di costruzione più leggera"]}]};
+const NEWS421_FB={"rev":"2026-10-06u","upcoming":[{"icon":"🆕","title":"Nuove sfide ed eventi","desc":"Altre novità per il gioco, restate sintonizzati!","eta":"In arrivo","tone":"later"}],"recent":[{"ver":"4.3.53","date":"6 ott","items":["Lo zaino si legge tutto e Equipaggia resta visibile","I pantaloni e il resto si indossano, lo scorrimento funziona","Le casse svuotano il contenuto dritto nella borsa","Pozzanghere, stop, strisce di sangue e scheletri più chiari"]},{"ver":"4.3.52","date":"6 ott","items":["Il mondo si disegna in Full HD, 1920 per 1080","Quando trovi un oggetto lo selezioni: Cambia oppure Scarta","Casse, equipaggiamento e zaino pieno non si riempiono più da soli"]},{"ver":"4.3.51","date":"6 ott","items":["L'interfaccia segue lo schermo, dal telefono lungo al tablet","La barra della vita e il pulsante di sparo restano interi","Mira, fuoco e granata non si coprono tra loro"]},{"ver":"4.3.50","date":"6 ott","items":["Lo zaino si scorre: materiali, munizioni e attrezzi si leggono tutti","Ogni arma mostra il caricatore e la riserva, senza tagliare il nome","I materiali a zero restano in elenco, più discreti"]},{"ver":"4.3.49","date":"6 ott","items":["Sangue, scie e fendenti si vedono meglio nei combattimenti","Cespugli e piantine riempiono la città, con criterio","Pozzanghere di fango, scure e bagnate, lungo le strade"]},{"ver":"4.3.48","date":"6 ott","items":["L'ascia taglia in avanti, verso gli alberi","Lo zombie colpito a una gamba cade e si trascina"]},{"ver":"4.3.47","date":"6 ott","items":["Lo schermo di Telegram mostra il gioco e la home per intero","L'arma in mano si vede anche in orizzontale","Gli zombie subiscono i colpi delle armi"]},{"ver":"4.3.46","date":"6 ott","items":["📱 Su Telegram c'è lo stesso gioco dell'app: città, mappa e zombie","⭐ Il negozio si paga con le stelle, non con i soldi","🎒 Zaino, menu e le altre schermate restano sopra il tasto Chiudi"]},{"ver":"4.3.45","date":"6 ott","items":["🏙️ Sull'app la home è subito la città, senza il lampo della neve","📌 Tornando al menu la schermata resta ferma, anche in basso","⭐ Su Telegram il negozio si paga con le stelle","🎒 Lo zaino lascia libero lo spazio dei tasti di Telegram"]},{"ver":"4.3.44","date":"6 ott","items":["⚖️ Le armi all'inizio fanno meno: la potenza vera arriva potenziandole con le monete","🎯 Ogni arma ha il suo mirino, e in mira il colpo è più fermo","🔫 Rinculo e dispersione più veri: la pompa cala con la distanza","🧥 Elmo, giacca, guanti e gli altri pezzi contano sulla forza, con un tetto"]},{"ver":"4.3.43","date":"6 ott","items":["🧟 Gli zombie camminano e cadono in modo naturale","💥 In testa scoppia la testa ed esce il cervello, braccia e gambe si staccano e loro zoppicano, al busto escono gli organi e il sangue","🚪 La porta della casa è ridisegnata","↩️ Home, caricamento, armi, costruzioni e mappa sono quelli di prima"]},{"ver":"4.3.41","date":"6 ott","items":["🏙️ Il campo è un quartiere, con strade e marciapiedi","🏚️ Palazzi distrutti e macerie al posto delle cripte","🚫 Gli oggetti non si sovrappongono"]},{"ver":"4.3.40","date":"6 ott","items":["🪓 L'ascia punta il filo verso l'albero","🧟 Gli zombie ti vengono incontro, senza il giro laterale","🎒 I pezzi nuovi stanno a sinistra e la schermata non si stringe","🪦 Cadaveri, sangue, alberi e palazzi distrutti da modelli gratuiti","🪵 Gli alberi ricrescono con calma e le munizioni trovate non riempiono tutto"]},{"ver":"4.3.39","date":"6 ott","items":["🏙️ Sull'app la home è una città infestata","🎒 Lo zaino entra tutto nello schermo, senza nomi tagliati","🧟 Più zombie di giorno, cadono in modo naturale, e la mappa ha bidoni, cadaveri e sangue"]},{"ver":"4.3.38","date":"6 ott","items":["🌫️ Sull'app la città è asciutta, con una foschia leggera al posto della neve"]},{"ver":"4.3.37","date":"6 ott","items":["📱 L'app Android si apre e resta sul menu"]},{"ver":"4.3.36","date":"6 ott","items":["📱 L'app Android usa tutto lo schermo","✨ Sull'app l'immagine è più nitida e i movimenti più fluidi","🎒 Lo zaino dell'app ha un tasto Chiudi grande","💶 Nel negozio dell'app i prezzi sono in euro"]},{"ver":"4.3.35","date":"6 ott","items":["📱 Il gioco è anche un'app Android: si muove più fluido sul telefono","🎵 La musica non sgrana più e non fa vibrare l'altoparlante"]},{"ver":"4.3.34","date":"6 ott","items":["🏙️ La città è stata ridisegnata: case, palazzi e ruderi diversi, non più tutti uguali","⛰️ Le montagne sono creste di roccia e neve, con una texture più ricca","🏚️ Modelli 3D di palazzi, sangue, ossa e macerie lungo le strade","🧟 Gli zombie sono più consumati: pelle spenta, ferite e ossa in vista","🪦 In costruzione ci sono tomba, gomme e macerie"]},{"ver":"4.3.32","date":"5 ott","items":["💾 Salva e la mappa resta così, anche se chiudi il gioco. Originale riporta i palazzi di partenza"]},{"ver":"4.3.31","date":"5 ott","items":["🏚️ Nei palazzi con la cassa si entra: il blocco in mezzo alla porta non c’è più, e la tettoia sta sopra la testa","❄️ La neve a terra, le montagne e gli alberi hanno una texture più vera, con neve anche sui rami","🩸 Per le strade ci sono sangue, ossa e corpi, senza chiudere il passaggio","💡 La lampada in casa illumina senza accecare la stanza","🎵 All’avvio la musica riparte da sola se un tema resta a metà"]},{"ver":"4.3.30","date":"5 ott","items":["🏠 Tetto e pavimento sono una superficie continua: il muro ha la sua texture, il pavimento la sua, il tetto la sua","🪟 La finestra fissa e quella apribile hanno un'apertura pulita. La tenda si mette su entrambe","💡 La lampada di casa è appesa e illumina la stanza","🏙️ In città auto, casse e panchine non sono più incastrate nei muri"]},{"ver":"4.3.29","date":"5 ott","items":["🎒 Lo zaino mostra ogni nome per intero: materiali da una parte, equipaggiamento dall'altra","⚔️ Nel crafting, Potenzia armi: servono tante monete per il massimo. Forza, difesa, critico e velocità si comprano lì, in partita","❄️ La neve scende in modo più naturale. Gli zombie si aprono a ventaglio e si vedono meglio","🔫 Volpe, Rondine, Cervo, Canne mozze e Vespa hanno ognuna il proprio disegno","💡 In home c'è Suggerimenti: scrivi un consiglio, lo legge solo chi gestisce il gioco"]},{"ver":"4.3.28","date":"5 ott","items":["🏠 Costruire è più facile: il pezzo dopo si mette in fila da solo, e dove costruisci non rinasce né un albero né una roccia","💡 Quadri, tende, camino e luci: muro, tetto e pavimento hanno texture nuove e la luce scalda la stanza","🪙 Dal deposito, in partita, spendi le monete per ampliare la cassa e potenziare l'arma in mano"]},{"ver":"4.3.27","date":"5 ott","items":["⚡ Se un fotogramma non arriva, il gioco riparte da solo e non resta fermo per 5 secondi","🎵 Resta acceso un solo tema: la musica non si spezza quando il telefono si blocca un attimo","👟 Passi e tocchi non creano più migliaia di suoni, la partita resta più fluida"]},{"ver":"4.3.26","date":"5 ott","items":["🏆 In classifica c’è anche chi ha giocato dall’altro telefono","⚡ La classifica si rilegge dal server ogni pochi secondi","🎮 I punti passano dal tasto Gioca del menu, non dalla tastiera della chat"]},{"ver":"4.3.25","date":"5 ott","items":["🎵 La musica resta continua, senza scatti né rumori strani","🏆 Ogni partita da Telegram entra in classifica e il server resta aggiornato","💨 Meno voci e scoppiettii a ogni fotogramma, il gioco resta più fluido"]},{"ver":"4.3.24","date":"5 ott","items":["🏗️ Recinto, assi, botte, torcia, cartello, bandiera, sedia, stufa, cassa e vaso","🔫 Negozio più ricco: Volpe, Rondine, Canne mozze, Cervo e Vespa, con kit e munizioni","📦 Il deposito si amplia pagando con le monete","❄️ Sotto un tetto non nevica, e la neve pesa meno sul gioco"]},{"ver":"4.3.23","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco arrivano da foto vere, gratis","🚗 Le auto parcheggiate e i lampioni sono modelli, con ruote e il braccio del faro","🏗️ In costruzione: pilastro, cancello, sacchi di sabbia, lampione, panchina e bidone"]},{"ver":"4.3.22","date":"5 ott","items":["🧱 Mattoni, legno, tegole e intonaco al posto delle superfici piatte","🛣️ L'asfalto, la pietra dei marciapiedi e il metallo arrugginito si leggono da vicino","🏠 I tetti restano a spiovente e le auto restano auto, con la vernice graffiata"]},{"ver":"4.3.21","date":"5 ott","items":["🏠 I tetti delle case e dei depositi sono a spiovente, con il colmo in alto","🚗 Le auto parcheggiate hanno carrozzeria, vetri e ruote, e stanno a bordo strada","🚑 Il bus e l'ambulanza hanno le ruote. L'ambulanza ha la croce"]},{"ver":"4.3.20","date":"5 ott","items":["🏥 Ospedale, mercato, scuola, stazione e case si distinguono: tetti, tende e insegne diversi","🛒 Il mercato ha banchi, tende colorate e vetrine. La città ha fari, cespugli, sangue e un po' di fumo","🌲 Non resti più incastrato nella chioma degli alberi: si passa accanto al tronco","🧟 Gli zombie non attaccano la base, a meno che non ti abbiano visto entrare","🏆 Il tasto Classifica non c'è più: la classifica a destra resta ferma"]},{"ver":"4.3.19","date":"5 ott","items":["🏙️ Città abbandonata: case, scuola, mercato, ospedale, deposito e stazione, collegati da strade","🗺️ Minimappa con i nomi dei quartieri, orientata a nord","🏆 Ogni zombie ucciso entra subito nel totale. Il server riceve il numero esatto e, se non risponde, viene reinviato","⚡ I palazzi nuovi non aggiungono luci: la partita resta fluida"]},{"ver":"4.3.18","date":"5 ott","items":["⚡ Con FPS su Max il gioco non torna più a 45 fotogrammi: resta al ritmo dello schermo","🏆 In home conti solo gli zombie uccisi. La classifica arriva dal server e si aggiorna da sola","🗺️ La mappa è più grande: oltre la recinzione c’è il bosco, case e strade restano al loro posto","🧟 Gli zombie non vanno più avanti e indietro sullo stesso ostacolo"]},{"ver":"4.3.17","date":"5 ott","items":["🏠 Livello e record stanno tutti in home, sopra la barra in basso","🏆 La classifica si aggiorna da sola. In Sempre i giocatori restano anche dopo il lunedì","🎵 Il vento non copre più la musica: in home è spento","🌲 Cespugli raggruppati e qualche zombie in più di giorno, vicino al paese"]},{"ver":"4.3.16","date":"5 ott","items":["⚡ Con FPS su Max, se lo schermo a 90 Hz perde fotogrammi la risoluzione scende e la partita resta più fluida"]},{"ver":"4.3.15","date":"5 ott","items":["🏠 La home è fissa: non scorre. Indietro dalla classifica torna alla home e non apre il negozio","☠️ Ogni partita parte da 0 zombie uccisi. Quelli nuovi si sommano alla classifica, senza ripartire dai vecchi"]},{"ver":"4.3.14","date":"5 ott","items":["🏠 Home ordinata: titolo, Gioca, Negozio e i quattro tasti stanno in colonna, non più in mezzo allo schermo","🎵 Musica senza gracchio: una sola traccia alla volta, e riparte se si ferma","🏆 La classifica si aggiorna quando chiudi la partita, anche se non aspetti la fine"]},{"ver":"4.3.13","date":"5 ott","items":["⚡ I primi secondi di partita non restano più a metà fotogrammi: gli shader finiscono dietro il caricamento","🔄 Si apre sempre l’ultima versione: l’indirizzo cambia a ogni aggiornamento, la copia vecchia non resta aperta","⚡ Il limite a 45 fps non si attacca mentre il telefono sta ancora scaldando gli shader"]},{"ver":"4.3.12","date":"5 ott","items":["⚡ Su telefoni a 90 Hz, con FPS su Max, il gioco non resta più bloccato a 45 fps quando la CPU è già libera","🏷️ Versione visibile nella home"]},{"ver":"4.3.11","date":"5 ott","items":["🏷️ La versione del gioco è visibile nella home, sotto il titolo","📋 Lista problemi completa e scorrevole, con la causa e dove intervenire"]},{"ver":"4.3.10","date":"4 ott","items":["🖼️ Immagine sempre nitida: la risoluzione non cala più a 45 fps","🧟 Zombie che camminano senza tremolii avanti e indietro","🕹️ Joystick più stabile: niente scatti di direzione","🎵 La musica riparte da sola se si interrompe","🛡️ Il gioco non si blocca più per un errore: lo salta e continua"]},{"ver":"4.3.9","date":"4 ott","items":["🏆 Classifica settimanale online: vedi i punteggi di tutti i giocatori, il punteggio si salva da solo","⚡ Movimento più fluido sui telefoni a 90 e 120 Hz","⏳ Caricamento della partita senza blocchi","📱 Menu che si adatta allo schermo del telefono e del tablet"]},{"ver":"4.3.8","date":"4 ott","items":["📱 Rotazione dello schermo sbloccata: il gioco segue il telefono su tutti i dispositivi"]},{"ver":"4.3.7","date":"4 ott","items":["🧟 Zombie più intelligenti: ti attaccano nel rifugio solo se ti hanno visto entrare","🌙 All'inizio della notte l'orda vaga e ti cerca, non assalta subito il rifugio","🧱 Nessun danno attraverso muri, porte e finestre chiuse"]},{"ver":"4.3.6","date":"4 ott","items":["⚡ Su telefoni a 90 Hz il gioco resta stabile a 60 fps quando serve, senza scatti","📜 Le liste non tornano più in cima da sole dopo lo scorrimento","📱 In verticale compare subito la schermata «Ruota il telefono»","💎 Avviso chiaro quando non hai abbastanza gemme","🛒 Apertura delle schede del negozio più veloce"]},{"ver":"4.3.5","date":"4 ott","items":["⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve","🏠 Anteprima di costruzione più leggera"]}]};
 let NEWS421=NEWS421_FB;const NEWS421_K='zc_news_seen';
 function news421Esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function news421Dot(){const b=document.getElementById('newsBtn');if(!b)return;let seen='';try{seen=localStorage.getItem(NEWS421_K)||'';}catch(e){}b.classList.toggle('new',!!NEWS421.rev&&seen!==NEWS421.rev);}
@@ -5718,7 +5718,7 @@ Promise.all([
   info.ready=1;try{bakeShadows();}catch(e){}
 }).catch(e=>{info.err=String(e&&e.message||e);console.warn('cc0',info.err);});}
 
-window.GAME_VER='4.3.52';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.52');}catch(e){}
+window.GAME_VER='4.3.53';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.53');}catch(e){}
 window.__zs424={snowCovered,chestCap,setChest(n){P42.cu.chest=n|0;return chestCap();},tick(dt){const t=performance.now()/1000;updateSnow(dt||.016,t);snow2Tick(dt||.016,t);},get snowOn(){return snow.visible},get snow2On(){return snow2.visible},CSHOP,PORDER};
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;
@@ -6696,7 +6696,7 @@ function parseObjC(text){const v=[],vc=[],pos=[],col=[];
     else if(s.startsWith('f ')){const p=s.split(/\s+/).slice(1).map(tok=>+tok.split('/')[0]);
       for(let i=1;i<p.length-1;i++)for(const k of [0,i,i+1]){const b=(p[k]-1)*3;pos.push(v[b],v[b+1],v[b+2]);col.push(vc[b],vc[b+1],vc[b+2]);}}}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('color',new T.Float32BufferAttribute(col,3));g.computeVertexNormals();return g;}
-function apkProps440(){if(!zsShow())return;const plan=window.__plan441||{towers:[],rubble:[],pines:[],trunks:[]};const CC='assets/cc0/',VQ='?v=4.3.52';
+function apkProps440(){if(!zsShow())return;const plan=window.__plan441||{towers:[],rubble:[],pines:[],trunks:[]};const CC='assets/cc0/',VQ='?v=4.3.53';
   const loadText=u=>fetch(CC+u+VQ).then(r=>{if(!r.ok)throw new Error(u);return r.text();});
   const loadImg=u=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error(u));i.src=CC+u+VQ;});
   Promise.all([loadText('corpse-skeleton.obj'),loadText('tree-pine.obj'),loadText('tree-trunk.obj'),loadText('ruin-tower.obj'),loadText('ruin-rubble-1.obj'),loadText('ruin-rubble-2.obj'),loadText('ruin-rubble-3.obj'),loadImg('blood-splatter.png')]).then(A=>{
@@ -6708,7 +6708,7 @@ function apkProps440(){if(!zsShow())return;const plan=window.__plan441||{towers:
     const o=new T.Object3D();
     function inst(g,n,fn){const m=new T.InstancedMesh(g,mat,Math.max(1,n));m.castShadow=false;m.receiveShadow=true;m.count=n;m.frustumCulled=false;scene.add(m);for(let i=0;i<n;i++){fn(i);m.setMatrixAt(i,o.matrix);}m.instanceMatrix.needsUpdate=true;return m;}
     const corpses=window.__corpse440||[];
-    inst(geo[0],corpses.length,(i)=>{const p=corpses[i];o.position.set(p.x,.08,p.z);o.rotation.set(-Math.PI/2,p.yaw,0);o.scale.set(2.35,2.35,2.35);o.updateMatrix();});
+    /* 4.3.53: scheletro proprio in dress453, il modello steso non si leggeva */
     inst(geo[1],plan.pines.length,(i)=>{const p=plan.pines[i];o.position.set(p.x,0,p.z);o.rotation.set(0,p.yaw,0);o.scale.set(2.4,2.4,2.4);o.updateMatrix();});
     inst(geo[2],plan.trunks.length,(i)=>{const p=plan.trunks[i];o.position.set(p.x,.42,p.z);o.rotation.set(0,p.yaw,-Math.PI/2);o.scale.set(1.6,5,1.6);o.updateMatrix();});
     inst(geo[3],plan.towers.length,(i)=>{const p=plan.towers[i];const sc=p.sc||.7;o.position.set(p.x,0,p.z);o.rotation.set(0,p.yaw||0,0);o.scale.set(sc,sc,sc);o.updateMatrix();});
@@ -6860,16 +6860,23 @@ function cityGreen449(){if(!zsShow())return;
     const leaves=[[.22,.24,.04],[ -.18,.28,-.05],[.04,.32,.18]];
     for(const L of leaves){P.push(0,L[1]-.03,0,L[0],L[1],L[2],L[0]*.4,L[1]+.09,L[2]*.4);for(let k=0;k<3;k++)C.push(.28,.66,.28);}
     const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));g.setAttribute('color',new T.Float32BufferAttribute(C,3));g.computeVertexNormals();return g;}
-  function mudTex(){const c=document.createElement('canvas');c.width=256;c.height=256;const g=c.getContext('2d');
-    g.clearRect(0,0,256,256);
-    const blob=(col,pts)=>{g.fillStyle=col;for(const p of pts){g.beginPath();g.ellipse(p[0],p[1],p[2],p[3],p[4]||0,0,6.3);g.fill();}};
-    blob('#a67c4a',[[64,152,34,24],[108,170,38,22],[156,166,40,24],[196,146,30,20],[92,128,28,18],[148,122,32,16],[178,178,22,14]]);
-    blob('#355868',[[78,152,30,22],[116,160,36,24],[158,154,34,22],[132,134,28,16],[176,150,24,16],[100,174,18,12]]);
-    blob('#243e4c',[[112,152,24,16],[148,150,22,14]]);
+  function mudTex(){const c=document.createElement('canvas');c.width=512;c.height=512;const g=c.getContext('2d');
+    g.clearRect(0,0,512,512);
+    function ell(x,y,rx,ry,rot,col){g.save();g.translate(x,y);g.rotate(rot);g.fillStyle=col;g.beginPath();g.ellipse(0,0,rx,ry,0,0,6.2832);g.fill();g.restore();}
+    ell(250,280,190,132,.04,'#6b4a2c');ell(175,250,88,66,-.35,'#543820');ell(340,300,104,68,.22,'#7a5534');
+    ell(220,210,64,42,.4,'#3f2c18');ell(310,340,78,40,-.18,'#2e2416');
+    ell(246,268,112,70,-.06,'#1e3642');ell(214,252,58,32,.12,'#163038');ell(292,278,44,24,-.22,'#2a4450');
     g.save();g.globalCompositeOperation='source-atop';
-    g.fillStyle='rgba(226,242,248,.9)';g.beginPath();g.ellipse(126,150,20,3.1,-.05,0,6.3);g.fill();
-    g.fillStyle='rgba(255,255,255,.7)';g.beginPath();g.ellipse(116,148,8,1.5,0,0,6.3);g.fill();
+    g.fillStyle='rgba(214,232,238,.7)';g.beginPath();g.ellipse(228,250,84,8,-.16,0,6.2832);g.fill();
+    g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.ellipse(206,246,24,3,0,0,6.2832);g.fill();
+    g.strokeStyle='rgba(186,214,222,.45)';g.lineWidth=3;g.beginPath();g.ellipse(248,272,48,15,-.08,0,6.2832);g.stroke();g.beginPath();g.ellipse(248,272,78,22,-.08,0,6.2832);g.stroke();
+    g.fillStyle='rgba(92,68,42,.4)';
+    for(let i=0;i<16;i++){const a=i/16*6.2832,rr=148+(i%5)*14;g.beginPath();g.ellipse(256+Math.cos(a)*rr,274+Math.sin(a)*rr*.7,9,4,a,0,6.2832);g.fill();}
     g.restore();
+    g.globalCompositeOperation='destination-in';
+    g.beginPath();const cx=256,cy=274;for(let i=0;i<16;i++){const a=i/16*6.2832,wob=.7+((i*3)%5)*.07,x=cx+Math.cos(a)*200*wob,y=cy+Math.sin(a)*146*wob;if(i)g.lineTo(x,y);else g.moveTo(x,y);}g.closePath();g.fillStyle='#000';g.fill();
+    const rg=g.createRadialGradient(cx,cy,20,cx,cy,220);rg.addColorStop(0,'rgba(0,0,0,1)');rg.addColorStop(.6,'rgba(0,0,0,.95)');rg.addColorStop(.84,'rgba(0,0,0,.28)');rg.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=rg;g.fillRect(0,0,512,512);
     const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;}
   const o3=new T.Object3D();
     if(bushes.length){const geo=bushGeom(),mat=new T.MeshLambertMaterial({vertexColors:true,flatShading:true}),m=new T.InstancedMesh(geo,mat,bushes.length);
@@ -6884,7 +6891,7 @@ function cityGreen449(){if(!zsShow())return;
   plantMesh(tuftGeom(),plants.filter(p=>p.kind==='tuft'));plantMesh(sproutGeom(),plants.filter(p=>p.kind==='sprout'));
   if(puddles.length){const mat=new T.MeshBasicMaterial({map:mudTex(),transparent:true,depthWrite:false,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
     const m=new T.InstancedMesh(new T.PlaneGeometry(1,1),mat,puddles.length);m.frustumCulled=false;m.receiveShadow=false;m.castShadow=false;m.count=puddles.length;m.userData.green449='puddle';
-    puddles.forEach((p,i)=>{o3.position.set(p.x,.05,p.z);o3.rotation.set(-Math.PI/2,p.yaw,0);o3.scale.set(p.w,p.d,1);o3.updateMatrix();m.setMatrixAt(i,o3.matrix);});
+    puddles.forEach((p,i)=>{o3.position.set(p.x,.02,p.z);o3.rotation.set(-Math.PI/2,p.yaw,0);o3.scale.set(p.w,p.d,1);o3.updateMatrix();m.setMatrixAt(i,o3.matrix);});
     m.instanceMatrix.needsUpdate=true;scene.add(m);}
   window.__green449={bushes:bushes.length,plants:plants.length,puddles:puddles.length};}
 
@@ -6912,15 +6919,87 @@ function loot452Discard(){const c=LOOT452.cur;if(!c){loot452Close();return;}if(c
 function loot452DiscardAll(){const left=[LOOT452.cur].concat(LOOT452.q).filter(Boolean);for(const c of left){if(c.kind==='gear'&&c.drop)c.drop.skip=1;if(c.kind==='mat'&&c.src)c.src.hold452=1;}LOOT452.q.length=0;loot452Close();}
 function loot452Gear(d,manual){if(!d||!d.on||!d.it||game.state!=='play')return;if(!manual&&d.skip)return;d.skip=0;const it=d.it;loot452Offer({kind:'gear',drop:d,it:it,icon:GSLOT[it.s].i,title:gName(it),sub:gStatTxt(it),color:GEAR_CFG.rar[it.r].c});}
 function loot452Mat(p){if(!p||!p.active||game.state!=='play')return;const I=MAT_INFO[p.type]||{name:'Materiale',icon:'📦',glow:0xffd27a};loot452Offer({kind:'mat',src:p,k:p.type,n:1,icon:I.icon,title:I.name,sub:'1 · lo zaino è pieno',color:'#'+new T.Color(I.glow).getHexString()});}
-function loot452Crate(c){if(!c||c.open||game.state!=='play')return;c.open=true;lootWrite(c);play('door');try{addXP(XP_GAIN.crate);}catch(e){}try{dropCoins(c.x,c.z,Math.round(rand(5,10)));}catch(e){}try{if(window.q42)q42('crate',1);}catch(e){}const offers=[],r=Math.random;const guns=WEAPONS.filter(function(w){return own[w.id]&&!w.melee;});if(guns.length&&r()<.75){const w=guns[(r()*guns.length)|0];const light=w.id==='pistol'||w.id==='revolver'||w.id==='shotgun'||w.id==='dbarrel'||w.id==='saw';const n=light?Math.max(2,Math.round(w.mag*.5)):Math.max(1,Math.round((w.mag||4)*.2));offers.push({kind:'ammo',wid:w.id,n:n,icon:'🔫',title:w.name,sub:'+'+n+' colpi di riserva',color:'#ffd27a'});}if(r()<.45){const h=Math.min(40,Math.max(0,player.maxHp-player.hp));if(h>0)offers.push({kind:'hp',n:h,icon:'🩹',title:'Kit medico',sub:'+'+Math.round(h)+' salute',color:'#ff8a7a'});}const mats=[['wood',2,4],['stone',1,3],['metal',1,2],['elec',0,1],['iron',0,1],['coal',0,2]];for(const row of mats){if(r()<.55){const n=row[1]+Math.floor(r()*(row[2]-row[1]+1));if(n>0)offers.push({kind:'mat',k:row[0],n:n,icon:RES[row[0]].i,title:RES[row[0]].n,sub:'+'+n,color:RES[row[0]].c});}}if(r()<.25&&S.nades<NADE_MAX)offers.push({kind:'nade',n:1,icon:'💣',title:'Granata',sub:'+1',color:'#ffb020'});if(!offers.length)offers.push({kind:'mat',k:'wood',n:2,icon:RES.wood.i,title:RES.wood.n,sub:'+2',color:RES.wood.c});for(const o of offers)loot452Offer(o);}
+function loot452Crate(c){if(!c||c.open||game.state!=='play')return;c.open=true;lootWrite(c);play('door');try{addXP(XP_GAIN.crate);}catch(e){}try{dropCoins(c.x,c.z,Math.round(rand(5,10)));}catch(e){}try{if(window.q42)q42('crate',1);}catch(e){}const got=[],r=Math.random;const guns=WEAPONS.filter(function(w){return own[w.id]&&!w.melee;});if(guns.length&&r()<.75){const w=guns[(r()*guns.length)|0];const light=w.id==='pistol'||w.id==='revolver'||w.id==='shotgun'||w.id==='dbarrel'||w.id==='saw';const n=light?Math.max(2,Math.round(w.mag*.5)):Math.max(1,Math.round((w.mag||4)*.2));res[w.id]=Math.min(w.maxReserve,(res[w.id]|0)+n);got.push('+'+n+' colpi '+w.name);}if(r()<.45){const h=Math.min(player.maxHp-player.hp,40);if(h>0){player.hp+=h;got.push('🩹 Kit medico +'+Math.round(h)+'❤️');}}const mats=[['wood',2,4],['stone',1,3],['metal',1,2],['elec',0,1],['iron',0,1],['coal',0,2]];for(const row of mats){if(r()<.55){const n=row[1]+Math.floor(r()*(row[2]-row[1]+1));if(n>0){const g=addRes(row[0],n,true);if(g)got.push('+'+g+' '+RES[row[0]].i);}}}if(r()<.25&&S.nades<NADE_MAX){S.nades++;got.push('+1 💣');}if(!got.length){addRes('wood',2,true);got.push('+2 '+RES.wood.i);}floatText(got.slice(0,3).join(' · '),'#ffd27a');if(got.length>3)setTimeout(function(){floatText(got.slice(3).join(' · '),'#ffd27a');},400);play('pickup',3);updateHUD();}
 const _collect452=collect;collect=function(p){if(SV.on&&bagCount()>=bagCap()&&p&&p.active){const d=Math.hypot(p.x-player.pos.x,p.z-player.pos.z);if(p.hold452&&d>3.4)p.hold452=0;if(p.hold452)return;if(game.state==='play'){loot452Mat(p);return;}return;}return _collect452(p);};
 openLoot=function(c){loot452Crate(c);};
 addEventListener('keydown',function(e){if(game.state!=='loot452')return;if(e.code==='Escape'){e.preventDefault();loot452Discard();}else if(e.code==='Enter'||e.code==='KeyE'){e.preventDefault();loot452Swap();}});
 const _back452=window.__zsBack;window.__zsBack=function(){const el=document.getElementById('loot452');if(el&&!el.classList.contains('hidden')){loot452DiscardAll();return true;}return _back452?_back452():false;};
 window.__loot452={gear:loot452Gear,crate:loot452Crate,swap:loot452Swap,drop:loot452Discard,get on(){return game.state==='loot452';},get n(){return LOOT452.q.length+(LOOT452.cur?1:0);}};
+// 4.3.53: scheletro, stop, sangue, scorrimento zaino
+function bag453Bind(){const root=$('bagScreen');if(!root||root.dataset.bag453)return;root.dataset.bag453='1';
+  root.addEventListener('touchmove',function(e){const sc=e.target.closest&&e.target.closest('#bagGrid,.gGrid');if(sc)e.stopPropagation();},{capture:true,passive:true});
+  root.addEventListener('wheel',function(e){const sc=e.target.closest&&e.target.closest('#bagGrid,.gGrid');if(!sc)return;if(sc.scrollHeight<=sc.clientHeight+1)return;sc.scrollTop+=e.deltaY;e.preventDefault();e.stopPropagation();},{passive:false});}
+bag439Fit=function(){bag439Gear();bag453Bind();};
+function dress453(){
+  const streakTex=canvasTex(512,128,function(g,w,h){g.clearRect(0,0,w,h);
+    const grd=g.createLinearGradient(8,h*.5,w-8,h*.42);grd.addColorStop(0,'rgba(80,0,0,0)');grd.addColorStop(.12,'rgba(120,6,8,.55)');grd.addColorStop(.4,'rgba(150,8,12,.95)');grd.addColorStop(.72,'rgba(110,4,8,.7)');grd.addColorStop(1,'rgba(40,0,0,0)');
+    g.fillStyle=grd;g.beginPath();g.moveTo(12,h*.55);g.bezierCurveTo(80,h*.22,180,h*.78,280,h*.4);g.bezierCurveTo(360,h*.18,450,h*.62,500,h*.36);g.lineTo(496,h*.58);g.bezierCurveTo(420,h*.86,240,h*.7,140,h*.88);g.bezierCurveTo(70,h*.96,24,h*.7,12,h*.55);g.fill();
+    g.fillStyle='rgba(90,4,8,.75)';g.beginPath();g.ellipse(70,h*.28,16,6,.4,0,6.3);g.fill();g.beginPath();g.ellipse(390,h*.72,14,5,-.35,0,6.3);g.fill();g.beginPath();g.ellipse(250,h*.48,8,4,.2,0,6.3);g.fill();});
+  const streaks=decalPool(streakTex,64);streaks.m.renderOrder=2;
+  function addStreak(x,z,yaw,len,wid){_o.position.set(x,.021,z);_o.quaternion.setFromUnitVectors(_z,_up);_q.setFromAxisAngle(_z,yaw);_o.quaternion.multiply(_q);_o.scale.set(len,wid,1);_o.updateMatrix();streaks.m.setMatrixAt(streaks.i,_o.matrix);streaks.i=(streaks.i+1)%streaks.n;streaks.m.instanceMatrix.needsUpdate=true;}
+  window.__addStreak453=addStreak;
+  const _kill=killZombie;killZombie=function(z,dir,d,head){_kill(z,dir,d,head);try{if(!z||!z.g)return;const yaw=Math.atan2(dir.x,dir.z);addStreak(z.g.position.x+dir.x*.55,z.g.position.z+dir.z*.55,yaw,1.5+Math.random()*1.7,.26+Math.random()*.22);}catch(e){}};
+  if(!zsShow())return;
+  scene.traverse(function(o){if(o.userData&&o.userData.boxCorpse)o.visible=false;});
+  let s=45317;const rnd=function(){s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
+  const corpses=window.__corpse440||[];
+  corpses.forEach(function(p){const yaw=p.yaw+(rnd()-.5)*.9;const len=1.35+rnd()*1.7;const along=.35+rnd()*.9;addStreak(p.x+Math.sin(yaw)*along,p.z+Math.cos(yaw)*along,yaw,len,.22+rnd()*.28);if(rnd()<.45)addStreak(p.x+Math.sin(yaw+1.2)*.6,p.z+Math.cos(yaw+1.2)*.6,yaw+1.4,.8+rnd()*.7,.16+rnd()*.12);});
+  const roads=(window.CITY4319&&CITY4319.roads)||[];
+  const avenues=[[-HALF,-24,HALF,-24],[0,-HALF,0,HALF],[-48,0,-6,0],[6,0,48,0],[-46,20,46,20]].concat(roads);
+  for(let i=0;i<10;i++){const r=avenues[(rnd()*avenues.length)|0];if(!r)continue;const horiz=Math.abs(r[1]-r[3])<.05;const t=.15+rnd()*.7;const x=r[0]+(r[2]-r[0])*t,z=r[1]+(r[3]-r[1])*t;const yaw=horiz?0:1.57;const ox=horiz?0:(rnd()<.5?-1:1)*2.2,oz=horiz?(rnd()<.5?-1:1)*2.2:0;if(Math.hypot(x+ox,(z+oz)-2)<6)continue;addStreak(x+ox,z+oz,yaw+(rnd()-.5)*.4,1.8+rnd()*2.2,.2+rnd()*.22);}
+  function badSign(x,z){if(x<-HALF+3||x>HALF-3||z<-HALF+3||z>HALF-3)return true;if(Math.hypot(x,z-2)<11)return true;if(Math.abs(x)<4.3&&Math.abs(z)<8)return true;
+    for(const h of HOUSE_RECTS)if(Math.abs(x-h[0])<h[2]+1.3&&Math.abs(z-h[1])<h[3]+1.3)return true;
+    for(const b of boxes)if(x>b.x0-.45&&x<b.x1+.45&&z>b.z0-.45&&z<b.z1+.45)return true;return false;}
+  function signTex(kind,label){return canvasTex(256,256,function(g){g.clearRect(0,0,256,256);
+    if(kind==='stop'){g.save();g.translate(128,128);g.fillStyle='#d10b16';g.beginPath();for(let i=0;i<8;i++){const a=-Math.PI/2+i*Math.PI/4,x=Math.cos(a)*108,y=Math.sin(a)*108;if(i)g.lineTo(x,y);else g.moveTo(x,y);}g.closePath();g.fill();g.lineWidth=12;g.strokeStyle='#fff';g.stroke();g.fillStyle='#fff';g.font='800 62px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('STOP',0,6);g.restore();}
+    else if(kind==='one'){g.fillStyle='#14181f';g.fillRect(18,78,220,100);g.strokeStyle='#f2f4f8';g.lineWidth=8;g.strokeRect(18,78,220,100);g.fillStyle='#fff';g.beginPath();g.moveTo(48,128);g.lineTo(150,128);g.lineTo(150,100);g.lineTo(210,128);g.lineTo(150,156);g.lineTo(150,128);g.fill();}
+    else{g.fillStyle='#1d4e32';g.fillRect(16,78,224,100);g.strokeStyle='#e7f6ea';g.lineWidth=8;g.strokeRect(16,78,224,100);g.fillStyle='#fff';g.font='700 42px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(label||'VIA',128,128);}});}
+  const stopM=new T.MeshBasicMaterial({map:signTex('stop'),transparent:true,side:T.DoubleSide,depthWrite:false});
+  const oneM=new T.MeshBasicMaterial({map:signTex('one'),transparent:true,side:T.DoubleSide,depthWrite:false});
+  const nameMats={};
+  function nameMat(label){if(!nameMats[label])nameMats[label]=new T.MeshBasicMaterial({map:signTex('name',label),transparent:true,side:T.DoubleSide,depthWrite:false});return nameMats[label];}
+  const spots=[];
+  function putSign(x,z,faceX,faceZ,kind,label){if(spots.length>=18)return;if(badSign(x,z))return;if(spots.some(function(p){return (p.x-x)*(p.x-x)+(p.z-z)*(p.z-z)<20;}))return;
+    const yaw=Math.atan2(faceX-x,faceZ-z);const pole=mesh(G.cyl,MAT.metal,x,1.15,z,.07,2.3,.07,null,false);pole.userData.sign453=1;
+    const mat=kind==='stop'?stopM:kind==='one'?oneM:nameMat(label||'VIA');
+    const w=kind==='stop'?0.78:0.96,hh=kind==='stop'?0.78:0.46;
+    const face=mesh(new T.PlaneGeometry(1,1),mat,x,2.12,z,w,hh,1,null,false);face.rotation.y=yaw;face.userData.sign453=1;
+    boxes.push({x0:x-.22,x1:x+.22,z0:z-.22,z1:z+.22});spots.push({x:x,z:z,kind:kind});}
+  const corners=[[-1,-1],[1,-1],[-1,1],[1,1]];
+  [[0,-24],[0,20]].forEach(function(c,ci){corners.forEach(function(s,si){const x=c[0]+s[0]*6.4,z=c[1]+s[1]*6.4;putSign(x,z,c[0],c[1],si%2?'stop':'one',si%2?'':'');});});
+  putSign(6.6,-8,0,-8,'name','CENTRO');putSign(-6.6,36,0,36,'name','NORD');putSign(6.6,-48,0,-48,'stop');putSign(-6.6,58,0,58,'name','MERCATO');
+  const horiz=roads.filter(function(r){return Math.abs(r[1]-r[3])<.05;}),vert=roads.filter(function(r){return Math.abs(r[0]-r[2])<.05;});
+  horiz.forEach(function(h){const x0=Math.min(h[0],h[2]),x1=Math.max(h[0],h[2]),z=h[1];vert.forEach(function(v){const z0=Math.min(v[1],v[3]),z1=Math.max(v[1],v[3]),x=v[0];if(x<x0-2||x>x1+2||z<z0-2||z>z1+2)return;putSign(x+5.6,z+5.6,x,z,'stop');putSign(x-5.6,z-5.6,x,z,'name',x<-20?'STAZIONE':'VIA');});});
+  avenues.forEach(function(r){if(spots.length>=16)return;const horizR=Math.abs(r[1]-r[3])<.05;const len=horizR?Math.abs(r[2]-r[0]):Math.abs(r[3]-r[1]);const n=Math.max(1,Math.floor(len/36));
+    for(let i=0;i<n&&spots.length<16;i++){const t=(i+.5)/n;let x,z,fx,fz;if(horizR){x=r[0]+(r[2]-r[0])*t;z=r[1]+(rnd()<.5?-1:1)*6.2;fx=x;fz=r[1];}else{z=r[1]+(r[3]-r[1])*t;x=r[0]+(rnd()<.5?-1:1)*6.2;fx=r[0];fz=z;}
+      const kind=rnd()<.62?'stop':rnd()<.5?'one':'name';const label=z>30?'NORD':z<-30?'SUD':x>20?'EST':'OVEST';putSign(x,z,fx,fz,kind,label);}});
+  const parts=[];const bone=[.91,.86,.74],dark=[.78,.72,.6],pit=[.22,.18,.16],tooth=[.96,.94,.9];
+  function addGeo(g,x,y,z,sx,sy,sz,rx,ry,rz,col){g.applyMatrix4(new T.Matrix4().compose(new T.Vector3(x,y,z),new T.Quaternion().setFromEuler(new T.Euler(rx||0,ry||0,rz||0)),new T.Vector3(sx,sy,sz)));
+    const ng=g.toNonIndexed();const n=ng.attributes.position.count;const c=new Float32Array(n*3);for(let i=0;i<n;i++){c[i*3]=col[0];c[i*3+1]=col[1];c[i*3+2]=col[2];}ng.setAttribute('color',new T.Float32BufferAttribute(c,3));parts.push(ng);g.dispose();}
+  function addBox(x,y,z,sx,sy,sz,rx,ry,rz,col){addGeo(new T.BoxGeometry(1,1,1),x,y,z,sx,sy,sz,rx,ry,rz,col);}
+  function addBall(x,y,z,sx,sy,sz,col){addGeo(new T.SphereGeometry(.5,12,9),x,y,z,sx,sy,sz,0,0,0,col);}
+  addBall(0,.3,.96,.34,.3,.38,bone);addBox(0,.14,.82,.26,.08,.18,.28,0,0,dark);addBox(0,.16,.92,.18,.03,.04,0,0,0,tooth);
+  addBall(-.07,.32,1.12,.06,.045,.04,pit);addBall(.07,.32,1.12,.06,.045,.04,pit);addBox(0,.24,1.14,.04,.07,.03,0,0,0,pit);
+  addBox(0,.2,.7,.11,.11,.18,0,0,0,bone);
+  for(let i=0;i<6;i++)addBox(0,.15,.5-i*.15,.13,.1,.11,0,0,0,i%2?bone:dark);
+  for(let i=0;i<5;i++){const z=.46-i*.12;addBox(.2,.24,z,.3,.045,.05,0,0,.55,bone);addBox(-.2,.24,z,.3,.045,.05,0,0,-.55,bone);addBox(.32,.12,z,.16,.04,.045,0,0,1.15,dark);addBox(-.32,.12,z,.16,.04,.045,0,0,-1.15,dark);}
+  addBox(0,.26,.3,.07,.045,.4,0,0,0,dark);
+  addBox(0,.15,-.46,.4,.12,.18,0,0,0,bone);addBox(.22,.18,-.44,.14,.1,.16,0,.15,.35,bone);addBox(-.22,.18,-.44,.14,.1,.16,0,-.15,-.35,bone);
+  addBox(.46,.14,.32,.4,.08,.08,0,.35,.25,bone);addBox(.82,.1,.14,.34,.06,.06,.15,.7,0,dark);addBox(1.02,.07,-.02,.14,.045,.16,0,.4,0,bone);
+  addBox(-.46,.14,.3,.4,.08,.08,0,-.4,-.25,bone);addBox(-.8,.09,.1,.32,.06,.06,-.1,-.65,0,dark);addBox(-1.0,.06,-.04,.14,.045,.16,0,-.35,0,bone);
+  addBox(.12,.11,-.78,.1,.1,.48,0,.08,0,bone);addBox(.16,.08,-1.22,.075,.075,.42,0,-.04,0,dark);addBox(.18,.05,-1.48,.14,.05,.24,0,.08,0,bone);
+  addBox(-.16,.11,-.74,.1,.1,.44,0,-.4,0,bone);addBox(-.36,.08,-1.08,.075,.075,.38,.1,-.55,0,dark);addBox(-.52,.05,-1.26,.13,.05,.22,0,-.6,0,bone);
+  let vn=0;for(const g of parts)vn+=g.attributes.position.count;const P=new Float32Array(vn*3),C=new Float32Array(vn*3);let off=0;
+  for(const g of parts){const a=g.attributes.position.array,c=g.attributes.color.array,cnt=g.attributes.position.count;P.set(a,off*3);C.set(c,off*3);off+=cnt;g.dispose();}
+  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(P,3));geo.setAttribute('color',new T.BufferAttribute(C,3));geo.computeVertexNormals();
+  const n=Math.max(1,corpses.length);const m=new T.InstancedMesh(geo,new T.MeshLambertMaterial({vertexColors:true}),n);m.count=corpses.length;m.castShadow=false;m.receiveShadow=true;m.frustumCulled=false;m.userData.skel453=1;scene.add(m);
+  const o=new T.Object3D();corpses.forEach(function(p,i){o.position.set(p.x,.02,p.z);o.rotation.set(0,p.yaw,0);o.scale.set(1,1,1);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.instanceMatrix.needsUpdate=true;
+  window.__dress453={signs:spots.length,streaks:Math.min(64,streaks.i||corpses.length),skels:corpses.length,spots:spots};}
+
 apkPlan441();
 apkDress439();
 cityGreen449();
+dress453();
 bag439Layout();
 apkProps440();
 
@@ -7215,5 +7294,111 @@ body.hudBandR424 #bagBtn{width:calc(105px * var(--ui))!important;height:calc(105
 }
 @media (max-width:640px){#loot452 .loot452top{grid-template-columns:1fr}#loot452grid{max-height:30vh}}
 </style>
+<style id="v453css">
+/* 4.3.53: zaino intero, scritte visibili, scorrimento vero, Equipaggia sempre in vista */
+html.zs-city #bagScreen .bagSheet.bagSheet{touch-action:auto!important;overflow:hidden!important}
+html.zs-city #bagScreen .bagFit{
+  position:absolute!important;inset:0!important;box-sizing:border-box!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  display:grid!important;overflow:hidden!important;
+  grid-template-columns:minmax(0,1.05fr) minmax(240px,.95fr)!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  grid-template-areas:"hd hd" "cap cap" "grid side" "note close"!important;
+  column-gap:10px!important;row-gap:6px!important;align-content:stretch!important;
+}
+html.zs-city #bagScreen #bagGrid{
+  height:100%!important;max-height:100%!important;min-height:0!important;
+  display:block!important;overflow-x:hidden!important;overflow-y:scroll!important;
+  touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.4) transparent;
+}
+html.zs-city #bagScreen #bagGrid *{touch-action:pan-y!important}
+html.zs-city #bagScreen .bagSide{
+  height:100%!important;min-height:0!important;max-height:100%!important;
+  display:grid!important;grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  gap:4px!important;overflow:hidden!important;touch-action:auto!important;
+}
+html.zs-city #bagScreen .bagSide #eqPanel{
+  max-height:none!important;overflow:visible!important;min-height:0!important;
+}
+html.zs-city #bagScreen .bagSide .bagFound{
+  display:contents!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+}
+html.zs-city #bagScreen .bagFound .eqSub{white-space:normal!important;overflow:visible!important}
+html.zs-city #bagScreen .bagFound .gT{min-height:48px!important;height:auto!important}
+html.zs-city #bagScreen .bagFound .gGrid,
+html.zs-city #bagScreen .bagSide .gGrid{
+  min-height:0!important;max-height:none!important;height:auto!important;
+  overflow-x:hidden!important;overflow-y:scroll!important;
+  touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;
+  align-content:start!important;grid-auto-rows:48px!important;scrollbar-width:thin;
+}
+html.zs-city #bagScreen .gGrid *{touch-action:pan-y!important}
+html.zs-city #bagScreen .bagFound .gInfo,
+html.zs-city #bagScreen .gInfo{
+  flex:0 0 auto!important;max-height:none!important;height:auto!important;overflow:visible!important;
+  white-space:normal!important;text-overflow:clip!important;
+}
+html.zs-city #bagScreen .gInfo b,
+html.zs-city #bagScreen .gInfo div,
+html.zs-city #bagScreen .gInfo small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:none!important}
+html.zs-city #bagScreen .gInfo{display:flex!important;flex-wrap:wrap!important;align-items:baseline!important;gap:2px 8px!important;padding:4px 6px!important}
+html.zs-city #bagScreen .gInfo .btnRow{display:flex!important;flex:1 0 100%!important;flex-wrap:nowrap!important;gap:6px!important;margin-top:2px}
+html.zs-city #bagScreen .gInfo .btnRow .act{flex:1 1 0!important;min-height:36px!important;min-width:0!important;white-space:normal!important;overflow:visible!important;line-height:1.15!important;padding:4px 6px!important}
+@media (orientation:landscape){
+  html.zs-tg #bagScreen .bagFit>.sub2{grid-column:1!important;grid-row:4!important}
+  html.zs-tg #bagScreen .bagSide{grid-column:2!important;grid-row:3 / span 2!important}
+}
+html.zs-city #bagScreen .eqStats{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px 8px!important;
+  font-size:12px!important;line-height:1.2!important;overflow:visible!important;
+}
+html.zs-city #bagScreen .eqStats div,
+html.zs-city #bagScreen .cr29{
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+  min-width:0!important;background:none!important;max-height:none!important;
+}
+html.zs-city #bagScreen .bgI span,
+html.zs-city #bagScreen .gS small,
+html.zs-city #bagScreen .gT small,
+html.zs-city #bagScreen .eqSub,
+html.zs-city #bagScreen .eqHead,
+html.zs-city #bagScreen #bagCap,
+html.zs-city #bagScreen .bagHd h2,
+html.zs-city #bagScreen .bgSec,
+html.zs-city #bagScreen .bgAm small{
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+  max-width:none!important;overflow-wrap:anywhere!important;
+}
+html.zs-city #bagScreen .gT small{font-size:11px!important;line-height:1.15!important}
+html.zs-city #bagScreen .bgI{min-height:34px!important}
+html.zs-city #bagScreen .bagFit>.sub2{white-space:normal!important;overflow:visible!important}
+html.zs-city #bagScreen #eqPanel{padding:4px 6px!important}
+html.zs-city #bagScreen .eqHead{margin:0 0 2px!important;font-size:12px!important;line-height:1.1!important}
+html.zs-city #bagScreen .eqRow{gap:4px!important;margin:0!important}
+html.zs-city #bagScreen .gS{padding:0 1px!important;min-height:0!important;gap:0!important}
+html.zs-city #bagScreen .gS i{font-size:16px!important;line-height:1!important}
+html.zs-city #bagScreen .gS small{font-size:10px!important;line-height:1.05!important}
+html.zs-city #bagScreen .eqStats{padding:2px 6px!important;gap:1px 6px!important;font-size:11px!important}
+@media (orientation:portrait){
+  html.zs-city #bagScreen .bagFit{
+    grid-template-columns:1fr!important;
+    grid-template-rows:auto auto minmax(0,1fr) minmax(140px,38vh) auto auto!important;
+    grid-template-areas:"hd" "cap" "grid" "side" "note" "close"!important;
+  }
+  html.zs-city #bagScreen .bagSide{max-height:none!important;height:100%!important}
+  html.zs-city #bagScreen .bgMats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-height:430px){
+  html.zs-city #bagScreen .eqHead{margin:0!important;font-size:12px!important}
+  html.zs-city #bagScreen .eqStats{font-size:11px!important;padding:3px 6px!important;gap:2px 6px!important}
+  html.zs-city #bagScreen .gS{padding:1px 2px!important}
+  html.zs-city #bagScreen .gInfo{padding:4px 6px!important;font-size:13px!important}
+  html.zs-city #bagScreen .gInfo .btnRow .act{min-height:36px!important;font-size:12px!important}
+  html.zs-city #bagScreen .bagSide #eqPanel{max-height:none!important}
+  html.zs-city #bagScreen .bagSide .bagFound{display:contents!important}
+}
+</style>
+
 </body>
 </html>

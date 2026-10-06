@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06t",
+  "rev": "2026-10-06u",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.53",
+      "date": "6 ott",
+      "items": [
+        "Lo zaino si legge tutto e Equipaggia resta visibile",
+        "I pantaloni e il resto si indossano, lo scorrimento funziona",
+        "Le casse svuotano il contenuto dritto nella borsa",
+        "Pozzanghere, stop, strisce di sangue e scheletri più chiari"
+      ]
+    },
     {
       "ver": "4.3.52",
       "date": "6 ott",
