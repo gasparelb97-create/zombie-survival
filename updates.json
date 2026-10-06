@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06p",
+  "rev": "2026-10-06q",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.49",
+      "date": "6 ott",
+      "items": [
+        "Sangue, scie e fendenti si vedono meglio nei combattimenti",
+        "Cespugli e piantine riempiono la città, con criterio",
+        "Pozzanghere di fango, scure e bagnate, lungo le strade"
+      ]
+    },
     {
       "ver": "4.3.48",
       "date": "6 ott",
