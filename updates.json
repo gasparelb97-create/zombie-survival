@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06r",
+  "rev": "2026-10-06s",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.51",
+      "date": "6 ott",
+      "items": [
+        "L'interfaccia segue lo schermo, dal telefono lungo al tablet",
+        "La barra della vita e il pulsante di sparo restano interi",
+        "Mira, fuoco e granata non si coprono tra loro"
+      ]
+    },
     {
       "ver": "4.3.50",
       "date": "6 ott",
