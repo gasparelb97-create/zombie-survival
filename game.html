@@ -2302,7 +2302,7 @@ $('craftClose').addEventListener('click',closeCraft);
 
 // ---------- shooting ----------
 const ray=new T.Raycaster();const _dir=new T.Vector3(),_org=new T.Vector3(),_n=new T.Vector3(),_from=new T.Vector3(),_tmp=new T.Vector3();
-let targetsCache=[];function shootTargets(){targetsCache.length=0;for(const s of solids)targetsCache.push(s);for(const m of zHitMeshes){const z=m.userData.z;if(z.alive&&!z.dead)targetsCache.push(m);}return targetsCache;}
+let targetsCache=[];function shootTargets(){targetsCache.length=0;for(const s of solids)targetsCache.push(s);for(const m of zHitMeshes){const z=m.userData.z;if(!z||!z.alive||z.dead)continue;const slot=m.userData.slot;if(z.gore&&slot&&z.gore[slot])continue;targetsCache.push(m);}return targetsCache;}
 const BLOOD=[0x8a0000,0x5a0000,0xb01010,0x6e0505];const SPARK=[0xfff2b0,0xffc040,0xff8a20];const DUST=[0x6a6058,0x857a6e,0x4a443e];
 function startReload(){const w=WEAPONS[curW];if(w.melee||fx.reload>=0||mag[w.id]>=w.mag||res[w.id]<=0)return false;fx.reload=0;fx.reloadDur=w.reload;play('reload',w.reload);$('rlBar').style.display='block';updateHUD();return true;}
 function finishReload(){const w=WEAPONS[curW];const take=Math.min(w.mag-mag[w.id],res[w.id]);mag[w.id]+=take;res[w.id]-=take;fx.reload=-1;$('rlBar').style.display='none';updateHUD();}
