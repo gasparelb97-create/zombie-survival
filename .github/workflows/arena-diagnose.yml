@@ -24,13 +24,18 @@ jobs:
           try:
               with urlopen(Request(base, headers=headers), timeout=20) as r:
                   code = r.read().decode('utf-8', errors='replace')
-              print('Health version literals:', re.findall(r'\\bv:\\s*(\\d+)', code))
+              print('Health version literals:', re.findall(r'\bv:\s*(\d+)', code))
               print('Room arena456:', 'arena456' in code)
               print('Room arena455:', 'arena455' in code)
-              print('Concurrent match registry:', bool(re.search(r'matches\\s*=\\s*new Set', code)))
+              print('Concurrent match registry:', bool(re.search(r'matches\s*=\s*new Set', code)))
               with urlopen(Request(base + '/deployments', headers=headers), timeout=20) as r:
                   data = json.load(r)
-              print('Active deployment:', json.dumps(data.get('result', {}).get('deployments', [])[-1:]))
+              print('Active deployment:', json.dumps(data.get('result', {}).get('deployments', [])[:1]))
+              with urlopen(Request(base + '/settings', headers=headers), timeout=20) as r:
+                  settings = json.load(r).get('result', {})
+              print('Durable Object bindings:', json.dumps([b for b in settings.get('bindings', []) if b.get('type') == 'durable_object_namespace']))
+              with urlopen(Request('https://zs-arena.gasparelb97.workers.dev/?diagnosis=latest', headers={'Cache-Control': 'no-cache'}), timeout=20) as r:
+                  print('Public health:', r.read().decode())
           except Exception as e:
               print('Read-only inspection failed:', type(e).__name__)
               raise SystemExit(1)
