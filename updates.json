@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07a",
+  "rev": "2026-10-07b",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.60",
+      "date": "7 ott",
+      "items": [
+        "Si gioca solo sulla città nuova: 35 edifici accessibili e quartieri collegati",
+        "La mappa precedente non si apre più, né dal menu né dall'indirizzo",
+        "Il salvataggio della città nuova resta al suo posto"
+      ]
+    },
     {
       "ver": "4.3.59",
       "date": "7 ott",
