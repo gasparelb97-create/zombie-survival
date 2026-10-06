@@ -1,8 +1,9 @@
-// Arena 3v3 — authoritative room. Shared by the Node server and the Cloudflare Durable Object.
+// Arena 1v1 and 3v3 — authoritative room. Shared by the Node server and the Cloudflare Durable Object.
 // Map blockers must stay in sync with the client list in game.html (arena454).
 
 export const MATCH_MS = 180000;
 export const NEED = 6;
+export const NEED_DUEL = 2;
 export const RESPAWN_MS = 5000;
 export const INVULN_MS = 1500;
 export const ARENA_R = 32.6;
@@ -135,7 +136,8 @@ function capsule(ox, oy, oz, dx, dy, dz, tx, tz, range) {
 }
 
 export function createHub() {
-  const lobby = new Map();
+  const queues = { 1: new Map(), 3: new Map() };
+  const watchers = new Map();
   const bySock = new Map();
   let match = null;
   let pid = 1;
@@ -151,22 +153,72 @@ export function createHub() {
   return hub;
 
   function hot() {
-    return !!(match || lobby.size);
+    return !!(match || queues[1].size || queues[3].size || watchers.size);
   }
 
   function wake() {
     if (hub.poke) { try { hub.poke(); } catch (e) {} }
   }
 
-  function lobbyMsg() {
+  function modeNeed(mode) {
+    return mode === 1 ? NEED_DUEL : NEED;
+  }
+
+  function queueOf(mode) {
+    return mode === 1 ? queues[1] : queues[3];
+  }
+
+  function inQueue(id) {
+    if (queues[1].has(id)) return queues[1].get(id);
+    if (queues[3].has(id)) return queues[3].get(id);
+    return null;
+  }
+
+  function removeQueued(id) {
+    queues[1].delete(id);
+    queues[3].delete(id);
+  }
+
+  function onlineCount() {
+    const ids = new Set();
+    for (const id of watchers.keys()) ids.add(id);
+    for (const id of queues[1].keys()) ids.add(id);
+    for (const id of queues[3].keys()) ids.add(id);
+    if (match) for (const id of match.players.keys()) ids.add(id);
+    return ids.size;
+  }
+
+  function presenceMsg() {
+    return { t: 'presence', online: onlineCount() };
+  }
+
+  function tellPresence() {
+    const msg = presenceMsg();
+    const seen = new Set();
+    const once = (ws) => {
+      if (!ws || seen.has(ws)) return;
+      seen.add(ws);
+      send(ws, msg);
+    };
+    for (const p of watchers.values()) once(p.ws);
+    for (const p of queues[1].values()) once(p.ws);
+    for (const p of queues[3].values()) once(p.ws);
+    if (match) for (const p of match.players.values()) once(p.ws);
+  }
+
+  function lobbyMsg(mode) {
+    const q = queueOf(mode);
     const names = [];
-    for (const p of lobby.values()) names.push({ id: p.id, name: p.name });
-    return { t: 'lobby', n: names.length, need: NEED, names: names, busy: !!match };
+    for (const p of q.values()) names.push({ id: p.id, name: p.name });
+    return { t: 'lobby', n: names.length, need: modeNeed(mode), mode: mode, names: names, online: onlineCount(), busy: !!match };
   }
 
   function tellLobby() {
-    const msg = lobbyMsg();
-    for (const p of lobby.values()) send(p.ws, msg);
+    for (const mode of [1, 3]) {
+      const msg = lobbyMsg(mode);
+      for (const p of queueOf(mode).values()) send(p.ws, msg);
+    }
+    tellPresence();
   }
 
   function connect(ws) {
@@ -202,10 +254,10 @@ export function createHub() {
     const conn = bySock.get(ws);
     bySock.delete(ws);
     if (!conn || !conn.id) return;
-    if (lobby.has(conn.id) && lobby.get(conn.id).ws === ws) {
-      lobby.delete(conn.id);
-      tellLobby();
-    }
+    if (watchers.has(conn.id) && watchers.get(conn.id).ws === ws) watchers.delete(conn.id);
+    const queued = inQueue(conn.id);
+    const leftQueue = !!(queued && queued.ws === ws);
+    if (leftQueue) removeQueued(conn.id);
     if (match && match.players.has(conn.id)) {
       const p = match.players.get(conn.id);
       if (p.ws === ws) {
@@ -213,16 +265,18 @@ export function createHub() {
         if (match.players.size === 0) match = null;
       }
     }
+    if (leftQueue) tellLobby();
+    else tellPresence();
     wake();
   }
 
   function findPlayer(id) {
     if (match && match.players.has(id)) return match.players.get(id);
-    if (lobby.has(id)) return lobby.get(id);
-    return null;
+    return inQueue(id);
   }
 
   function onClient(conn, msg) {
+    if (msg.t === 'watch') return watch(conn, msg);
     if (msg.t === 'join' || msg.t === 'ready') return join(conn, msg);
     const p = conn.id ? findPlayer(conn.id) : null;
     if (!p || p.ws !== conn.ws) return;
@@ -236,48 +290,92 @@ export function createHub() {
     }
   }
 
+  function kickOther(id, ws) {
+    const oldW = watchers.get(id);
+    if (oldW && oldW.ws !== ws) { send(oldW.ws, { t: 'kick', m: 'Connessione sostituita' }); try { oldW.ws.close(); } catch (e) {} watchers.delete(id); }
+    const oldL = inQueue(id);
+    if (oldL && oldL.ws !== ws) { send(oldL.ws, { t: 'kick', m: 'Connessione sostituita' }); try { oldL.ws.close(); } catch (e) {} removeQueued(id); }
+    if (match && match.players.has(id)) {
+      const old = match.players.get(id);
+      if (old.ws !== ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); }
+    }
+  }
+
+  function watch(conn, msg) {
+    const id = cleanId(msg.id);
+    if (!id) { send(conn.ws, { t: 'err', m: 'Identità mancante' }); return; }
+    kickOther(id, conn.ws);
+    conn.id = id;
+    const queued = inQueue(id);
+    const playing = match && match.players.has(id) ? match.players.get(id) : null;
+    if (queued && queued.ws === conn.ws) { send(conn.ws, lobbyMsg(queued.mode)); return; }
+    if (playing && playing.ws === conn.ws) { send(conn.ws, presenceMsg()); return; }
+    watchers.set(id, { id: id, name: cleanName(msg.name), ws: conn.ws });
+    tellPresence();
+    wake();
+  }
+
   function join(conn, msg) {
     const id = cleanId(msg.id);
     const name = cleanName(msg.name);
     const weapon = GUNS[msg.weapon] ? msg.weapon : 'knife';
+    const mode = Number(msg.mode) === 1 ? 1 : 3;
     if (!id) { send(conn.ws, { t: 'err', m: 'Identità mancante' }); return; }
-    const oldL = lobby.get(id);
-    if (oldL && oldL.ws !== conn.ws) { send(oldL.ws, { t: 'kick', m: 'Connessione sostituita' }); try { oldL.ws.close(); } catch (e) {} }
-    if (match && match.players.has(id)) {
-      const old = match.players.get(id);
-      if (old.ws !== conn.ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); }
+    if (match && match.players.has(id) && match.players.get(id).ws === conn.ws) {
+      send(conn.ws, { t: 'no', m: 'Sei già in partita' });
+      return;
     }
+    const prev = inQueue(id);
+    const keptJoined = prev && prev.ws === conn.ws && prev.mode === mode ? prev.joined : 0;
+    kickOther(id, conn.ws);
+    watchers.delete(id);
+    removeQueued(id);
     conn.id = id;
     const p = {
-      id: id, name: name, weapon: weapon, ws: conn.ws,
+      id: id, name: name, weapon: weapon, ws: conn.ws, mode: mode,
       team: -1, x: 0, z: 0, yaw: 0, pitch: 0,
       hp: 100, alive: false, ammo: 0, magSize: 0,
       buffs: { dmg: 0, spd: 0, arm: 0 },
-      lastShot: 0, respawnAt: 0, invuln: 0, tp: 0, slot: 0
+      lastShot: 0, respawnAt: 0, invuln: 0, tp: 0, slot: 0,
+      joined: keptJoined || Date.now()
     };
-    lobby.set(id, p);
+    queueOf(mode).set(id, p);
     tellLobby();
     tryStart();
     wake();
   }
 
   function setArm(p, msg) {
-    if (!lobby.has(p.id) || (match && match.players.has(p.id))) return;
+    if (!inQueue(p.id) || (match && match.players.has(p.id))) return;
     if (GUNS[msg.weapon]) p.weapon = msg.weapon;
     tellLobby();
   }
 
+  function queueAge(mode) {
+    let t = Infinity;
+    for (const p of queueOf(mode).values()) if (p.joined < t) t = p.joined;
+    return t;
+  }
+
   function tryStart() {
-    if (match || lobby.size < NEED) return;
+    if (match) return;
+    const ready = [];
+    if (queues[1].size >= NEED_DUEL) ready.push(1);
+    if (queues[3].size >= NEED) ready.push(3);
+    if (!ready.length) return;
+    ready.sort((a, b) => queueAge(a) - queueAge(b));
+    const mode = ready[0];
+    const need = modeNeed(mode);
     const picked = [];
-    for (const p of lobby.values()) {
+    for (const p of queueOf(mode).values()) {
       picked.push(p);
-      if (picked.length === NEED) break;
+      if (picked.length === need) break;
     }
-    for (const p of picked) lobby.delete(p.id);
+    for (const p of picked) removeQueued(p.id);
     const now = Date.now();
     match = {
       id: now,
+      mode: mode,
       t0: now,
       ends: now + MATCH_MS,
       scores: [0, 0],
@@ -288,10 +386,10 @@ export function createHub() {
       teams: [0, 0]
     };
     picked.forEach((p, i) => {
-      const team = i % 2;
+      const team = mode === 1 ? i : (i % 2);
       p.team = team;
-      p.slot = match.teams[team]++;
-      const sp = SPAWNS[team][p.slot % 3];
+      p.slot = mode === 1 ? 0 : match.teams[team]++;
+      const sp = SPAWNS[team][mode === 1 ? 1 : (p.slot % 3)];
       p.x = sp[0];
       p.z = sp[1];
       p.yaw = team === 0 ? -Math.PI / 2 : Math.PI / 2;
@@ -311,6 +409,7 @@ export function createHub() {
     for (const p of match.players.values()) {
       send(p.ws, {
         t: 'start',
+        mode: mode,
         team: p.team,
         slot: p.slot,
         x: p.x, z: p.z, yaw: p.yaw,

@@ -18,7 +18,7 @@ export class ArenaRoom {
   async fetch(req) {
     const upgrade = req.headers.get('Upgrade') || '';
     if (upgrade.toLowerCase() !== 'websocket') {
-      return new Response(JSON.stringify({ ok: true, arena: true }), {
+      return new Response(JSON.stringify({ ok: true, arena: true, v: 455 }), {
         headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' }
       });
     }
@@ -34,7 +34,7 @@ export class ArenaRoom {
 
 export default {
   async fetch(req, env) {
-    const id = env.ARENA.idFromName('main');
+    const id = env.ARENA.idFromName('arena455');
     return env.ARENA.get(id).fetch(req);
   }
 };

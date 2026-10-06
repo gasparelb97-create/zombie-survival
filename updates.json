@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06v",
+  "rev": "2026-10-06w",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.55",
+      "date": "6 ott",
+      "items": [
+        "Arena uno contro uno, oltre al tre contro tre",
+        "Le armi si scorrono con il dito prima della partita",
+        "Si vede quanti giocatori sono online"
+      ]
+    },
     {
       "ver": "4.3.54",
       "date": "6 ott",
