@@ -1,0 +1,36 @@
+name: Diagnosi Arena
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/arena-diagnose.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFARE_ACCOUNT_ID }}
+    steps:
+      - name: Controlla codice caricato e versione attiva
+        shell: python
+        run: |
+          import os, json, re
+          from urllib.request import Request, urlopen
+          base = 'https://api.cloudflare.com/client/v4/accounts/' + os.environ['CLOUDFLARE_ACCOUNT_ID'] + '/workers/scripts/zs-arena'
+          headers = {'Authorization': 'Bearer ' + os.environ['CLOUDFLARE_API_TOKEN']}
+          try:
+              with urlopen(Request(base, headers=headers), timeout=20) as r:
+                  code = r.read().decode('utf-8', errors='replace')
+              print('Health version literals:', re.findall(r'\\bv:\\s*(\\d+)', code))
+              print('Room arena456:', 'arena456' in code)
+              print('Room arena455:', 'arena455' in code)
+              print('Concurrent match registry:', bool(re.search(r'matches\\s*=\\s*new Set', code)))
+              with urlopen(Request(base + '/deployments', headers=headers), timeout=20) as r:
+                  data = json.load(r)
+              print('Active deployment:', json.dumps(data.get('result', {}).get('deployments', [])[-1:]))
+          except Exception as e:
+              print('Read-only inspection failed:', type(e).__name__)
+              raise SystemExit(1)
