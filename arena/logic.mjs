@@ -139,7 +139,7 @@ export function createHub() {
   const queues = { 1: new Map(), 3: new Map() };
   const watchers = new Map();
   const bySock = new Map();
-  let match = null;
+  const matches = new Set();
   let pid = 1;
   let spotCursor = 0;
   const hub = {
@@ -153,7 +153,7 @@ export function createHub() {
   return hub;
 
   function hot() {
-    return !!(match || queues[1].size || queues[3].size || watchers.size);
+    return !!(matches.size || queues[1].size || queues[3].size || watchers.size);
   }
 
   function wake() {
@@ -184,7 +184,7 @@ export function createHub() {
     for (const id of watchers.keys()) ids.add(id);
     for (const id of queues[1].keys()) ids.add(id);
     for (const id of queues[3].keys()) ids.add(id);
-    if (match) for (const id of match.players.keys()) ids.add(id);
+    for (const match of matches) for (const id of match.players.keys()) ids.add(id);
     return ids.size;
   }
 
@@ -203,14 +203,14 @@ export function createHub() {
     for (const p of watchers.values()) once(p.ws);
     for (const p of queues[1].values()) once(p.ws);
     for (const p of queues[3].values()) once(p.ws);
-    if (match) for (const p of match.players.values()) once(p.ws);
+    for (const match of matches) for (const p of match.players.values()) once(p.ws);
   }
 
   function lobbyMsg(mode) {
     const q = queueOf(mode);
     const names = [];
     for (const p of q.values()) names.push({ id: p.id, name: p.name });
-    return { t: 'lobby', n: names.length, need: modeNeed(mode), mode: mode, names: names, online: onlineCount(), busy: !!match };
+    return { t: 'lobby', n: names.length, need: modeNeed(mode), mode: mode, names: names, online: onlineCount(), busy: false };
   }
 
   function tellLobby() {
@@ -258,11 +258,12 @@ export function createHub() {
     const queued = inQueue(conn.id);
     const leftQueue = !!(queued && queued.ws === ws);
     if (leftQueue) removeQueued(conn.id);
-    if (match && match.players.has(conn.id)) {
+    const match = matchOf(conn.id);
+    if (match) {
       const p = match.players.get(conn.id);
       if (p.ws === ws) {
         match.players.delete(conn.id);
-        if (match.players.size === 0) match = null;
+        if (match.players.size === 0) matches.delete(match);
       }
     }
     if (leftQueue) tellLobby();
@@ -270,8 +271,14 @@ export function createHub() {
     wake();
   }
 
+  function matchOf(id) {
+    for (const match of matches) if (match.players.has(id)) return match;
+    return null;
+  }
+
   function findPlayer(id) {
-    if (match && match.players.has(id)) return match.players.get(id);
+    const match = matchOf(id);
+    if (match) return match.players.get(id);
     return inQueue(id);
   }
 
@@ -295,9 +302,10 @@ export function createHub() {
     if (oldW && oldW.ws !== ws) { send(oldW.ws, { t: 'kick', m: 'Connessione sostituita' }); try { oldW.ws.close(); } catch (e) {} watchers.delete(id); }
     const oldL = inQueue(id);
     if (oldL && oldL.ws !== ws) { send(oldL.ws, { t: 'kick', m: 'Connessione sostituita' }); try { oldL.ws.close(); } catch (e) {} removeQueued(id); }
-    if (match && match.players.has(id)) {
+    const match = matchOf(id);
+    if (match) {
       const old = match.players.get(id);
-      if (old.ws !== ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); }
+      if (old.ws !== ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); if (!match.players.size) matches.delete(match); }
     }
   }
 
@@ -307,7 +315,8 @@ export function createHub() {
     kickOther(id, conn.ws);
     conn.id = id;
     const queued = inQueue(id);
-    const playing = match && match.players.has(id) ? match.players.get(id) : null;
+    const match = matchOf(id);
+    const playing = match ? match.players.get(id) : null;
     if (queued && queued.ws === conn.ws) { send(conn.ws, lobbyMsg(queued.mode)); return; }
     if (playing && playing.ws === conn.ws) { send(conn.ws, presenceMsg()); return; }
     watchers.set(id, { id: id, name: cleanName(msg.name), ws: conn.ws });
@@ -321,7 +330,8 @@ export function createHub() {
     const weapon = GUNS[msg.weapon] ? msg.weapon : 'knife';
     const mode = Number(msg.mode) === 1 ? 1 : 3;
     if (!id) { send(conn.ws, { t: 'err', m: 'Identità mancante' }); return; }
-    if (match && match.players.has(id) && match.players.get(id).ws === conn.ws) {
+    const match = matchOf(id);
+    if (match && match.players.get(id).ws === conn.ws) {
       send(conn.ws, { t: 'no', m: 'Sei già in partita' });
       return;
     }
@@ -346,25 +356,18 @@ export function createHub() {
   }
 
   function setArm(p, msg) {
-    if (!inQueue(p.id) || (match && match.players.has(p.id))) return;
+    if (!inQueue(p.id) || matchOf(p.id)) return;
     if (GUNS[msg.weapon]) p.weapon = msg.weapon;
     tellLobby();
   }
 
-  function queueAge(mode) {
-    let t = Infinity;
-    for (const p of queueOf(mode).values()) if (p.joined < t) t = p.joined;
-    return t;
+  function tryStart() {
+    for (const mode of [1, 3]) {
+      while (queueOf(mode).size >= modeNeed(mode)) startMatch(mode);
+    }
   }
 
-  function tryStart() {
-    if (match) return;
-    const ready = [];
-    if (queues[1].size >= NEED_DUEL) ready.push(1);
-    if (queues[3].size >= NEED) ready.push(3);
-    if (!ready.length) return;
-    ready.sort((a, b) => queueAge(a) - queueAge(b));
-    const mode = ready[0];
+  function startMatch(mode) {
     const need = modeNeed(mode);
     const picked = [];
     for (const p of queueOf(mode).values()) {
@@ -373,7 +376,7 @@ export function createHub() {
     }
     for (const p of picked) removeQueued(p.id);
     const now = Date.now();
-    match = {
+    const match = {
       id: now,
       mode: mode,
       t0: now,
@@ -385,6 +388,7 @@ export function createHub() {
       seq: 1,
       teams: [0, 0]
     };
+    matches.add(match);
     picked.forEach((p, i) => {
       const team = mode === 1 ? i : (i % 2);
       p.team = team;
@@ -457,6 +461,7 @@ export function createHub() {
   }
 
   function setPos(p, msg) {
+    const match = matchOf(p.id);
     if (!match || !match.players.has(p.id) || !p.alive) return;
     const x = +msg.x, z = +msg.z;
     if (!Number.isFinite(x) || !Number.isFinite(z)) return;
@@ -475,6 +480,7 @@ export function createHub() {
   }
 
   function onShot(p, msg) {
+    const match = matchOf(p.id);
     if (!match || !match.players.has(p.id) || !p.alive) return;
     const now = Date.now();
     const g = gunOf(p.weapon);
@@ -530,6 +536,7 @@ export function createHub() {
   }
 
   function onClaim(p, msg) {
+    const match = matchOf(p.id);
     if (!match || !match.players.has(p.id) || !p.alive) return;
     const id = msg.id | 0;
     const ix = match.pickups.findIndex((q) => q.id === id);
@@ -552,10 +559,13 @@ export function createHub() {
 
   function tick() {
     const now = Date.now();
-    if (!match) return;
+    for (const match of matches) tickMatch(match, now);
+  }
+
+  function tickMatch(match, now) {
     for (const p of match.players.values()) {
       if (!p.alive && p.respawnAt && now >= p.respawnAt) {
-        const sp = SPAWNS[p.team][p.slot % 3];
+        const sp = SPAWNS[p.team][match.mode === 1 ? 1 : (p.slot % 3)];
         p.x = sp[0];
         p.z = sp[1];
         p.yaw = p.team === 0 ? -Math.PI / 2 : Math.PI / 2;
@@ -567,7 +577,7 @@ export function createHub() {
       }
     }
     if (now >= match.nextSpawn) spawnPickup(match, false);
-    if (now >= match.ends) { endMatch(); return; }
+    if (now >= match.ends) { endMatch(match); return; }
     if (match.lastSnap && now - match.lastSnap < 80) return;
     match.lastSnap = now;
     const basePlayers = [];
@@ -602,10 +612,8 @@ export function createHub() {
     }
   }
 
-  function endMatch() {
-    const m = match;
-    if (!m) return;
-    match = null;
+  function endMatch(m) {
+    if (!matches.delete(m)) return;
     const winner = m.scores[0] === m.scores[1] ? -1 : (m.scores[0] > m.scores[1] ? 0 : 1);
     for (const p of m.players.values()) {
       send(p.ws, { t: 'end', scores: m.scores.slice(), winner: winner });
