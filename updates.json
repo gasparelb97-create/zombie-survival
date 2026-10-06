@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06o",
+  "rev": "2026-10-06p",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,14 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.48",
+      "date": "6 ott",
+      "items": [
+        "L'ascia taglia in avanti, verso gli alberi",
+        "Lo zombie colpito a una gamba cade e si trascina"
+      ]
+    },
     {
       "ver": "4.3.47",
       "date": "6 ott",
