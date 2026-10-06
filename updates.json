@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06g",
+  "rev": "2026-10-06h",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,18 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.40",
+      "date": "6 ott",
+      "items": [
+        "🪓 L'ascia punta il filo verso l'albero",
+        "🧟 Gli zombie ti vengono incontro, senza il giro laterale",
+        "🎒 I pezzi nuovi stanno a sinistra e la schermata non si stringe",
+        "🪦 Cadaveri, sangue, alberi e palazzi distrutti da modelli gratuiti",
+        "🪵 Gli alberi ricrescono con calma e le munizioni trovate non riempiono tutto",
+        "🪵 Un recinto non si attraversa"
+      ]
+    },
     {
       "ver": "4.3.39",
       "date": "6 ott",

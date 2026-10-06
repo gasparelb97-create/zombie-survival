@@ -5,3 +5,13 @@ Models: sedan, suv, van, taxi, hatchback-sports, light-curved, dumpster, buildin
 Poly Haven (CC0) — photo textures
 https://polyhaven.com
 brick_wall_001, brown_planks_05, clay_roof_tiles, worn_plaster_wall, asphalt_02, brick_pavement_02
+
+Kenney Graveyard Kit (CC0) — corpse skeleton, coffin, pines, trunks, crypts, damaged wall, debris
+https://kenney.nl/assets/graveyard-kit
+https://opengameart.org/content/graveyard-kit
+
+AlejandroHaibi (CC0) — blood_splatter.png
+https://opengameart.org/content/liquid-splatter-pixel-texture
+
+Majadroid (CC0) — palazzi e macerie apocalittici
+https://opengameart.org/content/3d-apocalyptic-building-city-cc0
