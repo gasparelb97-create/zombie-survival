@@ -8,6 +8,7 @@ import time
 from urllib.request import Request, urlopen
 
 ARENA_URL = 'https://zs-arena.gasparelb97.workers.dev'
+GAME_URL = 'https://gasparelb97-create.github.io/zombie-survival'
 
 
 def expected_version():
@@ -18,6 +19,23 @@ def expected_version():
     return int(match.group(1))
 
 
+def client_online():
+    notes = json.loads(Path('arena/release-notes.json').read_text())
+    version = notes['game_version']
+    stamp = os.environ.get('GITHUB_SHA', 'check')
+    def read(path):
+        request = Request(f'{GAME_URL}/{path}?release={stamp}',
+                          headers={'User-Agent': 'ZombieSurvival-Release/1.0'})
+        with urlopen(request, timeout=10) as response:
+            return response.read().decode('utf-8')
+    if read('version.txt').strip() != version:
+        return False
+    news = json.loads(read('updates.json'))
+    if not news.get('recent') or news['recent'][0].get('ver') != version:
+        return False
+    return f"window.GAME_VER='{version}'" in read('game.html')
+
+
 def verify():
     expected = expected_version()
     for attempt in range(36):
@@ -26,8 +44,8 @@ def verify():
             request = Request(url, headers={'User-Agent': 'ZombieSurvival-Release/1.0'})
             with urlopen(request, timeout=10) as response:
                 data = json.load(response)
-            if data.get('ok') is True and data.get('arena') is True and data.get('v') == expected:
-                print(f'Arena online: versione {expected}')
+            if data.get('ok') is True and data.get('arena') is True and data.get('v') == expected and client_online():
+                print(f'Gioco e bacheca online: {json.loads(Path("arena/release-notes.json").read_text())["game_version"]}; Arena {expected}')
                 return
         except Exception:
             pass
@@ -43,7 +61,8 @@ def notification_text():
     if notes.get('version') != version or not changes or not all(isinstance(x, str) and x.strip() for x in changes):
         raise ValueError('Aggiornare le note di rilascio per la versione Arena pubblicata')
     summary = '\n'.join('• ' + item.strip() for item in changes)
-    text = f'✅ Arena aggiornata e online\nVersione: {version}\n\nNovità:\n{summary}\n\nChiudi e riapri il gioco su Telegram.'
+    game_version = notes['game_version']
+    text = f'✅ Zombie Survival aggiornato e online\nVersione gioco: {game_version} · Arena: {version}\n\nNovità:\n{summary}\n\nChiudi e riapri il gioco su Telegram.'
     if len(text) > 4000:
         raise ValueError('Note di rilascio troppo lunghe per Telegram')
     return text

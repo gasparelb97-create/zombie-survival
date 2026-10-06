@@ -1,8 +1,9 @@
 {
-  "version": 456,
+  "version": 457,
+  "game_version": "4.3.56",
   "changes": [
-    "Scelta della modalità 1 contro 1 o 3 contro 3.",
-    "La partita 1 contro 1 inizia appena sono pronti 2 giocatori; quella 3 contro 3 con 6 giocatori.",
-    "Più partite possono svolgersi contemporaneamente, con code separate per modalità."
+    "Arena: 1 contro 1 con 2 giocatori, 3 contro 3 con 6 giocatori, partenza automatica quando il gruppo è completo",
+    "Più partite contemporanee e code separate per modalità",
+    "Tasto Indietro sempre visibile in Arena; puoi cambiare modalità mentre aspetti o tornare al menu anche durante la partita"
   ]
 }

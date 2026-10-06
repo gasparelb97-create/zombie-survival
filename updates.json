@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06w",
+  "rev": "2026-10-06x",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.56",
+      "date": "6 ott",
+      "items": [
+        "Arena: 1 contro 1 con 2 giocatori, 3 contro 3 con 6 giocatori, partenza automatica quando il gruppo è completo",
+        "Più partite contemporanee e code separate per modalità",
+        "Tasto Indietro sempre visibile in Arena; puoi cambiare modalità mentre aspetti o tornare al menu anche durante la partita"
+      ]
+    },
     {
       "ver": "4.3.55",
       "date": "6 ott",

@@ -35,3 +35,8 @@ aggiornare `arena/release-notes.json` con la stessa versione e le novità rivolt
 ai giocatori. La notifica contiene queste novità e la versione verificata online.
 Non inserire credenziali nelle note. Se versione e note non coincidono, nessuna
 notifica viene inviata.
+
+La versione visibile del gioco è `game_version` nelle note. Aggiornare anche
+`version.txt`, le etichette e il fallback della bacheca in `game.html`, e
+`updates.json`. Prima della notifica vengono controllati il Worker e i tre
+file pubblici del gioco, aspettando anche la pubblicazione di GitHub Pages.
