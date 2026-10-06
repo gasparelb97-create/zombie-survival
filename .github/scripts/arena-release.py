@@ -36,6 +36,19 @@ def verify():
     raise RuntimeError('La versione pubblicata non risponde: nessuna notifica di successo inviata')
 
 
+def notification_text():
+    version = expected_version()
+    notes = json.loads(Path('arena/release-notes.json').read_text())
+    changes = notes.get('changes', [])
+    if notes.get('version') != version or not changes or not all(isinstance(x, str) and x.strip() for x in changes):
+        raise ValueError('Aggiornare le note di rilascio per la versione Arena pubblicata')
+    summary = '\n'.join('• ' + item.strip() for item in changes)
+    text = f'✅ Arena aggiornata e online\nVersione: {version}\n\nNovità:\n{summary}\n\nChiudi e riapri il gioco su Telegram.'
+    if len(text) > 4000:
+        raise ValueError('Note di rilascio troppo lunghe per Telegram')
+    return text
+
+
 def notify():
     token = os.environ.get('TELEGRAM_NOTIFY_BOT_TOKEN', '')
     chat_id = os.environ.get('TELEGRAM_NOTIFY_CHAT_ID', '')
@@ -44,8 +57,7 @@ def notify():
         return
     # Recheck immediately before sending. Only the explicitly configured chat is used.
     verify()
-    version = expected_version()
-    text = f'✅ Arena aggiornata e online (versione {version}). Puoi riaprire il gioco su Telegram.'
+    text = notification_text()
     payload = json.dumps({'chat_id': chat_id, 'text': text}).encode()
     request = Request(f'https://api.telegram.org/bot{token}/sendMessage',
                       data=payload, headers={'Content-Type': 'application/json'})

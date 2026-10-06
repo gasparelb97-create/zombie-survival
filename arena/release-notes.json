@@ -1,0 +1,8 @@
+{
+  "version": 456,
+  "changes": [
+    "Scelta della modalità 1 contro 1 o 3 contro 3.",
+    "La partita 1 contro 1 inizia appena sono pronti 2 giocatori; quella 3 contro 3 con 6 giocatori.",
+    "Più partite possono svolgersi contemporaneamente, con code separate per modalità."
+  ]
+}

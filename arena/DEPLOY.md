@@ -27,3 +27,11 @@ Arena; il client Telegram continua a usare la pubblicazione del sito esistente.
 
 Documentazione ufficiale:
 [Cloudflare e GitHub Actions](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/).
+
+## Testo della notifica
+
+Prima di un nuovo aggiornamento, incrementare la versione in `arena/worker.js` e
+aggiornare `arena/release-notes.json` con la stessa versione e le novità rivolte
+ai giocatori. La notifica contiene queste novità e la versione verificata online.
+Non inserire credenziali nelle note. Se versione e note non coincidono, nessuna
+notifica viene inviata.
