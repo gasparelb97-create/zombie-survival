@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-05u",
+  "rev": "2026-10-05v",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,14 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.32",
+      "date": "5 ott",
+      "items": [
+        "🏛️ Architetto: solo chi gestisce il gioco sposta i palazzi e aggiunge casse, panchine, botti, lampioni e corpi",
+        "💾 Salva e la mappa resta così, anche se chiudi il gioco. Originale riporta i palazzi di partenza"
+      ]
+    },
     {
       "ver": "4.3.31",
       "date": "5 ott",
@@ -290,24 +298,6 @@
         "🔊 Audio più leggero: meno suoni sovrapposti, meno scatti",
         "🧟 Gli zombie bloccati trovano un'altra strada (anche dalla porta aperta)",
         "🎒 Zaino più in alto e su due colonne: ogni slot dell'equipaggiamento ha il suo spazio"
-      ]
-    },
-    {
-      "ver": "4.3.2",
-      "date": "4 ott",
-      "items": [
-        "⏳ Il caricamento ora parte quando inizi la partita: il menu si apre subito e la mappa è già tutta pronta quando entri",
-        "🧟 Zombie più nitidi e visibili da più lontano",
-        "✨ Grafica più nitida (antialiasing e texture più definite)",
-        "🏠 Dentro la base chiusa sei al sicuro: gli zombie non ti colpiscono attraverso i muri e assediano la casa solo se ti hanno visto entrare o ti sentono",
-        "🪟 Le finestre si aprono e si chiudono come le porte: chiuse bloccano la vista, aperte gli zombie ti vedono e ti attaccano",
-        "🔨 Costruzione più fluida: niente scatti quando piazzi o togli i pezzi",
-        "⚔️ Potenziamenti Attacco, Difesa e Velocità fino al livello 100, e livello giocatore massimo 100",
-        "🎁 Premio di accesso giornaliero: 7 giorni di fila, il 7° giorno 💎 e un equipaggiamento Raro",
-        "✨ Avviso quando trovi un equipaggiamento Epico o migliore di quello che indossi",
-        "🎉 Weekend di sangue: sabato e domenica +25% monete dagli zombie e un boss in più dalla 3ª notte",
-        "👥 Invita un amico: condividi il tuo link personale da Telegram",
-        "🎒 Borsa senza scorrimento, e mentre è aperta il gioco va in pausa"
       ]
     }
   ]
