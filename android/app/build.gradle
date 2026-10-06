@@ -1,0 +1,78 @@
+plugins {
+    id "com.android.application"
+}
+
+def gameRoot = rootProject.projectDir.parentFile
+
+android {
+    namespace "com.gaspare.zombiesurvival"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.gaspare.zombiesurvival"
+        minSdk 24
+        targetSdk 34
+        versionCode 435
+        versionName "4.3.35"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("${rootProject.projectDir}/zs-release.jks")
+            storePassword "zombiesurvival"
+            keyAlias "zs"
+            keyPassword "zombiesurvival"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            assets.srcDir("${buildDir}/pack")
+        }
+    }
+}
+
+tasks.register("ensureKey") {
+    doLast {
+        def ks = file("${rootProject.projectDir}/zs-release.jks")
+        if (!ks.exists()) {
+            exec {
+                commandLine "keytool", "-genkeypair", "-keystore", ks.absolutePath, "-storepass", "zombiesurvival", "-keypass", "zombiesurvival", "-alias", "zs", "-keyalg", "RSA", "-keysize", "2048", "-validity", "10000", "-dname", "CN=Zombie Survival, OU=Game, O=Gaspare, C=IT"
+            }
+        }
+    }
+}
+
+tasks.named("preBuild").configure { dependsOn("ensureKey") }
+
+tasks.register("packGame", Copy) {
+    from(gameRoot) {
+        include "game.html"
+        include "index.html"
+        include "updates.json"
+        include "version.txt"
+        include "assets/**"
+    }
+    into layout.buildDirectory.dir("pack")
+}
+
+preBuild.dependsOn tasks.named("packGame")
+
+dependencies {
+    implementation "androidx.webkit:webkit:1.11.0"
+}

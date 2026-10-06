@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06b",
+  "rev": "2026-10-06c",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,14 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.35",
+      "date": "6 ott",
+      "items": [
+        "📱 Il gioco è anche un'app Android: si muove più fluido sul telefono",
+        "🎵 La musica non sgrana più e non fa vibrare l'altoparlante"
+      ]
+    },
     {
       "ver": "4.3.34",
       "date": "6 ott",
@@ -277,17 +285,6 @@
       "items": [
         "⚡ Più fluido: controlli interni più leggeri e risoluzione che non scende quando non serve",
         "🏠 Anteprima di costruzione più leggera"
-      ]
-    },
-    {
-      "ver": "4.3.4",
-      "date": "4 ott",
-      "items": [
-        "🏠 Il tetto si posa esattamente dove miri",
-        "🧱 Il tetto deve poggiare su muri, porte, finestre o un altro tetto; se togli l'appoggio crolla (rimborso di parte della legna)",
-        "🏆 Il punteggio si salva da solo in classifica alla fine di ogni partita",
-        "🎒 Zaino leggibile con scorrimento verticale quando serve",
-        "🛠️ Piccole correzioni di grafica e interfaccia"
       ]
     }
   ]
