@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06k",
+  "rev": "2026-10-06l",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.44",
+      "date": "6 ott",
+      "items": [
+        "Le armi all'inizio fanno meno: la potenza vera arriva potenziandole con le monete",
+        "Ogni arma ha il suo mirino, e in mira il colpo è più fermo",
+        "Rinculo e dispersione più veri: la pompa cala con la distanza",
+        "Elmo, giacca, guanti e gli altri pezzi contano sulla forza, con un tetto"
+      ]
+    },
     {
       "ver": "4.3.43",
       "date": "6 ott",
