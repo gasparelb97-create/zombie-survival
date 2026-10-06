@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06i",
+  "rev": "2026-10-06j",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.42",
+      "date": "6 ott",
+      "items": [
+        "Molti più palazzi, alcuni in fiamme e fumo",
+        "Gli zombie camminano e cadono in modo naturale: un colpo in testa fa scoppiare la testa, alle braccia e alle gambe le stacca e loro zoppicano, al busto escono gli organi",
+        "Porta della casa ridisegnata e dodici pezzi nuovi, prima quelli già usabili e poi quelli da sbloccare di livello",
+        "Ascia e piccone sempre a portata di mano, al massimo due armi scelte",
+        "La home resta fissa e il caricamento mostra subito quella attuale"
+      ]
+    },
     {
       "ver": "4.3.41",
       "date": "6 ott",
