@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06f",
+  "rev": "2026-10-06g",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.39",
+      "date": "6 ott",
+      "items": [
+        "🏙️ Sull'app la home è una città infestata",
+        "🎒 Lo zaino entra tutto nello schermo, senza nomi tagliati",
+        "🧟 Più zombie di giorno, cadono in modo naturale, e la mappa ha bidoni, cadaveri e sangue"
+      ]
+    },
     {
       "ver": "4.3.38",
       "date": "6 ott",
