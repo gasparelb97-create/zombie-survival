@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06q",
+  "rev": "2026-10-06r",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.50",
+      "date": "6 ott",
+      "items": [
+        "Lo zaino si scorre: materiali, munizioni e attrezzi si leggono tutti",
+        "Ogni arma mostra il caricatore e la riserva, senza tagliare il nome",
+        "I materiali a zero restano in elenco, più discreti"
+      ]
+    },
     {
       "ver": "4.3.49",
       "date": "6 ott",
