@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-06m",
+  "rev": "2026-10-06n",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.46",
+      "date": "6 ott",
+      "items": [
+        "Su Telegram c'è lo stesso gioco dell'app: città, mappa e zombie",
+        "Il negozio si paga con le stelle, non con i soldi",
+        "Zaino, menu e le altre schermate restano sopra il tasto Chiudi"
+      ]
+    },
     {
       "ver": "4.3.45",
       "date": "6 ott",
