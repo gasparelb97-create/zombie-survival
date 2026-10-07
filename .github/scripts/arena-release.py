@@ -34,7 +34,7 @@ def client_online():
     news = json.loads(read('updates.json'))
     if not news.get('recent') or news['recent'][0].get('ver') != version:
         raise ValueError(f'Bacheca non ancora aggiornata a {version}')
-    if f"window.GAME_VER='{version}'" not in read('game.html'):
+    if f"window.GAME_VER='{version}'" not in read('js/09-init-loop.js'):
         raise ValueError(f'Client non ancora aggiornato a {version}')
     return True
 

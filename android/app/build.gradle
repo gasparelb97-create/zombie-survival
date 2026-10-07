@@ -12,8 +12,8 @@ android {
         applicationId "com.gaspare.zombiesurvival"
         minSdk 24
         targetSdk 34
-        versionCode 472
-        versionName "4.3.72"
+        versionCode 473
+        versionName "4.3.73"
     }
 
     signingConfigs {
@@ -67,6 +67,7 @@ tasks.register("packGame", Copy) {
         include "updates.json"
         include "version.txt"
         include "assets/**"
+        include "js/**"
     }
     into layout.buildDirectory.dir("pack")
 }

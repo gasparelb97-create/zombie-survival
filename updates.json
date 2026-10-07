@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-08a",
+  "rev": "2026-10-08b",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,13 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.73",
+      "date": "8 ott",
+      "items": [
+        "🛠️ Ottimizzazione interna: il codice del gioco ora è diviso in più file, così si carica e si aggiorna meglio"
+      ]
+    },
     {
       "ver": "4.3.72",
       "date": "8 ott",

@@ -4,8 +4,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 const dir=fileURLToPath(new URL('../',import.meta.url));
-const html=readFileSync(resolve(dir,'game.html'),'utf8');
-const source=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).find(s=>s.startsWith('window.THREE='));
+const source=readFileSync(resolve(dir,'js/three.min.js'),'utf8').replace(/\n$/,''); // 4.3.73: three.js moved out of game.html
 const context=vm.createContext({window:{},console});vm.runInContext(source,context);
 for(const name of ['zombies','runtime'])vm.runInContext(readFileSync(resolve(dir,`assets/zombies-v2/${name}.js`),'utf8'),context);
 const T=context.window.THREE,Z=context.window.ZombieV2;
