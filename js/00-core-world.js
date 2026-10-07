@@ -49,7 +49,7 @@ const camera=new T.PerspectiveCamera(75,VW()/VH(),0.05,140);camera.rotation.orde
 const vmScene=new T.Scene();const vmCam=new T.PerspectiveCamera(60,VW()/VH(),0.01,5);
 vmScene.add(new T.HemisphereLight(0x9aa0d0,0x302018,1.1));const vmSun=new T.DirectionalLight(0xffb070,1.6);vmSun.position.set(-1,1.2,.6);vmScene.add(vmSun);
 const vmFlash=new T.PointLight(0xffc060,0,3,1.5);vmFlash.position.set(.25,-.1,-.8);vmScene.add(vmFlash);
-let _lw=0,_lh=0;function onResize(){const w=VW(),hh=VH();_lw=w;_lh=hh;renderer.setSize(w,hh,false);camera.aspect=vmCam.aspect=w/hh;camera.updateProjectionMatrix();vmCam.updateProjectionMatrix();homeJoy&&homeJoy();try{fl431Apply(true);}catch(e){}}
+let _lw=0,_lh=0;function onResize(){const w=VW(),hh=VH();_lw=w;_lh=hh;renderer.setSize(w,hh,false);camera.aspect=vmCam.aspect=w/hh;camera.updateProjectionMatrix();vmCam.updateProjectionMatrix();if(typeof homeJoy==='function')homeJoy();try{fl431Apply(true);}catch(e){}}
 addEventListener('resize',onResize);window.__zcResize=onResize;if(window.visualViewport)visualViewport.addEventListener('resize',onResize);try{new ResizeObserver(()=>{if(VW()!==_lw||VH()!==_lh)onResize();}).observe(canvas);}catch(e){}addEventListener('orientationchange',()=>setTimeout(onResize,250));
 
 // ---------- textures ----------

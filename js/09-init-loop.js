@@ -321,7 +321,7 @@ Promise.all([
   info.ready=1;try{bakeShadows();}catch(e){}
 }).catch(e=>{info.err=String(e&&e.message||e);console.warn('cc0',info.err);});}}
 
-window.GAME_VER='4.3.73';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.73');}catch(e){}
+window.GAME_VER='4.3.74';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v4.3.74');}catch(e){}
 window.__zs424={snowCovered,chestCap,setChest(n){P42.cu.chest=n|0;return chestCap();},tick(dt){const t=performance.now()/1000;updateSnow(dt||.016,t);snow2Tick(dt||.016,t);},get snowOn(){return snow.visible},get snow2On(){return snow2.visible},CSHOP,PORDER};
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;

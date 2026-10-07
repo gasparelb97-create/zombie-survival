@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-08b",
+  "rev": "2026-10-08c",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.74",
+      "date": "8 ott",
+      "items": [
+        "🐛 Corretti: errore all'avvio/rotazione schermo, boss bloccato mentre ti insegue, liste che non scorrevano o tornavano indietro",
+        "🏠 Rifugio più realistico: assediano la casa solo gli zombie vicini che ti hanno visto entrare, gli altri continuano a vagare",
+        "🪴 Vaso ridisegnato",
+        "🛡️ 10 nuove difese: porta blindata, barricata chiodata, bunker di sacchi, muro chiodato, campana d'allarme, balestra automatica, fossato, fossa con punte, trappola di fuoco, pavimento elettrico",
+        "🪤 Nuova categoria Trappole e nuove icone disegnate per tutti gli oggetti da costruire"
+      ]
+    },
     {
       "ver": "4.3.73",
       "date": "8 ott",
