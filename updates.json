@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07l",
+  "rev": "2026-10-07m",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.71",
+      "date": "7 ott",
+      "items": [
+        "⚡ Più fluido con tanti zombie: ogni zombie si disegna in un colpo solo invece di 12 pezzi",
+        "🖼️ Le immagini delle armi compaiono subito, nello zaino e nella barra",
+        "🚀 Gli effetti si preparano nel menu, così all'inizio della partita non ci sono scatti",
+        "🎵 La musica si prepara senza bloccare il gioco"
+      ]
+    },
     {
       "ver": "4.3.70",
       "date": "7 ott",
