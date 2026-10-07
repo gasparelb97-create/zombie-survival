@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07m",
+  "rev": "2026-10-08a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.72",
+      "date": "8 ott",
+      "items": [
+        "👥 Invita un amico: lui riceve 500 🪙 appena entra dal tuo link, tu 1000 🪙 quando arriva al giorno 2 o uccide 50 zombie",
+        "⭐ Se un amico invitato compra con le Stelle, ricevi il 10% in monete",
+        "🎁 Le monete degli inviti arrivano da sole quando apri il gioco, e nel tasto Invita vedi quanti amici hai invitato"
+      ]
+    },
     {
       "ver": "4.3.71",
       "date": "7 ott",
