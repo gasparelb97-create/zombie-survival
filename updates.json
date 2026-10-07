@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07d",
+  "rev": "2026-10-07e",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.63",
+      "date": "7 ott",
+      "items": [
+        "Gli zombie si muovono con un passo più naturale",
+        "Dove li colpisci esce sangue e si staccano pezzi",
+        "I modelli sono molto più dettagliati"
+      ]
+    },
     {
       "ver": "4.3.62",
       "date": "7 ott",
