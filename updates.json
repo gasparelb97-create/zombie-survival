@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07h",
+  "rev": "2026-10-07i",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.67",
+      "date": "7 ott",
+      "items": [
+        "🌧️ Pioggia a scrosci e nebbia più fitta, atmosfera ancora più cupa",
+        "🎯 Mirini nuovi per ogni arma che mostrano la dispersione reale, marcatore per colpi alla testa",
+        "🩸 Sangue più realistico, testa che esplode col colpo in testa e cadute con fisica",
+        "🔫 Armi nelle casse con confronto: Metti nello zaino o Sostituisci",
+        "📦 Munizioni divise tra le tue armi, scatole colorate per tipo e monete d'oro che rimbalzano e rotolano"
+      ]
+    },
     {
       "ver": "4.3.66",
       "date": "7 ott",
