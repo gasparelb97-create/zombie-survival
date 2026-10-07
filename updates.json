@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07k",
+  "rev": "2026-10-07l",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.70",
+      "date": "7 ott",
+      "items": [
+        "🔫 Il tasto Armi ha l'icona di una pistola",
+        "🎒 Nello zaino armi ogni arma ha il suo disegno, anche le armi in mano (1 e 2), e la lista scorre bene col dito",
+        "🔦 La torcia si accende davvero, anche di giorno, e il tasto è più comodo: giallo acceso, barrato spento",
+        "🧟 Zombie più curati: teste arrotondate, occhi incavati, naso, ciuffi, vestiti strappati, ferite e pelle di colori diversi"
+      ]
+    },
     {
       "ver": "4.3.69",
       "date": "7 ott",
