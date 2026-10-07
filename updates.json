@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07a",
+  "rev": "2026-10-07b",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.60",
+      "date": "7 ott",
+      "items": [
+        "Cinque zombie 3D ridisegnati: Errante, Predatore, Bruto, Infetto e Abominio, con vita, forza e velocità diverse",
+        "Animazioni articolate di cammino, corsa, attacco e caduta; arti distruttibili con colpi localizzati e movimento a terra dopo la perdita delle gambe",
+        "Parti staccate con gravità, urti e arresto a terra; percezione distinta, aggiramento degli ostacoli e gestione corretta al riutilizzo degli zombie"
+      ]
+    },
     {
       "ver": "4.3.59",
       "date": "7 ott",
