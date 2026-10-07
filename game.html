@@ -3361,7 +3361,7 @@ function drawRadar(){const W=radar.width,H=radar.height,cx=W/2,cy=H/2,R=W/2-3,sc
 const SCORE_BOT='Zombie_SurvivalGame_bot',SCORE_SALT='zs-score-2026';let curPendR=null;
 function rnd8(){const c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',a=new Uint8Array(8);try{crypto.getRandomValues(a);}catch(e){for(let i=0;i<8;i++)a[i]=Math.random()*256;}let r='';for(const x of a)r+=c[x%62];return r;}
 function pend(){const q=LS.get('zs_pend',[]),ws=weekStart();return Array.isArray(q)?q.filter(x=>x&&Math.abs(x.wk-ws)<36e5&&x.k>=0):[];}
-function queueScore(){if(NEXT_CITY)return null;try{if((game.kills|0)<=0)return null;const q=pend();let p=curPendR&&q.find(x=>x.r===curPendR);
+function queueScore(){try{if((game.kills|0)<=0)return null;const q=pend();let p=curPendR&&q.find(x=>x.r===curPendR);
   if(!p){p={r:rnd8()};q.push(p);curPendR=p.r;}Object.assign(p,{k:game.kills|0,w:Math.max(1,SV.day|0),n:(SV.streak|0),s:Math.round(S.score)||0,d:SET.diff,wk:weekStart()});
   LS.set('zs_pend',q.slice(-6));updPend();return p;}catch(e){return null;}}
 function bestPend(){const q=pend();return q.sort((a,b)=>b.k-a.k||b.w-a.w)[0]||null;}
@@ -6330,7 +6330,7 @@ function ai437Shield(p){return !!(SV.on&&AI432.enc&&p&&!ai432Inside(p.x,p.z));}
 // ======================= 4.3.9 =======================
 // ---- shared weekly leaderboard (Cloudflare Worker). Fill ZS_API with the worker URL, e.g. 'https://zs-classifica.<account>.workers.dev'.
 //      Empty = old behaviour (bot link). Inside Telegram (initData present) scores are POSTed silently; failures stay queued (zs_pend).
-const ZS_API=NEXT_CITY?'':'https://zs-classifica.gasparelb97.workers.dev';
+const ZS_API='https://zs-classifica.gasparelb97.workers.dev';
 const ONL439={t:0,data:null,busy:false,cbs:[],sending:false,last:null};
 const KS439={ack:0,ackS:0};
 {const _sg439=startGame;startGame=function(){KS439.ack=0;KS439.ackS=0;curPendR=null;return _sg439.apply(this,arguments);};}
