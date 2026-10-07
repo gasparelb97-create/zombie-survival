@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07j",
+  "rev": "2026-10-07k",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.69",
+      "date": "7 ott",
+      "items": [
+        "⚡ Partita più fluida: niente scatti all'inizio e meno micro-blocchi durante il gioco",
+        "🔦 Tasto torcia spostato, non copre più il tasto spara",
+        "🪙 Le monete si raccolgono subito quando sei vicino, anche mentre cadono",
+        "😱 Più suspense: ogni tanto si sentono urla lontane, soprattutto di notte"
+      ]
+    },
     {
       "ver": "4.3.68",
       "date": "7 ott",
