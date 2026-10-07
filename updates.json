@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07g",
+  "rev": "2026-10-07h",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,16 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.66",
+      "date": "7 ott",
+      "items": [
+        "🌫️ Atmosfera più cupa: nebbiolina sulla città e luce più scura",
+        "💡 Lampioni con luce calda, aloni e coni di luce; torcia più forte e lunga",
+        "🗺️ Minimappa nuova: zoom sul giocatore, strade, edifici, zombie e direzione",
+        "🧟 Più zombie in giro e orde più grandi"
+      ]
+    },
     {
       "ver": "4.3.65",
       "date": "7 ott",
