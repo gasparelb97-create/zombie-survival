@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07f",
+  "rev": "2026-10-07g",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.65",
+      "date": "7 ott",
+      "items": [
+        "Gli zombie camminano con un passo più naturale, ginocchia e braccia in opposizione",
+        "Nell'arena gli altri giocatori sono persone che camminano, non manichini",
+        "Li vedi di fronte, con volto, braccia, gambe e un'arma in mano"
+      ]
+    },
     {
       "ver": "4.3.64",
       "date": "7 ott",
