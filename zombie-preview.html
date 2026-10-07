@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zombie Survival — cinque zombie 3D</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10151b;color:#e7edf1;font:14px system-ui}canvas{display:block;width:100%;height:72vh}header{padding:18px 22px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;border-bottom:1px solid #313b44}h1{font-size:18px;margin:0 auto 0 0}button,select{background:#29353d;color:#fff;border:1px solid #53646e;padding:10px 14px;border-radius:8px}button:hover{background:#43524d}.info{padding:12px 22px;display:flex;flex-wrap:wrap;gap:12px}.card{padding:10px 16px;background:#1c252c;border:1px solid #34434c;border-radius:8px;flex:1;min-width:135px}.card b{display:block;color:#d4b789;font-size:17px}.card small{color:#9eafb9}.note{margin:8px 22px;color:#9eafb9;font-size:12px}button.active{border-color:#d4b789}
+</style></head><body>
+<header><h1>BESTIARIO / ZOMBIE SURVIVAL</h1><select id="mode"><option value="walk">Cammino</option><option value="atk">Attacco</option><option value="crawl">A terra</option><option value="death">Morte</option><option value="idle">Fermi</option></select><button id="rotate">Ruota modelli</button><button id="restart">Ripeti</button></header>
+<canvas id="view"></canvas><div class="info" id="info"></div><p class="note">Modelli originali articolati. Le statistiche sono di base; difficoltà, ondate e potenziamenti modificano il combattimento nel gioco.</p>
+<script src="assets/zombies-v2/three-r160.js"></script><script src="assets/zombies-v2/zombies.js"></script><script src="assets/zombies-v2/runtime.js"></script>
+<script>
+const T=window.THREE,Z=window.ZombieV2,renderer=new T.WebGLRenderer({canvas:document.getElementById('view'),antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setClearColor(0x10151b);renderer.outputColorSpace=T.SRGBColorSpace;
+renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;
+const scene=new T.Scene(),camera=new T.PerspectiveCamera(34,1,.1,80);camera.position.set(0,3.4,14.5);camera.lookAt(0,1.7,0);
+scene.add(new T.HemisphereLight(0xd5e8f5,0x51443a,2));const key=new T.DirectionalLight(0xffdfb3,3);key.position.set(-3,5,6);scene.add(key);
+const rim=new T.DirectionalLight(0x94bdd6,2);rim.position.set(2,4,-4);scene.add(rim);
+const floor=new T.Mesh(new T.PlaneGeometry(30,30),new T.MeshLambertMaterial({color:0x263038}));floor.rotation.x=-Math.PI/2;floor.position.y=-.015;scene.add(floor);
+const dimensions={normal:[1,1],runner:[.93,.88],tank:[1.42,1.3],bloater:[1.08,1.45],boss:[2.3,1.35]};
+const list=[];let i=0,elapsed=0,spin=false;const mode=document.getElementById('mode');
+for(const [name,p] of Object.entries(Z.profiles)){
+ const [scale,width]=dimensions[name],V={...p,name,scale,width,eyes:name==='bloater'?0x9aa955:name==='runner'?0xc09b63:0xb48768,heavy:name==='tank'||name==='boss'};
+ const z=Z.create(T,V,60007);Z.reset(z);z.g.visible=true;z.g.position.x=[-4.7,-2.65,-.25,2.05,4.55][i++];z.g.rotation.y=-.15;scene.add(z.g);list.push(z);
+ const card=document.createElement('div');card.className='card';card.innerHTML='<b>'+p.label+'</b><small>Vita '+p.hp+' · Forza '+(p.blastDamage??p.dmg)+'<br>Velocità '+p.speed[0]+'–'+p.speed[1]+' m/s'+(name==='bloater'?'<br>Danno da esplosione':'')+'</small>';document.getElementById('info').appendChild(card);
+}
+function restart(){elapsed=0;for(const z of list){const x=z.g.position.x;Z.reset(z);z.g.position.x=x;z.g.visible=true;}}
+mode.onchange=restart;document.getElementById('restart').onclick=restart;document.getElementById('rotate').onclick=()=>spin=!spin;
+function size(){const c=renderer.domElement;renderer.setSize(c.clientWidth,c.clientHeight,false);camera.aspect=c.clientWidth/c.clientHeight;camera.fov=innerWidth<700?50:34;camera.position.z=innerWidth<700?23:14.5;camera.updateProjectionMatrix();}addEventListener('resize',size);size();
+let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;elapsed+=dt;
+ for(const z of list){z.state=mode.value==='atk'?'atk':'walk';z.phase=elapsed*(z.V.name==='runner'?8:3.7);z.atkT=elapsed%1.1;z.moveV2=mode.value==='idle'?.1:1;z.crawl=mode.value==='crawl'?1:0;z.crawlT=2;
+   if(mode.value==='death'){z.blob.visible=false;Z.deathPose(z,Math.min(1.3,elapsed),1);z.g.position.y=0;const y=Z.minY(T,z.body);z.g.position.y=.025-y;}
+   else{z.blob.visible=true;Z.pose(z,elapsed);if(z.crawl){z.g.position.y=0;const y=Z.minY(T,z.body);z.g.position.y=Math.max(0,.02-y);}}
+   if(spin)z.g.rotation.y+=dt*.35;
+ }renderer.render(scene,camera);requestAnimationFrame(frame);
+}window.__zombiePreview={list,scene,camera,renderer,Z,mode,restart};requestAnimationFrame(frame);
+</script></body></html>

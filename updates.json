@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07b",
+  "rev": "2026-10-07c",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.61",
+      "date": "7 ott",
+      "items": [
+        "Si gioca con cinque zombie nuovi: Errante, Predatore, Bruto, Infetto e Abominio",
+        "Camminano, attaccano e cadono con un corpo articolato; un colpo a una gamba li mette a terra",
+        "Le parti staccate cadono e si fermano; la città nuova resta l'unica mappa"
+      ]
+    },
     {
       "ver": "4.3.60",
       "date": "7 ott",
