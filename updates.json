@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07e",
+  "rev": "2026-10-07f",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.64",
+      "date": "7 ott",
+      "items": [
+        "Tornano gli zombie dell'inizio, quelli a cubi: Zombie, Corridore, Gigante, Esplosivo e BOSS",
+        "I corpi lisci della versione precedente non sono più in partita",
+        "Il passo, il sangue e i pezzi sul colpo restano"
+      ]
+    },
     {
       "ver": "4.3.63",
       "date": "7 ott",
