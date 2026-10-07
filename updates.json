@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07c",
+  "rev": "2026-10-07d",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,15 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.62",
+      "date": "7 ott",
+      "items": [
+        "Tornano gli zombie di prima: Zombie, Corridore, Gigante, Esplosivo e BOSS",
+        "I cinque modelli nuovi non sono più in partita",
+        "La città nuova resta l'unica mappa"
+      ]
+    },
     {
       "ver": "4.3.61",
       "date": "7 ott",
