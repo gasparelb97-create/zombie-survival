@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-07i",
+  "rev": "2026-10-07j",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.68",
+      "date": "7 ott",
+      "items": [
+        "🔦 Torcia vera: fascio stretto dove miri, pulsante per accenderla e spegnerla (tasto F su PC)",
+        "🚪 Porte e cancelli si incastrano nel muro senza spazi",
+        "🎒 Porti 2 armi da fuoco, le altre restano nello zaino; ascia e piccone sempre con te",
+        "🏗️ Nuovi pezzi: muro rinforzato, feritoia, tagliola, palizzata; i pezzi si sbloccano con il livello",
+        "🌫️ Notte con nebbia fitta, vento e lamenti lontani; fulmini e tuoni durante la pioggia, che non entra più nelle case"
+      ]
+    },
     {
       "ver": "4.3.67",
       "date": "7 ott",
