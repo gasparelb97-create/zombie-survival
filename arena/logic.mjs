@@ -416,6 +416,7 @@ export function createHub() {
       p.ammo = g.melee ? -1 : (g.mag + g.reserve);
       p.tp = 1;
       p.hist = [];
+      p.k = 0; p.d = 0; p.dmg = 0;
       match.players.set(p.id, p);
     });
     for (let n = 0; n < 6; n++) spawnPickup(match, true);
@@ -475,7 +476,8 @@ export function createHub() {
     const x = +msg.x, z = +msg.z;
     if (!Number.isFinite(x) || !Number.isFinite(z)) return;
     const dx = x - p.x, dz = z - p.z;
-    if (dx * dx + dz * dz > 64) return;
+    // v4.3.77 reconciliation: a rejected jump tells the client where the server keeps it
+    if (dx * dx + dz * dz > 64) { if (!p.tp) p.tp = 2; return; }
     const d = Math.hypot(x, z);
     if (d > ARENA_R) {
       p.x = x * (ARENA_R / d);
@@ -525,6 +527,7 @@ export function createHub() {
     if (!g.melee) p.ammo = Math.max(0, p.ammo - 1);
     let best = null;
     let bestId = null;
+    let reach = g.range;
     for (const o of match.players.values()) {
       if (o.id === p.id || !o.alive || o.team === p.team) continue;
       if (now < o.invuln) continue;
@@ -541,6 +544,16 @@ export function createHub() {
       }
       if (blocked) best = null;
     }
+    // v4.3.77: the other players see this shot (muzzle flash, tracer, sound); length stops at the first cover
+    if (best) reach = best.along;
+    else {
+      for (const b of BLOCKS) {
+        const t = rayAabb(ox, oy, oz, dx, dy, dz, b, reach);
+        if (t != null && t < reach) reach = t;
+      }
+    }
+    const sh = { t: 'sh', id: p.id, x: +ox.toFixed(2), y: +oy.toFixed(2), z: +oz.toFixed(2), dx: +dx.toFixed(3), dy: +dy.toFixed(3), dz: +dz.toFixed(3), l: +Math.min(reach, 80).toFixed(1) };
+    for (const o of match.players.values()) if (o.id !== p.id) send(o.ws, sh);
     if (!best) return;
     const victim = match.players.get(bestId);
     let dmg = g.dmg;
@@ -551,6 +564,7 @@ export function createHub() {
     if (victim.buffs.arm > now) dmg *= 0.62;
     dmg = Math.max(1, Math.round(dmg));
     victim.hp -= dmg;
+    p.dmg = (p.dmg | 0) + Math.min(dmg, Math.max(0, victim.hp + dmg));
     const fx = { t: 'fx', by: p.id, victim: victim.id, part: best.part, dmg: dmg, hp: Math.max(0, victim.hp) };
     if (victim.hp <= 0) {
       victim.hp = 0;
@@ -558,6 +572,8 @@ export function createHub() {
       victim.respawnAt = now + RESPAWN_MS;
       victim.buffs = { dmg: 0, spd: 0, arm: 0 };
       match.scores[p.team] += 1;
+      p.k = (p.k | 0) + 1;
+      victim.d = (victim.d | 0) + 1;
       fx.kill = 1;
       fx.scores = match.scores.slice();
     }
@@ -615,7 +631,7 @@ export function createHub() {
       basePlayers.push({
         id: p.id, name: p.name, team: p.team, weapon: p.weapon,
         x: +p.x.toFixed(2), z: +p.z.toFixed(2), yaw: +p.yaw.toFixed(3), pitch: +p.pitch.toFixed(3),
-        hp: p.hp | 0, alive: p.alive ? 1 : 0
+        hp: p.hp | 0, alive: p.alive ? 1 : 0, k: p.k | 0, d: p.d | 0
       });
     }
     const left = Math.max(0, match.ends - now);
@@ -632,7 +648,7 @@ export function createHub() {
           spd: Math.max(0, p.buffs.spd - now),
           arm: Math.max(0, p.buffs.arm - now)
         },
-        tp: p.tp ? 1 : 0,
+        tp: p.tp | 0,
         x: +p.x.toFixed(2),
         z: +p.z.toFixed(2),
         yaw: +p.yaw.toFixed(3)
@@ -645,8 +661,11 @@ export function createHub() {
   function endMatch(m) {
     if (!matches.delete(m)) return;
     const winner = m.scores[0] === m.scores[1] ? -1 : (m.scores[0] > m.scores[1] ? 0 : 1);
+    const board = [];
+    for (const p of m.players.values()) board.push({ id: p.id, name: p.name, team: p.team, weapon: p.weapon, k: p.k | 0, d: p.d | 0, dmg: p.dmg | 0 });
+    board.sort((a, b) => b.k - a.k || a.d - b.d || b.dmg - a.dmg);
     for (const p of m.players.values()) {
-      send(p.ws, { t: 'end', scores: m.scores.slice(), winner: winner });
+      send(p.ws, { t: 'end', scores: m.scores.slice(), winner: winner, board: board });
     }
     tryStart();
     tellLobby();

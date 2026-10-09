@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-09b",
+  "rev": "2026-10-09c",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,22 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.77",
+      "date": "9 ott",
+      "items": [
+        "⚔️ Arena rifatta: mappa con sacchi, casse, muri di pietra, colonne con bracieri, spalti con il pubblico, torri e stendardi",
+        "🧍 Giocatori ridisegnati con animazioni fluide: corsa, passo laterale e all'indietro, mira, rinculo, colpi subiti e caduta",
+        "🎯 Mirino in Arena (tasto mira o tasto destro), numeri danno, killfeed, serie di uccisioni e colpi degli avversari visibili",
+        "💊 Bonus dell'Arena disegnati bene: medikit, munizioni, giubbotto, potenziamento e velocità con nome e descrizione",
+        "🎬 Introduzione con squadre e 3-2-1, schermata finale VITTORIA/SCONFITTA e classifica con uccisioni, morti e danni",
+        "🔫 In Arena solo la tua arma: niente costruzioni, zaino o missioni",
+        "🚪 Porte e cancelli ridisegnati, con cornici, cardini, borchie e maniglie, e ora si aprono con un'animazione",
+        "🧱 20 nuovi elementi: porta rinforzata, cancelletto, portone doppio, muri di mattoni e tronchi, cavallo di frisia, denti di drago, bobina Tesla, lama rotante, barriera Hesco, barile esplosivo, stazione medica, cassa munizioni, lampione solare, carbonaia, spaventapasseri, zucca, panchina, statua e catasta di legna",
+        "🟥 Il tappeto ora si può mettere anche sulle fondamenta",
+        "🐦‍⬛ Corvi in giro vicino a te: saltellano, beccano e volano via. Scarafaggi piccoli e lucidi dentro le case e nella base"
+      ]
+    },
     {
       "ver": "4.3.76",
       "date": "9 ott",
