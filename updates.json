@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-09c",
+  "rev": "2026-10-09d",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,13 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.78",
+      "date": "9 ott",
+      "items": [
+        "📱 App Android a schermo intero: niente barre, interfaccia che usa tutto lo schermo (solo il notch resta libero)"
+      ]
+    },
     {
       "ver": "4.3.77",
       "date": "9 ott",
