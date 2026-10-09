@@ -12,8 +12,8 @@ android {
         applicationId "com.gaspare.zombiesurvival"
         minSdk 24
         targetSdk 34
-        versionCode 478
-        versionName "4.3.78"
+        versionCode 479
+        versionName "4.3.79"
     }
 
     signingConfigs {
@@ -22,6 +22,11 @@ android {
             storePassword "zombiesurvival"
             keyAlias "zs"
             keyPassword "zombiesurvival"
+            // v1 (JAR) + v2 + v3: some OEM installers (ColorOS) reject APKs signed with v2 only
+            enableV1Signing true
+            enableV2Signing true
+            enableV3Signing true
+            enableV4Signing false
         }
     }
 
