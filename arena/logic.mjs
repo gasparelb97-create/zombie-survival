@@ -6,9 +6,11 @@ export const NEED = 6;
 export const NEED_DUEL = 2;
 export const RESPAWN_MS = 5000;
 export const INVULN_MS = 1500;
-export const ARENA_R = 32.6;
+// v4.3.76: the map is 25% larger (client applies the same ARENA_S to arena454)
+export const ARENA_S = 1.25;
+export const ARENA_R = 32.6 * ARENA_S;
 
-export const COVERS = [
+const COVERS_BASE = [
   [-14, -7, 3.4, 0.8, 1.7],
   [-14, 7, 3.4, 0.8, 1.7],
   [14, -7, 3.4, 0.8, 1.7],
@@ -31,9 +33,9 @@ export const COVERS = [
   [-4, -4, 1.6, 1.1, 1.8]
 ];
 
-export const PILLARS = [[-22, 0], [22, 0], [0, -22], [0, 22], [-18, -18], [18, 18], [-18, 18], [18, -18]];
+const PILLARS_BASE = [[-22, 0], [22, 0], [0, -22], [0, 22], [-18, -18], [18, 18], [-18, 18], [18, -18]];
 
-export const SPOTS = [
+const SPOTS_BASE = [
   [0, 0], [0, 5], [0, -5],
   [-11, -11], [11, 11], [-11, 11], [11, -11],
   [-6, 16], [6, -16], [16, 6], [-16, -6],
@@ -42,9 +44,14 @@ export const SPOTS = [
   [8, -8], [-8, 8]
 ];
 
+export const COVERS = COVERS_BASE.map(c => [c[0] * ARENA_S, c[1] * ARENA_S, c[2] * ARENA_S, c[3] * ARENA_S, c[4]]);
+export const PILLARS = PILLARS_BASE.map(p => [p[0] * ARENA_S, p[1] * ARENA_S]);
+export const PILLAR_HALF = 0.6 * ARENA_S;
+export const SPOTS = SPOTS_BASE.map(p => [p[0] * ARENA_S, p[1] * ARENA_S]);
+
 export const SPAWNS = [
-  [[-26.5, -5.5], [-26.5, 0], [-26.5, 5.5]],
-  [[26.5, -5.5], [26.5, 0], [26.5, 5.5]]
+  [[-31, -5.5], [-31, 0], [-31, 5.5]],
+  [[31, -5.5], [31, 0], [31, 5.5]]
 ];
 
 export const GUNS = {
@@ -76,7 +83,7 @@ const BUFF_MS = { dmg: 12000, spd: 10000, arm: 12000 };
 function blocks() {
   const out = [];
   for (const c of COVERS) out.push({ x0: c[0] - c[2] / 2, x1: c[0] + c[2] / 2, z0: c[1] - c[3] / 2, z1: c[1] + c[3] / 2, h: c[4] });
-  for (const p of PILLARS) out.push({ x0: p[0] - 0.6, x1: p[0] + 0.6, z0: p[1] - 0.6, z1: p[1] + 0.6, h: 3.4 });
+  for (const p of PILLARS) out.push({ x0: p[0] - PILLAR_HALF, x1: p[0] + PILLAR_HALF, z0: p[1] - PILLAR_HALF, z1: p[1] + PILLAR_HALF, h: 3.4 });
   return out;
 }
 const BLOCKS = blocks();
@@ -148,7 +155,7 @@ export function createHub() {
     hot,
     connect
   };
-  const timer = setInterval(tick, 100);
+  const timer = setInterval(tick, 33);
   if (timer.unref) timer.unref();
   return hub;
 
@@ -285,6 +292,7 @@ export function createHub() {
   function onClient(conn, msg) {
     if (msg.t === 'watch') return watch(conn, msg);
     if (msg.t === 'join' || msg.t === 'ready') return join(conn, msg);
+    if (msg.t === 'ping') { send(conn.ws, { t: 'pong', c: +msg.c || 0 }); return; }
     const p = conn.id ? findPlayer(conn.id) : null;
     if (!p || p.ws !== conn.ws) return;
     if (msg.t === 'arm') return setArm(p, msg);
@@ -407,6 +415,7 @@ export function createHub() {
       p.magSize = g.mag || 0;
       p.ammo = g.melee ? -1 : (g.mag + g.reserve);
       p.tp = 1;
+      p.hist = [];
       match.players.set(p.id, p);
     });
     for (let n = 0; n < 6; n++) spawnPickup(match, true);
@@ -475,8 +484,25 @@ export function createHub() {
       p.x = x;
       p.z = z;
     }
+    const h = p.hist || (p.hist = []);
+    h.push({ t: Date.now(), x: p.x, z: p.z });
+    if (h.length > 24) h.shift();
     if (Number.isFinite(+msg.yaw)) p.yaw = +msg.yaw;
     if (Number.isFinite(+msg.pitch)) p.pitch = Math.max(-1.4, Math.min(1.4, +msg.pitch));
+  }
+
+  function posAt(o, t) {
+    const h = o.hist;
+    if (!h || !h.length || o.tp) return null;
+    if (t >= h[h.length - 1].t) return null;
+    for (let i = h.length - 1; i > 0; i--) {
+      const b = h[i], a = h[i - 1];
+      if (t >= a.t) {
+        const k = (t - a.t) / Math.max(1, b.t - a.t);
+        return { x: a.x + (b.x - a.x) * k, z: a.z + (b.z - a.z) * k };
+      }
+    }
+    return { x: h[0].x, z: h[0].z };
   }
 
   function onShot(p, msg) {
@@ -494,13 +520,16 @@ export function createHub() {
     if (!Number.isFinite(ox) || !Number.isFinite(oy) || !Number.isFinite(oz)) return;
     if (Math.hypot(ox - p.x, oz - p.z) > 3 || oy < 0.6 || oy > 2.4) return;
     p.lastShot = now;
+    // v4.3.76 lag compensation: the shooter sees the others ~lag ms in the past (interpolation + round trip)
+    const lag = Number.isFinite(+msg.lag) ? Math.max(0, Math.min(350, +msg.lag)) : 0;
     if (!g.melee) p.ammo = Math.max(0, p.ammo - 1);
     let best = null;
     let bestId = null;
     for (const o of match.players.values()) {
       if (o.id === p.id || !o.alive || o.team === p.team) continue;
       if (now < o.invuln) continue;
-      const hit = capsule(ox, oy, oz, dx, dy, dz, o.x, o.z, g.range);
+      const at = lag > 0 ? posAt(o, now - lag) : null;
+      const hit = capsule(ox, oy, oz, dx, dy, dz, at ? at.x : o.x, at ? at.z : o.z, g.range);
       if (!hit) continue;
       if (!best || hit.along < best.along) { best = hit; bestId = o.id; }
     }
@@ -574,11 +603,12 @@ export function createHub() {
         p.invuln = now + INVULN_MS;
         p.respawnAt = 0;
         p.tp = 1;
+        p.hist = [];
       }
     }
     if (now >= match.nextSpawn) spawnPickup(match, false);
     if (now >= match.ends) { endMatch(match); return; }
-    if (match.lastSnap && now - match.lastSnap < 80) return;
+    if (match.lastSnap && now - match.lastSnap < 62) return;
     match.lastSnap = now;
     const basePlayers = [];
     for (const p of match.players.values()) {

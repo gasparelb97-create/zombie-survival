@@ -1,9 +1,9 @@
 {
-  "version": 459,
-  "game_version": "4.3.59",
+  "version": 476,
+  "game_version": "4.3.76",
   "changes": [
-    "Nuova città 3D disponibile dal tasto Città nuova: 35 edifici accessibili e quartieri collegati; prima versione giocabile con salvataggi separati",
-    "Fari accesi, fumo animato, auto distrutte e ribaltate, asfalto rovinato, sangue, scheletri e ossa",
-    "Incroci senza superfici stradali sovrapposte; passaggi e interni verificati; la partita attuale resta accessibile"
+    "Arena più grande del 25%, movimenti più reattivi e aggiornamenti più frequenti (15 al secondo)",
+    "Mira assistita leggera e colpi compensati per il ritardo di rete: se lo vedi sotto il mirino, lo colpisci",
+    "Si vede l'arma vera in mano agli altri giocatori e schizzi di sangue sui colpi a segno"
   ]
 }

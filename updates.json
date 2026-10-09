@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-09a",
+  "rev": "2026-10-09b",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,22 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.76",
+      "date": "9 ott",
+      "items": [
+        "🎃 Halloween: schermata iniziale a tema con luna, pipistrelli e zucche",
+        "🪦 Nuovo cimitero con lapidi, cripte, cancellata, alberi secchi e nebbia… e tanti più zombie",
+        "🎩 Raro Ghigno Rosso: abito rosso, cilindro nero, più forte e veloce. Vale 5 💎!",
+        "🌕 Luna reale: segue la fase vera e la luce notturna cambia con la fase",
+        "🐦‍⬛ Corvi che volano via quando ti avvicini, ratti, scarafaggi e spazzatura in città",
+        "🎠 Parco abbandonato con altalene, scivolo, giostra e lampioni rotti",
+        "🧟 Più zombie sulla mappa e urla più varie, che si sentono in base alla distanza",
+        "🎒 Le risorse da terra vanno dritte nello zaino (se è pieno ti avvisa)",
+        "🌧️ La pioggia non entra più negli edifici",
+        "⚔️ Arena più grande, movimento più fluido, mira assistita, mirino migliore, sangue sui colpi e armi vere in mano agli avversari"
+      ]
+    },
     {
       "ver": "4.3.75",
       "date": "9 ott",
