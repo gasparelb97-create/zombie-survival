@@ -518,7 +518,7 @@ if(NEXT_CITY){
   for(let i=circles.length-1;i>=0;i--)if(!circles[i].node)circles.splice(i,1);
   solids.length=0;solids.push(ground,...Object.values(NIM));
   lamps.length=0;window.__cars23=[];window.__lamps23=[];window.SMOKE20=[];window.__poles23=null;
-  const city=window.buildCityV2(T,{scene,ground,boxes,circles,solids,houses:HOUSE_RECTS,assetBase:'assets/cc0/',anisotropy:ani432()});
+  const city=window.buildCityV2(T,{scene,ground,boxes,circles,solids,houses:HOUSE_RECTS,assetBase:'assets/cc0/',anisotropy:ani432(),quality:(()=>{try{const u=new URLSearchParams(location.search).get('gfx');if(u)return u;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/zc_gfx$/.test(k||'')){const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&v.q)return v.q;}}}catch(e){}return 'media';})()});
   window.CITY4319=city;
   // Stable new resource positions; the preview uses a separate save namespace.
   let ns=192837;const nr=()=>{ns=(Math.imul(ns,1664525)+1013904223)>>>0;return ns/4294967296;};

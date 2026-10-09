@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-08c",
+  "rev": "2026-10-09a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,17 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.75",
+      "date": "9 ott",
+      "items": [
+        "🏢 Interni dei palazzi ridisegnati: cucine, camere, uffici, ospedale, scuola, negozi e officine arredati, con finestre, quadri, lampade, scaffali pieni, detriti e sangue (dettagli in base alla grafica Bassa/Media/Alta)",
+        "⚔️ Arena: personaggi ridisegnati con elmetto, giubbotto tattico, zaino, guanti, volto e fucile impugnato con due mani",
+        "🚀 Arena più fluida: movimento degli avversari interpolato, grafica preparata prima di entrare e protezioni contro i blocchi",
+        "🎨 Nuova schermata Arena: modalità chiare (Duello 1v1 / Squadre 3v3), scelta arma con immagini, regole e premi",
+        "🪙 Premi Arena: monete per uccisioni, vittoria o pareggio (con limite giornaliero)"
+      ]
+    },
     {
       "ver": "4.3.74",
       "date": "8 ott",

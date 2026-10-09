@@ -153,6 +153,151 @@
     function furniture(mat, x, y, z, w, h, d, kind = 'furniture') {
       block(mat, x, y, z, w, h, d); collider(x, z, w, d, kind); furnitureCount++;
     }
+    // ---- 4.3.75: richer interiors. One tinted material (per-instance colour) + the shared batches, so the
+    // whole city still costs a handful of draw calls. Clutter scales with the graphics quality (env.quality).
+    const QI = env.quality === 'bassa' ? .4 : env.quality === 'alta' ? 1 : .72;
+    const tint = new T.MeshLambertMaterial({ color: 0xffffff }); m.tint = tint;
+    let es = 475113; const er = () => { es = (Math.imul(es, 1664525) + 1013904223) >>> 0; return es / 4294967296; };
+    const ea = (a, b) => a + (b - a) * er(), pick = arr => arr[Math.floor(er() * arr.length) % arr.length];
+    function tp(geo, c, x, y, z, sx, sy, sz, yaw = 0, rx = 0, rz = 0) { part(geo, tint, x, y, z, sx, sy, sz, yaw, rx, rz); const b = batches.get(geo.uuid + tint.uuid); b.parts[b.parts.length - 1][9] = c; }
+    const WOODS = [0x6b4a32, 0x7c5a3a, 0x5a3e2a, 0x8a6a48], FABRIC = [0x5d6f8a, 0x7a3a34, 0x4f6a4a, 0x8a7a5a, 0x6a5a7a], BOOKS = [0x8a2e26, 0x2e5a8a, 0x3d6b34, 0xc9a23a, 0x5a3a6a, 0xd8d0c0, 0x2a2a2a];
+    const WALLP = { home: [0x7a8f86, 0x9a7f6a, 0x6f7a94, 0x8f8a6a], hospital: [0x9ab0a8], school: [0x8a9a6a], police: [0x5f6f80], factory: [0x5a5a52], station: [0x6a7a7a], shop: [0x8a7a62, 0x6a8a84] };
+    function enrich(b, front, occ) {
+      const { x, z, w, d, kind } = b, iw = w / 2 - .19, id = d / 2 - .19, gap = kind === 'factory' ? 4 : 2.6, fz = z + front * id;
+      const OV = (r, s) => r.x0 < s.x1 && r.x1 > s.x0 && r.z0 < s.z1 && r.z1 > s.z0;
+      const res = [rect(x, fz - front * 1.9, gap + 1.6, 3.8), rect(x - w * .23, z + d * .14, 2.4, 2.4)];
+      const fits = r => r.x0 > x - iw - .01 && r.x1 < x + iw + .01 && r.z0 > z - id - .01 && r.z1 < z + id + .01 && !occ.some(s => OV(r, s)) && !res.some(s => OV(r, s));
+      // walls: inward normal n, tangent t, origin on the inner surface; windows as intervals along t
+      const walls = [];
+      const win = (len, step, start, skipDoor) => { const o = []; for (let u = start; u < len / 2 - 1; u += step) { if (skipDoor && Math.abs(u) < gap / 2 + .8) continue; o.push(u); } return o; };
+      for (const s of [-1, 1]) {
+        const nz = -s, yaw = Math.atan2(0, nz); // wall at z + s*id, normal pointing back into the room
+        walls.push({ ox: x, oz: z + s * id, nx: 0, nz, yaw, tx: Math.cos(yaw), tz: -Math.sin(yaw), L: w - .5, door: s === front, wins: win(w, 3, -w / 2 + 2, s === front).map(u => u * Math.cos(yaw)), ww: kind === 'factory' ? 1.2 : 1.2 });
+        const nx = -s, yaw2 = Math.atan2(nx, 0);
+        walls.push({ ox: x + s * iw, oz: z, nx, nz: 0, yaw: yaw2, tx: Math.cos(yaw2), tz: -Math.sin(yaw2), L: d - .5, door: false, wins: win(d, 3.2, -d / 2 + 2, false).map(u => u * -Math.sin(yaw2)), ww: 1.05 });
+      }
+      // local (u along wall, v into the room) -> world
+      const W = (wl, u, v) => [wl.ox + wl.tx * u + wl.nx * v, wl.oz + wl.tz * u + wl.nz * v];
+      const LB = (wl, c, u, y, v, sw, sh, sd, rx = 0, rz = 0) => { const p = W(wl, u, v); tp(box, c, p[0], y, p[1], sw, sh, sd, wl.yaw, rx, rz); };
+      const LM = (wl, mat, u, y, v, sw, sh, sd) => { const p = W(wl, u, v); block(mat, p[0], y, p[1], sw, sh, sd, wl.yaw); };
+      const LC = (wl, c, u, y, v, r, h, geo = cyl) => { const p = W(wl, u, v); tp(geo, c, p[0], y, p[1], r * 2, h, r * 2, wl.yaw); };
+      const foot = (wl, u, v, sw, sd) => { const a = W(wl, u - sw / 2, v), b2 = W(wl, u + sw / 2, v + sd); return { x0: Math.min(a[0], b2[0]), x1: Math.max(a[0], b2[0]), z0: Math.min(a[1], b2[1]), z1: Math.max(a[1], b2[1]) }; };
+      const winHit = (wl, u0, u1) => wl.wins.some(c => u1 > c - wl.ww / 2 - .12 && u0 < c + wl.ww / 2 + .12);
+      const tall = new Map(walls.map(wl => [wl, []]));
+      // ---- furniture pieces (draw in wall space: u centre, v from the wall) ----
+      const P = {
+        wardrobe: { w: 1.2, d: .6, h: 2, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, 1, .3, 1.2, 2, .6); LB(wl, 0x2a2018, u, 1.05, .605, .02, 1.8, .02); for (const s of [-1, 1]) LB(wl, 0x9a9a92, u + s * .08, 1.05, .62, .03, .22, .03); LB(wl, c, u, 2.03, .3, 1.26, .06, .64); if (er() < .5 * QI) LB(wl, 0x8a7a5a, u + .2, 2.2, .3, .5, .3, .4); } },
+        books: { w: 1, d: .35, h: 1.9, f(wl, u) { const c = pick(WOODS); for (const s of [-1, 1]) LB(wl, c, u + s * .48, .95, .175, .04, 1.9, .35); LB(wl, c, u, .95, .02, 1, 1.9, .03); for (const y of [.06, .5, .95, 1.4, 1.88]) LB(wl, c, u, y, .175, .96, .035, .34);
+          for (const y of [.08, .52, .97, 1.42]) { let k = -.44; while (k < .42) { const bw = ea(.035, .08), bh = ea(.24, .36); if (er() < .82 * (QI + .25)) LB(wl, pick(BOOKS), u + k + bw / 2, y + bh / 2 + .02, .19, bw, bh, ea(.18, .26), 0, er() < .12 ? .25 : 0); k += bw + .006; } } } },
+        fridge: { w: .75, d: .7, h: 1.8, f(wl, u) { LB(wl, 0xd8d6cc, u, .9, .35, .74, 1.8, .68); LB(wl, 0x9a9a92, u, 1.18, .7, .72, .015, .01); LB(wl, 0x707070, u + .3, 1.45, .72, .03, .35, .03); LB(wl, 0x707070, u + .3, .8, .72, .03, .25, .03); if (er() < .6) LB(wl, pick(BOOKS), u - .1, 1.5, .695, .12, .09, .01); } },
+        stove: { w: .7, d: .65, h: .92, f(wl, u) { LB(wl, 0xcfccc2, u, .45, .32, .7, .9, .64); LB(wl, 0x1e1e1e, u, .915, .32, .7, .03, .64); for (const a of [-1, 1]) for (const c of [-1, 1]) LC(wl, 0x3a3a3a, u + a * .17, .935, .32 + c * .15, .08, .02); LB(wl, 0x151515, u, .42, .645, .5, .32, .01); LB(wl, 0x8a8a8a, u, .64, .66, .5, .03, .03); } },
+        sink: { w: 1.2, d: .6, h: .92, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, .44, .3, 1.2, .88, .58); LB(wl, 0xbdb6a6, u, .9, .3, 1.24, .05, .62); LB(wl, 0x6f7478, u - .2, .905, .32, .5, .04, .36); LC(wl, 0x9aa0a6, u - .2, 1.05, .1, .02, .25); LB(wl, 0x9aa0a6, u - .2, 1.17, .17, .03, .03, .16); LB(wl, 0x2a2018, u + .3, .45, .585, .01, .7, .01);
+          if (er() < .7 * QI) { LC(wl, 0xe8e4da, u + .35, .97, .3, .06, .1); LC(wl, 0x3a6a9a, u + .5, 1.0, .25, .04, .16); } LB(wl, c, u, 1.7, .17, 1.2, .7, .34); LB(wl, 0x2a2018, u, 1.7, .345, .01, .62, .01); } },
+        sideboard: { w: 1.4, d: .45, h: .8, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, .4, .22, 1.4, .8, .44); for (const s of [-.35, .35]) LB(wl, 0x2a2018, u + s, .45, .445, .6, .01, .01); LB(wl, 0xb0a890, u, .82, .22, 1.44, .03, .46);
+          if (er() < .8 * QI) { LC(wl, 0x8a6a48, u - .45, .95, .22, .07, .24); LC(wl, 0xe8d8a8, u - .45, 1.13, .22, .13, .16, cone); } if (er() < .7 * QI) LB(wl, pick(BOOKS), u + .3, .93, .2, .26, .2, .03); } },
+        tv: { w: 1.3, d: .45, h: .55, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, .25, .22, 1.3, .5, .44); LB(wl, 0x151515, u, .86, .2, 1.1, .64, .05); LB(wl, 0x2a3036, u, .86, .225, 1.02, .56, .01); if (er() < .5) LB(wl, 0x8a9aa0, u + .12, .9, .232, .5, .015, .005, 0, .7); LB(wl, 0x151515, u, .53, .2, .3, .06, .2); } },
+        desk: { w: 1.3, d: .65, h: .76, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, .74, .32, 1.3, .05, .64); for (const s of [-1, 1]) LB(wl, c, u + s * .6, .36, .32, .05, .72, .6); LB(wl, c, u + .38, .45, .32, .48, .5, .58);
+          if (kind === 'police' || kind === 'school' || er() < .5) { LB(wl, 0x1e1e1e, u - .15, 1.0, .18, .5, .32, .03); LB(wl, 0x3a5a6a, u - .15, 1.0, .198, .45, .27, .005); LB(wl, 0x2a2a2a, u - .15, .8, .2, .08, .1, .06); LB(wl, 0x2a2a2a, u - .1, .775, .42, .42, .015, .14); }
+          for (let i = 0; i < 1 + Math.round(3 * QI); i++) LB(wl, 0xe8e4da, u + ea(-.5, .5), .77 + i * .004, ea(.3, .55), .21, .004, .29, 0, 0); 
+          const cu = u - .15, p0 = W(wl, cu, 1.0); tp(box, 0x2a2a2a, p0[0], .46, p0[1], .44, .06, .44, wl.yaw + ea(-.4, .4)); LB(wl, 0x2a2a2a, cu, .75, 1.22, .42, .5, .05); LC(wl, 0x4a4a4a, cu, .22, 1.0, .03, .42); } },
+        dresser: { w: 1, d: .5, h: 1.05, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, .52, .25, 1, 1.04, .5); for (const y of [.22, .52, .82]) { LB(wl, 0x2a2018, u, y + .14, .505, .94, .01, .01); LB(wl, 0x9a9a92, u, y, .51, .14, .025, .02); } if (er() < .6 * QI) LB(wl, 0x9ab0b8, u, 1.45, .03, .6, .7, .02); } },
+        plant: { w: .55, d: .55, h: 1.1, f(wl, u) { LC(wl, 0x9a5a3a, u, .2, .28, .2, .4); LC(wl, 0x3a2a1e, u, .4, .28, .17, .02); const p = W(wl, u, .28); part(sphere, m.leaf, p[0], .72, p[1], .55, .6, .55); part(sphere, m.leaf2, p[0] + .1, .95, p[1] - .05, .35, .4, .35); } },
+        lockers: { w: 1.2, d: .5, h: 1.9, f(wl, u) { const c = pick([0x5a6a7a, 0x6a7a5a, 0x7a5a4a]); LB(wl, c, u, .95, .25, 1.2, 1.9, .5); for (const k of [-.4, 0, .4]) { LB(wl, 0x2a2f33, u + k + .2, .95, .505, .01, 1.84, .01); for (const y of [1.6, 1.68, 1.76]) LB(wl, 0x2a2f33, u + k, y, .505, .24, .02, .01); LB(wl, 0x9a9a92, u + k + .14, 1.05, .51, .03, .12, .02); } if (er() < .35) LB(wl, c, u + .4, .95, .62, .38, 1.8, .03, 0, .02); } },
+        filing: { w: .55, d: .65, h: 1.32, f(wl, u) { LB(wl, 0x7a8288, u, .66, .32, .5, 1.32, .62); for (const y of [.2, .52, .84, 1.16]) { LB(wl, 0x4a5258, u, y + .15, .635, .48, .01, .01); LB(wl, 0xa0a6aa, u, y, .64, .14, .03, .02); } if (er() < .4) LB(wl, 0x7a8288, u, .2, .85, .46, .28, .4); } },
+        cooler: { w: .45, d: .45, h: 1.45, f(wl, u) { LB(wl, 0xd8d6cc, u, .5, .22, .38, 1, .38); LC(wl, 0x6aa0c8, u, 1.2, .22, .16, .42); LB(wl, 0x3a6a9a, u - .08, .82, .42, .05, .05, .04); } },
+        cabinet: { w: 1, d: .45, h: 1.9, f(wl, u) { LB(wl, 0xd8d8d0, u, .95, .22, 1, 1.9, .44); LB(wl, 0x34474a, u, 1.35, .445, .9, .9, .01); for (const y of [1.1, 1.45]) LB(wl, 0xc0c0b8, u, y, .3, .9, .02, .34); for (let i = 0; i < Math.round(6 * QI); i++) LC(wl, pick([0xe8e4da, 0xc8a050, 0x8ab0d0]), u + ea(-.38, .38), 1.17 + (i % 2) * .35, .3, .04, .12); LB(wl, 0x8a2e26, u, 1.82, .45, .2, .2, .005); } },
+        oxygen: { w: .5, d: .4, h: 1.3, f(wl, u) { for (const s of [-.12, .12]) { LC(wl, s < 0 ? 0x3d7b34 : 0xd8d8d0, u + s, .6, .2, .1, 1.2); LC(wl, 0x707070, u + s, 1.25, .2, .03, .1); } } },
+        vending: { w: .95, d: .8, h: 1.95, f(wl, u) { const c = pick([0x8a2e26, 0x2e5a8a, 0x3d6b34]); LB(wl, c, u, .97, .4, .95, 1.94, .8); LB(wl, 0x2a3036, u - .12, 1.15, .805, .6, 1.2, .01); const p = W(wl, u - .12, .81); block(m.lamp, p[0], 1.15, p[1], .5, 1.05, .004, wl.yaw); LB(wl, 0x1a1a1a, u + .32, 1.2, .81, .15, .3, .01); LB(wl, 0x1a1a1a, u - .12, .3, .81, .6, .16, .02); } },
+        board: { w: 1.8, d: .06, h: 1.2, wall: 1, f(wl, u) { LB(wl, 0x2a2f2a, u, 1.65, .03, 1.8, 1.1, .04); LB(wl, 0x8a7a5a, u, 1.08, .06, 1.8, .04, .08); for (let i = 0; i < 4; i++) LB(wl, 0xd8d4c0, u - .7 + i * .38 + ea(0, .1), 1.75 - (i % 2) * .25, .055, ea(.15, .32), .015, .004); } },
+        notice: { w: 1.1, d: .05, h: 1, wall: 1, f(wl, u) { LB(wl, 0x8a6a48, u, 1.6, .025, 1.1, .8, .03); for (let i = 0; i < Math.round(7 * QI) + 1; i++) LB(wl, pick([0xe8e4da, 0xf0d070, 0xd8a8a8, 0xa8c8d8]), u + ea(-.42, .42), 1.6 + ea(-.28, .28), .045, .18, .22, .004, 0, ea(-.15, .15)); } },
+        barrels: { w: 1.4, d: .75, h: .95, f(wl, u) { for (const s of [-.35, .35]) { const c = pick([0x795542, 0x3a5a7a, 0x8a2e26, 0x4a5a3a]); LC(wl, c, u + s, .46, .36, .3, .92); LC(wl, 0x2a2a2a, u + s, .3, .36, .305, .03); LC(wl, 0x2a2a2a, u + s, .62, .36, .305, .03); } } },
+        workbench: { w: 2, d: .75, h: .95, f(wl, u) { LB(wl, 0x6a5a42, u, .9, .37, 2, .08, .74); for (const s of [-1, 1]) LB(wl, 0x3a3a3a, u + s * .92, .43, .37, .07, .86, .68); LB(wl, 0x6a5a42, u, .2, .37, 1.9, .04, .66); LB(wl, 0x5a6066, u + .65, 1.0, .5, .2, .12, .14); LB(wl, 0x3a3a3a, u, 1.5, .03, 1.9, .9, .03);
+          for (let i = 0; i < Math.round(6 * QI); i++) LB(wl, pick([0x8a2e26, 0x9a9a92, 0x2a2a2a]), u - .8 + i * .3, 1.5 + ea(-.2, .2), .06, .04, ea(.2, .35), .03, 0, ea(-.3, .3)); LB(wl, 0xc9a23a, u - .4, .97, .35, .3, .06, .12); } },
+        toolcab: { w: .8, d: .5, h: 1.1, f(wl, u) { LB(wl, 0xa83228, u, .55, .25, .8, 1.1, .5); for (const y of [.25, .45, .65, .85]) LB(wl, 0x2a2a2a, u, y, .505, .74, .015, .01); LB(wl, 0x9a9a92, u, 1.12, .25, .82, .03, .52); } },
+        pallet: { w: 1.3, d: 1.1, h: .9, f(wl, u) { LB(wl, 0x9a7a4a, u, .07, .55, 1.25, .12, 1.05); const n = 1 + Math.round(3 * QI); for (let i = 0; i < n; i++) { const p = W(wl, u + ea(-.3, .3), .55 + ea(-.25, .25)); tp(box, pick([0xc2a36b, 0xa07a45, 0xd8d0b8]), p[0], .28 + i * .16, p[1], ea(.5, .7), .18, ea(.38, .5), wl.yaw + ea(-.3, .3)); } } },
+        freezer: { w: 1.6, d: .8, h: .92, f(wl, u) { LB(wl, 0xd8d6cc, u, .45, .4, 1.6, .9, .78); LB(wl, 0x34474a, u, .91, .4, 1.5, .02, .68); for (let i = 0; i < Math.round(5 * QI); i++) LB(wl, pick(BOOKS), u + ea(-.65, .65), .86, .4 + ea(-.25, .25), .18, .08, .12); } },
+        display: { w: 1.25, d: .75, h: 2, f(wl, u) { LB(wl, 0xcfccc2, u, 1, .37, 1.25, 2, .72); LB(wl, 0x34474a, u, 1.05, .735, 1.1, 1.75, .01); const p = W(wl, u, .74); block(m.lamp, p[0], 1.92, p[1], 1, .05, .02, wl.yaw); for (const y of [.45, .9, 1.35]) for (let i = 0; i < Math.round(5 * QI); i++) LC(wl, pick(BOOKS), u - .45 + i * .22, y + .12, .45, .05, .22); } },
+        counter: { w: 1.8, d: .7, h: 1.05, f(wl, u) { const c = pick(WOODS); LB(wl, c, u, .5, .35, 1.8, 1, .68); LB(wl, 0xb0a890, u, 1.02, .35, 1.86, .05, .74); LB(wl, 0x2a2a2a, u + .5, 1.15, .3, .36, .22, .3); LB(wl, 0x3a5a6a, u + .5, 1.3, .25, .3, .15, .02, .4); if (er() < .6 * QI) LB(wl, 0xc9a23a, u - .4, 1.1, .4, .3, .12, .2); } },
+        rack: { w: .9, d: .4, h: 1.5, f(wl, u) { LB(wl, 0x707070, u, .75, .2, .9, 1.5, .4); for (const y of [.35, .75, 1.15]) for (let i = 0; i < 4; i++) LB(wl, pick(BOOKS), u - .33 + i * .22, y, .3, .18, .26, .02, .25, 0); } },
+        safe: { w: .7, d: .65, h: .9, f(wl, u) { LB(wl, 0x3a4048, u, .45, .32, .7, .9, .64); LC(wl, 0x9a9a92, u + .1, .55, .65, .07, .03); LB(wl, 0x9a9a92, u - .18, .5, .65, .03, .2, .03); } },
+        timetable: { w: 2, d: .06, h: 1, wall: 1, f(wl, u) { LB(wl, 0x1a1e22, u, 2.1, .03, 2, .8, .05); for (let i = 0; i < 5; i++) LB(wl, i % 2 ? 0xf0c040 : 0xe8e4da, u - .2 + ea(-.1, .1), 2.4 - i * .14, .058, ea(1, 1.6), .05, .004); } },
+        radiator: { w: .9, d: .14, h: .6, low: 1, f(wl, u) { for (let i = 0; i < 9; i++) LB(wl, 0xc8c4b8, u - .4 + i * .1, .45, .07, .07, .55, .1); LB(wl, 0xa8a49a, u, .2, .08, .9, .04, .05); } },
+        bins: { w: .9, d: .45, h: .9, f(wl, u) { for (const s of [-.22, .22]) { LC(wl, pick([0x3d6b34, 0x3a5a7a, 0x8a6a2a]), u + s, .38, .22, .2, .76); LC(wl, 0x2a2a2a, u + s, .78, .22, .21, .04); } } },
+        stretcher: { w: 2, d: .7, h: .85, f(wl, u) { LB(wl, 0x9aa0a6, u, .62, .4, 1.9, .06, .62); LB(wl, 0xd8d8d0, u, .72, .4, 1.8, .1, .56); for (const s of [-.85, .85]) { LB(wl, 0x707070, u + s, .3, .4, .04, .6, .5); LC(wl, 0x1a1a1a, u + s, .07, .4, .06, .04); } if (er() < .5) part(plane, bloodDecal, ...W(wl, u + .3, .4).slice(0, 1), .785, W(wl, u + .3, .4)[1], .7, .4, 1, 0, -Math.PI / 2); } },
+      };
+      const SETS = {
+        home: ['wardrobe', 'books', 'fridge', 'stove', 'sink', 'sideboard', 'tv', 'dresser', 'plant', 'desk', 'radiator', 'books', 'plant'],
+        hospital: ['cabinet', 'oxygen', 'stretcher', 'cabinet', 'sink', 'filing', 'radiator', 'notice', 'cooler'],
+        school: ['lockers', 'books', 'board', 'lockers', 'desk', 'notice', 'plant', 'books', 'radiator'],
+        police: ['lockers', 'filing', 'desk', 'safe', 'notice', 'cooler', 'filing', 'desk', 'board'],
+        factory: ['workbench', 'barrels', 'toolcab', 'pallet', 'lockers', 'barrels', 'pallet', 'workbench'],
+        station: ['vending', 'timetable', 'lockers', 'bins', 'vending', 'plant', 'notice'],
+        shop: ['display', 'counter', 'freezer', 'rack', 'display', 'bins', 'notice', 'rack'],
+        cafe: ['counter', 'display', 'sink', 'plant', 'books', 'notice', 'fridge']
+      };
+      const set = kind === 'shop' && (b.label === 'CAFFÈ' || b.label === 'PANETTERIA') ? SETS.cafe : SETS[kind] || SETS.shop;
+      let k = Math.floor(er() * set.length);
+      for (const wl of walls) {
+        let u = -wl.L / 2 + .25;
+        while (u < wl.L / 2 - .25) {
+          const key = set[k % set.length], it = P[key];
+          if (!it || u + it.w > wl.L / 2 - .25) { u += .4; k++; if (u > wl.L / 2 - .3) break; continue; }
+          const uc = u + it.w / 2, r = foot(wl, uc, it.wall ? 0 : .02, it.w, Math.max(.1, it.d));
+          const tallOk = it.h <= .95 || !winHit(wl, u, u + it.w), doorOk = !(wl.door && Math.abs(uc) < gap / 2 + it.w / 2 + .7);
+          const free = it.wall ? !tall.get(wl).some(q => u + it.w > q[0] && u < q[1]) : fits(r);
+          if (tallOk && doorOk && free && (it.low || it.wall || er() < .55 + .45 * QI)) {
+            try { it.f(wl, uc); } catch (e) { }
+            if (!it.wall && !it.low) { collider((r.x0 + r.x1) / 2, (r.z0 + r.z1) / 2, r.x1 - r.x0, r.z1 - r.z0, 'furniture'); occ.push(r); furnitureCount++; }
+            if (it.h > 1.2 || it.wall) tall.get(wl).push([u, u + it.w]);
+            u += it.w + ea(.15, .6); k++;
+          } else { u += .45; if (er() < .5) k++; }
+        }
+      }
+      // wall finish: painted lower band + chair rail + skirting, interior window frames, pictures, clocks, switches
+      const paint = pick(WALLP[kind] || WALLP.shop);
+      for (const wl of walls) {
+        const segs = wl.door ? [[-wl.L / 2 - .2, -gap / 2], [gap / 2, wl.L / 2 + .2]] : [[-wl.L / 2 - .2, wl.L / 2 + .2]];
+        for (const [a, c] of segs) { const L = c - a, um = (a + c) / 2; LB(wl, paint, um, .55, .012, L, 1.02, .02); LB(wl, 0xb8b09a, um, 1.07, .025, L, .06, .04); LB(wl, 0x4a3a2a, um, .06, .02, L, .1, .03); }
+        for (const c of wl.wins) {
+          LB(wl, 0xd8d2c0, c, 1.7, .02, wl.ww + .2, 1.55 + .2, .04); LB(wl, 0x4a5a5e, c, 1.7, .035, wl.ww, 1.5, .02); LB(wl, 0xd8d2c0, c, 1.7, .05, .04, 1.5, .02); LB(wl, 0xd8d2c0, c, .9, .09, wl.ww + .35, .05, .18);
+          if (er() < .5 * QI) { LB(wl, pick(FABRIC), c - wl.ww / 2 - .12, 1.75, .07, .22, 1.7, .05); LB(wl, pick(FABRIC), c + wl.ww / 2 + .12, 1.75, .07, .22, 1.7, .05); }
+        }
+        const pics = Math.round((wl.L / 4) * QI);
+        for (let i = 0; i < pics; i++) {
+          const u = ea(-wl.L / 2 + .8, wl.L / 2 - .8), pw = ea(.35, .8), ph = ea(.3, .6);
+          if (winHit(wl, u - pw / 2 - .1, u + pw / 2 + .1) || tall.get(wl).some(q => u + pw / 2 > q[0] - .1 && u - pw / 2 < q[1] + .1) || (wl.door && Math.abs(u) < gap / 2 + .6)) continue;
+          if (er() < .25) { LC(wl, 0xe8e4da, u, 2.2, .02, .16, .03); continue; }
+          LB(wl, pick(WOODS), u, 1.7, .02, pw + .08, ph + .08, .03, 0, er() < .3 ? ea(-.15, .15) : 0); LB(wl, pick([0x6a8aa0, 0x9a7a4a, 0x5a7a4a, 0xa06a5a, 0x7a6a8a]), u, 1.7, .037, pw, ph, .005);
+        }
+        if (er() < .6) LB(wl, 0xe8e4da, ea(-wl.L / 2 + .6, wl.L / 2 - .6), 1.2, .015, .08, .12, .01);
+      }
+      // ceiling lamps (some dead) with a soft light pool on the floor; lit lamps only on the ground floor
+      const nl = Math.max(1, Math.round(w * d / 70));
+      for (let i = 0; i < nl; i++) {
+        const lx = x + (nl === 1 ? 0 : (i / (nl - 1) - .5) * (w - 4)), lz = z + ea(-d * .15, d * .15), lit = er() < .55;
+        block(m.metal, lx, 3.12, lz, .02, .3, .02); tp(box, 0x2a2a2a, lx, 2.96, lz, .5, .06, .5);
+        if (lit) { block(m.lamp, lx, 2.925, lz, .42, .01, .42); flat(lightPool, lx, lz, 4.2, 4.2, .07); } else tp(box, 0x8a8a7a, lx, 2.925, lz, .42, .01, .42);
+      }
+      // rugs, debris, papers, cans, bags, a fallen chair, blood (no colliders: everything here is low)
+      const inRoom = (px, pz, pad) => Math.abs(px - x) < iw - pad && Math.abs(pz - z) < id - pad;
+      const clear = (px, pz, s) => !occ.some(r => px > r.x0 - s && px < r.x1 + s && pz > r.z0 - s && pz < r.z1 + s);
+      if (kind === 'home' || kind === 'police' || kind === 'school') for (let i = 0; i < 2; i++) { const rx = x + ea(-w * .2, w * .2), rz = z + ea(-d * .2, d * .2); if (clear(rx, rz, .3)) tp(box, pick(FABRIC), rx, .047, rz, ea(1.6, 2.6), .012, ea(1.2, 1.8), er() < .5 ? 0 : Math.PI / 2); }
+      const nd = Math.round((w * d / 9) * QI);
+      for (let i = 0; i < nd; i++) {
+        const px = x + ea(-iw + .4, iw - .4), pz = z + ea(-id + .4, id - .4); if (!inRoom(px, pz, .3) || !clear(px, pz, .15)) continue;
+        const r = er(), yaw = er() * 6.28;
+        if (r < .4) tp(plane, pick([0xe8e4da, 0xd8d0b8, 0xf0ead8]), px, .05 + i * .0004, pz, ea(.2, .32), ea(.26, .4), 1, yaw, -Math.PI / 2);
+        else if (r < .55) tp(cyl, pick([0x8a2e26, 0x9aa0a6, 0x3a6a9a]), px, .1, pz, .07, .12, .07, yaw, Math.PI / 2);
+        else if (r < .67) tp(box, pick(BOOKS), px, .07, pz, .16, .04, .22, yaw, 0, ea(-.2, .2));
+        else if (r < .77) tp(sphere, 0x1e2226, px, .2, pz, ea(.45, .6), ea(.38, .5), ea(.45, .55), yaw);
+        else if (r < .87) part(box, pick([m.ash, m.stain, m.wood]), px, .07, pz, ea(.15, .4), ea(.04, .1), ea(.1, .3), yaw, 0, ea(-.3, .3));
+        else if (r < .93) { tp(box, pick(WOODS), px, .25, pz, .42, .04, .42, yaw, Math.PI / 2 - .1); tp(box, pick(WOODS), px, .1, pz + .25, .4, .4, .04, yaw); }
+        else part(plane, bloodDecal, px, .16, pz, ea(.8, 1.6), ea(.6, 1.2), 1, yaw, -Math.PI / 2);
+      }
+      if (er() < .45 + .3 * QI) { const px = x + ea(-iw * .6, iw * .6), pz = z + ea(-id * .5, id * .5); part(plane, bloodDecal, px, .16, pz, ea(1.4, 2.4), ea(1, 1.6), 1, er() * 6, -Math.PI / 2); for (let i = 1; i <= 3; i++) part(plane, bloodDecal, px + i * .5, .161, pz + i * .3, .35, .5, 1, er() * 6, -Math.PI / 2); }
+      // kitchens and hospitals get a tiled floor patch
+      if (kind === 'home' || kind === 'hospital') { const rear = z - front * (id - 1.6); tp(box, kind === 'home' ? 0x9a9488 : 0xb8bcb4, x, .044, rear, w - .8, .006, 3.2); }
+    }
     function furnish(b, front) {
       const { x, z, w, d, kind, label } = b, sx = w * .30, rz = d * .24;
       b.interior = kind === 'shop' ? label.toLowerCase() : kind;
@@ -286,7 +431,8 @@
         wallBlock(x - w / 2, z, t, d); wallBlock(x + w / 2, z, t, d);
         entrances.push([x, fz + front * 2.5]); loot.push([x - w * .23, z + d * .14]);
         // Furnish by use, keeping a clear route from every entrance to the room centre.
-        furnish(b, front);
+        const nb0 = env.boxes.length; furnish(b, front);
+        try { enrich(b, front, env.boxes.slice(nb0).map(c => ({ x0: c.x0, x1: c.x1, z0: c.z0, z1: c.z1 }))); } catch (e) { try { console.warn('enrich', e); } catch (_) { } }
       } else { block(wall, x, h / 2, z, w, h, d); collider(x, z, w, d, 'building'); }
       if (enterable && floors > 1) block(wall, x, 3.3 + (h - 3.3) / 2, z, w, h - 3.3, d);
       for (let f = 0; f < floors; f++) {
@@ -592,8 +738,9 @@
       else if ((b.mat === m.bone || b.mat === m.cloth) && p[1] < .3) p[1] += groundHeight(p[0], p[2]);
     }
     for (const b of batches.values()) {
-      const im = new T.InstancedMesh(b.geo, b.mat, b.parts.length), o = new T.Object3D();
-      b.parts.forEach((p, i) => { o.position.set(p[0], p[1], p[2]); o.rotation.set(p[7], p[6], p[8], 'YXZ'); o.scale.set(p[3], p[4], p[5]); o.updateMatrix(); im.setMatrixAt(i, o.matrix); });
+      const im = new T.InstancedMesh(b.geo, b.mat, b.parts.length), o = new T.Object3D(), tc = new T.Color();
+      b.parts.forEach((p, i) => { o.position.set(p[0], p[1], p[2]); o.rotation.set(p[7], p[6], p[8], 'YXZ'); o.scale.set(p[3], p[4], p[5]); o.updateMatrix(); im.setMatrixAt(i, o.matrix); if (b.mat === m.tint) im.setColorAt(i, tc.setHex(p[9] === undefined ? 0xffffff : p[9])); });
+      if (im.instanceColor) im.instanceColor.needsUpdate = true;
       im.instanceMatrix.needsUpdate = true; im.computeBoundingSphere(); im.castShadow = false; im.receiveShadow = true; im.userData.cityV2 = true; root.add(im);
       if (b.geo !== plane && b.geo !== beamGeo) env.solids.push(im);
     }

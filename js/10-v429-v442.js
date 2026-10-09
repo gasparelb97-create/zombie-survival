@@ -335,7 +335,7 @@ function parseObjC(text){const v=[],vc=[],pos=[],col=[];
     else if(s.startsWith('f ')){const p=s.split(/\s+/).slice(1).map(tok=>+tok.split('/')[0]);
       for(let i=1;i<p.length-1;i++)for(const k of [0,i,i+1]){const b=(p[k]-1)*3;pos.push(v[b],v[b+1],v[b+2]);col.push(vc[b],vc[b+1],vc[b+2]);}}}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('color',new T.Float32BufferAttribute(col,3));g.computeVertexNormals();return g;}
-function apkProps440(){if(!zsShow())return;const plan=window.__plan441||{towers:[],rubble:[],pines:[],trunks:[]};const CC='assets/cc0/',VQ='?v=4.3.74';
+function apkProps440(){if(!zsShow())return;const plan=window.__plan441||{towers:[],rubble:[],pines:[],trunks:[]};const CC='assets/cc0/',VQ='?v=4.3.75';
   const loadText=u=>fetch(CC+u+VQ).then(r=>{if(!r.ok)throw new Error(u);return r.text();});
   const loadImg=u=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error(u));i.src=CC+u+VQ;});
   Promise.all([loadText('corpse-skeleton.obj'),loadText('tree-pine.obj'),loadText('tree-trunk.obj'),loadText('ruin-tower.obj'),loadText('ruin-rubble-1.obj'),loadText('ruin-rubble-2.obj'),loadText('ruin-rubble-3.obj'),loadImg('blood-splatter.png')]).then(A=>{
