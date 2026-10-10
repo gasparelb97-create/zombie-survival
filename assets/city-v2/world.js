@@ -397,8 +397,18 @@
       }
     }
     function sign(text, x, y, z, w = 5, yaw = 0, color = '#34443a') {
-      const t = texture((g, n) => { g.fillStyle = color; g.fillRect(0, 0, n, n); g.strokeStyle = '#c1bba3'; g.lineWidth = 16; g.strokeRect(14, 160, n - 28, 192); g.fillStyle = '#e1dcc7'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = 'bold ' + Math.min(58, 550 / text.length) + 'px sans-serif'; g.fillText(text, n / 2, n / 2, n - 46); });
-      const mat = new T.MeshLambertMaterial({ map: t }); const mesh = new T.Mesh(plane, mat); mesh.position.set(x, y, z); mesh.scale.set(w, w / 3, 1); mesh.rotation.y = yaw; mesh.castShadow = false; root.add(mesh);
+      // 4.3.80: wide plate (no stretched square texture), framed, a little weathered; callers place it above the door.
+      const c = document.createElement('canvas'); c.width = 512; c.height = 128; const g = c.getContext('2d');
+      g.fillStyle = color; g.fillRect(0, 0, 512, 128);
+      const gr = g.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,.14)'); gr.addColorStop(.5, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.28)'); g.fillStyle = gr; g.fillRect(0, 0, 512, 128);
+      g.strokeStyle = '#c1bba3'; g.lineWidth = 7; g.strokeRect(9, 9, 494, 110);
+      g.fillStyle = '#9a947e'; for (const [bx, by] of [[20, 20], [492, 20], [20, 108], [492, 108]]) { g.beginPath(); g.arc(bx, by, 4, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = '#e8e2cb'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = 'bold ' + Math.min(72, Math.floor(880 / Math.max(4, text.length))) + 'px sans-serif';
+      g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowOffsetY = 3; g.fillText(text, 256, 68, 470); g.shadowColor = 'transparent';
+      let sd = 7; const R = () => { sd = (sd * 16807 + text.length * 31) % 2147483647; return sd / 2147483647; };
+      for (let i = 0; i < 26; i++) { g.fillStyle = 'rgba(40,30,20,' + (.05 + R() * .12).toFixed(2) + ')'; g.fillRect(R() * 512, R() * 128, 2 + R() * 18, 1 + R() * 4); }
+      const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4;
+      const mat = new T.MeshLambertMaterial({ map: t }); const mesh = new T.Mesh(plane, mat); mesh.position.set(x, y, z); mesh.scale.set(w, w / 4, 1); mesh.rotation.y = yaw; mesh.castShadow = false; root.add(mesh);
     }
     function windowAt(x, y, z, yaw, wide = 1.15, tall = 1.55, boarded = false) {
       block(m.trim, x, y, z, wide + .22, tall + .22, .14, yaw);
@@ -470,7 +480,7 @@
       // Downpipes, plinth, entrances and signage distinguish silhouettes at eye level.
       for (const s of [-1, 1]) block(m.metal, x + s * (w / 2 - .45), h / 2, fz + front * .32, .1, h, .1);
       block(m.trim, x, .17, z - front * d / 2, w, .34, .45);
-      if (label) { sign(label, x, 2.8, fz + front * .3, Math.min(w - 1, 8), front > 0 ? 0 : Math.PI, kind === 'hospital' ? '#496452' : kind === 'police' ? '#344657' : '#514a37'); landmarks.push([label, x, z]); }
+      if (label) { const sw = Math.min(w - 1, 7.5), sh = sw / 4, sy = floors > 1 ? 3.3 + sh / 2 + .22 : h + .62 + sh / 2; if (floors === 1) for (const q of [-1, 1]) block(m.metal, x + q * sw * .36, h + .5, fz - front * .05, .08, .5 + sh * .6, .08); sign(label, x, sy, fz + front * (floors > 1 ? .3 : .22), sw, front > 0 ? 0 : Math.PI, kind === 'hospital' ? '#496452' : kind === 'police' ? '#344657' : '#514a37'); landmarks.push([label, x, z]); }
       if (kind === 'shop') { block(m.cloth, x, 2.55, fz + front * 1, w * .83, .15, 1.9); for (const s of [-1, 1]) block(m.metal, x + s * w * .36, 1.25, fz + front * 1.65, .07, 2.5, .07); }
       if (kind === 'hospital') { block(m.red, x + 5, h + 1.45, fz + front * .2, .45, 2.2, .16); block(m.red, x + 5, h + 1.45, fz + front * .2, 1.8, .45, .16); }
       if (kind === 'factory') { part(cyl, m.brick, x + w * .28, h + 4.5, z - d * .2, 1.4, 9, 1.4); part(cyl, m.trim, x + w * .28, h + 9, z - d * .2, 1.7, .3, 1.7); if (z === 72) emission(x + w * .28, h + 9.1, z - d * .2, 13, 4); }
@@ -579,7 +589,7 @@
     for (const z of [57, 87]) for (const x of [-133, -111]) { block(m.wood, x, .65, z, 13, .14, .1); block(m.wood, x, 1.25, z, 13, .14, .1); collider(x, z, 13, .2, 'fence'); }
     collider(-140, 72, .2, 30, 'fence'); collider(-104, 72, .2, 30, 'fence');
     for (const x of [-132, -111]) { part(cone, m.cloth, x, 1.2, 65, 5, 2.4, 5, Math.PI / 4); collider(x, 65, 3.2, 3.2, 'tent'); }
-    landmarks.push(['Rifugio', -122, 72]); sign('RIFUGIO', -119, 2.4, 87.2, 4.5);
+    landmarks.push(['Rifugio', -122, 72]); sign('RIFUGIO', -119, 2.95, 87.2, 4.5);
     function vehicle(x, z, yaw, color, van = false, options = {}) {
       if (inside(x, z, 3)) return;
       const starts = new Map([...batches].map(([key, b]) => [key, b.parts.length]));
@@ -792,7 +802,7 @@
       const loader = new T.TextureLoader();
       [['brick', 'brick.jpg'], ['road', 'asphalt_02.jpg'], ['walk', 'brick_pavement_02.jpg'], ['roof', 'clay_roof_tiles.jpg']].forEach(([k, file]) => loader.load(env.assetBase + file, t => { t.colorSpace = T.SRGBColorSpace; t.wrapS = t.wrapT = T.RepeatWrapping; t.repeat.set(k === 'road' ? 4 : 2, 2); t.anisotropy = Math.min(4, env.anisotropy || 1); m[k].map = t; m[k].needsUpdate = true; }, undefined, () => {}));
     }
-    const city = { root, buildings, plots: buildings, roads, paving, entrances, landmarks, tags: landmarks, foliage, loot, wrecks, damageSites, smokeSources, lightSources, dynamicLights, smoke, update, extent: 168, spawn: [-122, 75], seed: 826103, stats: { buildings: buildings.length, entrances: entrances.length, roads: roads.length, trees: foliage.length, cars, puddles, remains, boneFragments, potholes: damageSites.length, headlights: wrecks.filter(w => w.headlights).length, smokeSources: smokeSources.length, particles: positions.length / 3, lights: lightSources.length, dynamicLights: dynamicLights.length, furniture: furnitureCount, batches: batches.size } };
+    const city = { root, buildings, plots: buildings, roads, paving, groundHeight, rail: { x0: -160, x1: 160, z0: -163, z1: -144 }, entrances, landmarks, tags: landmarks, foliage, loot, wrecks, damageSites, smokeSources, lightSources, dynamicLights, smoke, update, extent: 168, spawn: [-122, 75], seed: 826103, stats: { buildings: buildings.length, entrances: entrances.length, roads: roads.length, trees: foliage.length, cars, puddles, remains, boneFragments, potholes: damageSites.length, headlights: wrecks.filter(w => w.headlights).length, smokeSources: smokeSources.length, particles: positions.length / 3, lights: lightSources.length, dynamicLights: dynamicLights.length, furniture: furnitureCount, batches: batches.size } };
     window.__cityV2 = city; return city;
   };
 })();

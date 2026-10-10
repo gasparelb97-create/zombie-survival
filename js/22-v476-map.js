@@ -32,6 +32,9 @@ function lots476(lv){lv=lv|0;const mP=[7,4,4][lv],mR=[7.5,6.5,6.5][lv],mL=[14,8,
   for(const b of boxes)mark(b.x0-mB,b.x1+mB,b.z0-mB,b.z1+mB);if(lv<2)for(const c of circles)if(!c.off)mark(c.x-c.r-1,c.x+c.r+1,c.z-c.r-1,c.z+c.r+1);for(const a of (L476.placed||[]))mark(a[0],a[1],a[2],a[3]);
   for(const h of HOUSE_RECTS)mark(h[0]-h[2]-3,h[0]+h[2]+3,h[1]-h[3]-3,h[1]+h[3]+3);
   mark(-40,40,-40,40);mark(-150,-95,45,100);
+  // 4.3.80: the railway (sleepers, rails, platform) has no colliders, so it was free ground for the park and the cemetery: keep it out
+  try{const R=C&&C.rail;if(R)mark(R.x0,R.x1,R.z0-4,R.z1+4);else mark(-172,172,-167,-140);}catch(e){mark(-172,172,-167,-140);}
+  try{if(C&&C.entrances)for(const e of C.entrances)mark(e[0]-3,e[0]+3,e[1]-3,e[1]+3);}catch(e){}
   try{const s=svLoadData();if(s){for(const p of (s.pc||[]))mark(p[1]-8,p[1]+8,p[2]-8,p[2]+8);if(s.pos)mark(s.pos[0]-10,s.pos[0]+10,s.pos[1]-10,s.pos[1]+10);}}catch(e){}
   const S=new Int32Array((N+1)*(N+1));for(let z=0;z<N;z++){let row=0;for(let x=0;x<N;x++){row+=occ[z*N+x];S[(z+1)*(N+1)+x+1]=S[z*(N+1)+x+1]+row;}}
   return {H,N,occ,S,mark,sum(x0,x1,z0,z1){const a=Math.max(0,Math.floor(x0+H)),b=Math.min(N,Math.ceil(x1+H)),c=Math.max(0,Math.floor(z0+H)),d=Math.min(N,Math.ceil(z1+H));if(a<=0||c<=0||b>=N||d>=N)return 1e9;return S[d*(N+1)+b]-S[c*(N+1)+b]-S[d*(N+1)+a]+S[c*(N+1)+a];}};}

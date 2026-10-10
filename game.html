@@ -889,35 +889,44 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
 <body class="inmenu">
 <div id="ld431" class="ldGone" role="progressbar" aria-label="Caricamento" aria-valuemin="0" aria-valuemax="100"><style>
 #ld431{position:fixed;inset:0;z-index:2147482000;display:flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:none;
-  padding:calc(var(--sat,0px) + 10px) calc(var(--sar,0px) + 16px) calc(var(--sab,0px) + 10px) calc(var(--sal,0px) + 16px);box-sizing:border-box;
-  background:radial-gradient(120% 90% at 50% 0%,#24344f 0%,#121a2a 55%,#080b12 100%);color:#e9f1ff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding:calc(var(--sat,0px) + 10px) calc(var(--sar,0px) + 16px) calc(var(--sab,0px) + 34px) calc(var(--sal,0px) + 16px);box-sizing:border-box;
+  background:radial-gradient(90% 70% at 50% 108%,#5a1a12 0%,rgba(60,16,10,.55) 35%,transparent 70%),radial-gradient(130% 100% at 50% -10%,#1f2a3c 0%,#0f141d 55%,#05070b 100%);color:#eef3ff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   opacity:1;transition:opacity .38s ease;overflow:hidden;contain:strict}
 #ld431.ldOff{opacity:0;pointer-events:none}
 #ld431.ldGone{display:none}
-#ld431 .ldSnow,#ld431 .ldSnow2{position:absolute;left:0;right:0;top:-100%;height:200%;pointer-events:none;will-change:transform;
-  background-image:radial-gradient(2px 2px at 20px 30px,#fff,transparent),radial-gradient(2px 2px at 140px 80px,#fff,transparent),radial-gradient(1.5px 1.5px at 90px 150px,#dbe8ff,transparent),radial-gradient(2.5px 2.5px at 200px 20px,#fff,transparent),radial-gradient(1.5px 1.5px at 260px 120px,#fff,transparent);
-  background-size:300px 200px;opacity:.55;animation:ld431snow 9s linear infinite}
-#ld431 .ldSnow2{background-size:220px 160px;opacity:.3;animation-duration:14s}
-@keyframes ld431snow{from{transform:translateY(0)}to{transform:translateY(50%)}}
-#ld431 .ldCard{position:relative;width:min(440px,100%);text-align:center}
-#ld431 .ldT{font-weight:900;letter-spacing:.14em;font-size:clamp(20px,5.2vmin,30px);text-shadow:0 2px 0 #0a0f18,0 0 18px rgba(150,190,255,.35)}
-#ld431 .ldT b{color:#ff6b4a}
-#ld431 .ldS{margin:4px 0 14px;font-size:12px;opacity:.7;letter-spacing:.08em}
-#ld431 .ldBar{position:relative;height:12px;border-radius:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
+#ld431 .ldSky{position:absolute;left:0;right:0;bottom:0;height:42%;pointer-events:none;opacity:.95}
+#ld431 .ldSky{background:#06080c;clip-path:polygon(0 100%,0 62%,3% 62%,3% 40%,9% 40%,9% 55%,11% 55%,11% 30%,15% 30%,15% 50%,17% 50%,17% 22%,22% 22%,22% 14%,24% 14%,24% 22%,26% 22%,26% 48%,29% 48%,29% 36%,33% 36%,33% 58%,36% 58%,36% 26%,41% 26%,41% 18%,43% 18%,43% 26%,47% 26%,47% 52%,50% 52%,50% 34%,57% 34%,57% 60%,60% 60%,60% 20%,66% 20%,66% 12%,68% 12%,68% 20%,71% 20%,71% 50%,73% 50%,73% 38%,79% 38%,79% 56%,82% 56%,82% 28%,88% 28%,88% 44%,93% 44%,93% 58%,95% 58%,95% 34%,100% 34%,100% 100%)}
+#ld431 .ldWin{position:absolute;left:0;right:0;bottom:0;height:42%;pointer-events:none;opacity:.55;background-image:radial-gradient(1.6px 2.2px at 13% 62%,#ffb860,transparent),radial-gradient(1.6px 2.2px at 19% 48%,#ffcf80,transparent),radial-gradient(1.6px 2.2px at 38% 52%,#ffb860,transparent),radial-gradient(1.6px 2.2px at 63% 40%,#ffd890,transparent),radial-gradient(1.6px 2.2px at 84% 50%,#ffb860,transparent),radial-gradient(1.6px 2.2px at 54% 62%,#ff9a50,transparent);animation:ld480w 3.2s steps(2) infinite}
+@keyframes ld480w{0%{opacity:.55}50%{opacity:.35}}
+#ld431 .ldFog,#ld431 .ldFog2{position:absolute;left:-50%;width:200%;bottom:6%;height:40%;pointer-events:none;will-change:transform;
+  background:radial-gradient(40% 50% at 20% 60%,rgba(170,180,200,.16),transparent 70%),radial-gradient(35% 45% at 55% 70%,rgba(170,180,200,.12),transparent 70%),radial-gradient(30% 40% at 85% 55%,rgba(170,180,200,.14),transparent 70%);animation:ld480f 26s linear infinite}
+#ld431 .ldFog2{bottom:0;height:30%;opacity:.8;animation-duration:38s;animation-direction:reverse}
+@keyframes ld480f{from{transform:translateX(0)}to{transform:translateX(25%)}}
+#ld431 .ldMoon{position:absolute;right:12%;top:9%;width:min(15vmin,96px);height:min(15vmin,96px);border-radius:50%;background:radial-gradient(circle at 38% 36%,#fff8e8,#e8dcc0 55%,#b8ab90 100%);box-shadow:0 0 40px 8px rgba(255,236,200,.18),0 0 120px 30px rgba(255,220,170,.08);opacity:.85}
+#ld431 .ldCard{position:relative;width:min(460px,100%);text-align:center;padding:18px 18px 14px;border-radius:18px;background:linear-gradient(180deg,rgba(14,18,26,.72),rgba(10,12,18,.55));border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+#ld431 .ldIco{font-size:clamp(28px,8vmin,44px);line-height:1;filter:drop-shadow(0 0 14px rgba(255,90,60,.45));animation:ld480p 2.4s ease-in-out infinite}
+@keyframes ld480p{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+#ld431 .ldT{margin-top:4px;font-weight:900;letter-spacing:.16em;font-size:clamp(22px,5.8vmin,34px);text-shadow:0 3px 0 #000,0 0 22px rgba(255,90,60,.25)}
+#ld431 .ldT b{color:#ff5a3c;text-shadow:0 3px 0 #000,0 0 18px rgba(255,70,40,.55)}
+#ld431 .ldS{margin:2px 0 14px;font-size:12px;opacity:.65;letter-spacing:.22em;text-transform:uppercase}
+#ld431 .ldBar{position:relative;height:14px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
 #ld431 .ldFill{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(.04);will-change:transform;transition:transform .55s cubic-bezier(.22,.8,.3,1);
-  background:linear-gradient(90deg,#7fb2ff,#d9ecff 60%,#ffffff);border-radius:7px}
-#ld431 .ldShine{position:absolute;top:0;bottom:0;width:40%;left:-40%;will-change:transform;animation:ld431shine 1.4s ease-in-out infinite;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
+  background:linear-gradient(90deg,#8a1a10,#e0442a 45%,#ff9a50 85%,#ffd38a);border-radius:8px;box-shadow:0 0 14px rgba(255,90,50,.55)}
+#ld431 .ldShine{position:absolute;top:0;bottom:0;width:40%;left:-40%;will-change:transform;animation:ld431shine 1.5s ease-in-out infinite;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent)}
 @keyframes ld431shine{from{transform:translateX(0)}to{transform:translateX(350%)}}
-#ld431 .ldRow{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;opacity:.8}
-#ld431 .ldTip{margin-top:12px;font-size:13px;line-height:1.35;opacity:.9;min-height:2.7em;transition:opacity .3s}
-@media (max-height:300px){#ld431 .ldS{margin-bottom:8px}#ld431 .ldTip{margin-top:6px}}
-</style><i class="ldSnow"></i><i class="ldSnow2"></i>
-<div class="ldCard"><div class="ldT">ZOMBIE <b>SURVIVAL</b></div><div class="ldS">città nella foschia</div>
-<script>if(window.zsShow&&zsShow()){var s=document.querySelector('#ld431 .ldS');if(s)s.textContent='città nella foschia';}</script>
+#ld431 .ldRow{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;opacity:.82}
+#ld431 .ldPct{font-weight:800;color:#ffb070}
+#ld431 .ldTip{margin-top:12px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:13px;line-height:1.38;opacity:.92;min-height:2.7em;transition:opacity .3s;text-align:left}
+#ld431 .ldBy{position:absolute;left:0;right:0;bottom:calc(var(--sab,0px) + 10px);text-align:center;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(235,240,255,.55);pointer-events:none}
+#ld431 .ldBy b{color:#ffb070;letter-spacing:.14em;font-weight:800}
+@media (max-height:340px){#ld431 .ldCard{padding:10px 14px 9px}#ld431 .ldS{margin-bottom:8px}#ld431 .ldTip{margin-top:6px;padding:6px 9px}#ld431 .ldIco{display:none}#ld431 .ldBy{bottom:calc(var(--sab,0px) + 4px)}}
+</style><i class="ldMoon"></i><i class="ldSky"></i><i class="ldWin"></i><i class="ldFog"></i><i class="ldFog2"></i>
+<div class="ldCard"><div class="ldIco">🧟</div><div class="ldT">ZOMBIE <b>SURVIVAL</b></div><div class="ldS">città nella foschia</div>
 <div class="ldBar"><i class="ldFill"></i><i class="ldShine"></i></div>
 <div class="ldRow"><span class="ldStep">Avvio…</span><span class="ldPct">0%</span></div>
-<div class="ldTip">💡 Di notte gli zombie sono più forti: costruisci muri e accendi un fuoco prima del tramonto.</div></div></div>
+<div class="ldTip">💡 Di notte gli zombie sono più forti: costruisci muri e accendi un fuoco prima del tramonto.</div></div>
+<div class="ldBy">created by <b>Evghenij</b></div></div>
 
 <canvas id="c"></canvas>
 <div id="vig"></div>
@@ -1092,9 +1101,9 @@ body.playing #grade43,#grade43.g43-media,#grade43.g43-alta{display:block}
   <div class="btnRow"><button class="act" id="chAll">Deposita tutto</button><button class="act ghost" id="chClose">Chiudi</button></div>
 </div></div>
 <div id="mtoast"></div>
-<script src="assets/city-v2/world.js?v=4.3.78"></script>
-<script>window.__boot432={h:performance.now()};try{if(matchMedia('(orientation:portrait)').matches&&matchMedia('(pointer:coarse)').matches)document.documentElement.classList.add('pt436');}catch(e){}</script><script src="js/three.min.js?v=4.3.78"></script>
-<script src="js/debug.js?v=4.3.78"></script>
+<script src="assets/city-v2/world.js?v=4.3.80"></script>
+<script>window.__boot432={h:performance.now()};try{if(matchMedia('(orientation:portrait)').matches&&matchMedia('(pointer:coarse)').matches)document.documentElement.classList.add('pt436');}catch(e){}</script><script src="js/three.min.js?v=4.3.80"></script>
+<script src="js/debug.js?v=4.3.80"></script>
 <script>/* 4.3.73: the game code is split into js/ files. Timers and frames requested while they load are held and start right after the last file has run, as with the old single script. */
 (function(){var w=window,H={on:1,q:[],n:0,m:{}},o={},S={setTimeout:'clearTimeout',setInterval:'clearInterval',requestAnimationFrame:'cancelAnimationFrame',requestIdleCallback:'cancelIdleCallback'};
 for(var k in S){if(typeof w[k]==='function'&&typeof w[S[k]]==='function'){o[k]=w[k];o[S[k]]=w[S[k]];}}
@@ -1103,32 +1112,33 @@ function clr(k){return function(id){var r=H.m[id];if(r!==undefined){delete H.m[i
 for(var k2 in S){if(o[k2]){w[k2]=hold(k2);w[S[k2]]=clr(S[k2]);}}
 w.__zsGo473=function(){if(!H.on)return;H.on=0;var Q=H.q;H.q=[];for(var i=0;i<Q.length;i++){var e=Q[i],a=e.a;try{if(e.k==='setTimeout'&&a.length>1){a=a.slice();a[1]=Math.max(0,(+a[1]||0)-(Date.now()-e.t));}H.m[e.id]=o[e.k].apply(w,a);}catch(x){}}};
 document.addEventListener('DOMContentLoaded',function(){w.__zsGo473();});})();</script>
-<script src="js/00-core-world.js?v=4.3.78"></script>
-<script src="js/01-audio-fx.js?v=4.3.78"></script>
-<script src="js/02-weapons.js?v=4.3.78"></script>
-<script src="js/03-zombies.js?v=4.3.78"></script>
-<script src="js/04-game-core.js?v=4.3.78"></script>
-<script src="js/05-v3-shop-waves.js?v=4.3.78"></script>
-<script src="js/06-v4-arsenal-survival.js?v=4.3.78"></script>
-<script src="js/07-v41-v42.js?v=4.3.78"></script>
-<script src="js/08-v43-graphics-build.js?v=4.3.78"></script>
-<script src="js/09-init-loop.js?v=4.3.78"></script>
-<script src="js/10-v429-v442.js?v=4.3.78"></script>
-<script src="js/11-v443-v465.js?v=4.3.78"></script>
-<script src="js/12-v466.js?v=4.3.78"></script>
-<script src="js/13-v467.js?v=4.3.78"></script>
-<script src="js/14-v468.js?v=4.3.78"></script>
-<script src="js/15-v469.js?v=4.3.78"></script>
-<script src="js/16-v470.js?v=4.3.78"></script>
-<script src="js/17-v471.js?v=4.3.78"></script>
-<script src="js/18-v472.js?v=4.3.78"></script>
-<script src="js/19-v474.js?v=4.3.78"></script>
-<script src="js/20-v475.js?v=4.3.78"></script>
-<script src="js/21-v476.js?v=4.3.78"></script>
-<script src="js/22-v476-map.js?v=4.3.78"></script>
-<script src="js/23-v477-arena.js?v=4.3.78"></script>
-<script src="js/24-v477-build.js?v=4.3.78"></script>
-<script src="js/25-v477-critters.js?v=4.3.78"></script>
+<script src="js/00-core-world.js?v=4.3.80"></script>
+<script src="js/01-audio-fx.js?v=4.3.80"></script>
+<script src="js/02-weapons.js?v=4.3.80"></script>
+<script src="js/03-zombies.js?v=4.3.80"></script>
+<script src="js/04-game-core.js?v=4.3.80"></script>
+<script src="js/05-v3-shop-waves.js?v=4.3.80"></script>
+<script src="js/06-v4-arsenal-survival.js?v=4.3.80"></script>
+<script src="js/07-v41-v42.js?v=4.3.80"></script>
+<script src="js/08-v43-graphics-build.js?v=4.3.80"></script>
+<script src="js/09-init-loop.js?v=4.3.80"></script>
+<script src="js/10-v429-v442.js?v=4.3.80"></script>
+<script src="js/11-v443-v465.js?v=4.3.80"></script>
+<script src="js/12-v466.js?v=4.3.80"></script>
+<script src="js/13-v467.js?v=4.3.80"></script>
+<script src="js/14-v468.js?v=4.3.80"></script>
+<script src="js/15-v469.js?v=4.3.80"></script>
+<script src="js/16-v470.js?v=4.3.80"></script>
+<script src="js/17-v471.js?v=4.3.80"></script>
+<script src="js/18-v472.js?v=4.3.80"></script>
+<script src="js/19-v474.js?v=4.3.80"></script>
+<script src="js/20-v475.js?v=4.3.80"></script>
+<script src="js/21-v476.js?v=4.3.80"></script>
+<script src="js/22-v476-map.js?v=4.3.80"></script>
+<script src="js/23-v477-arena.js?v=4.3.80"></script>
+<script src="js/24-v477-build.js?v=4.3.80"></script>
+<script src="js/25-v477-critters.js?v=4.3.80"></script>
+<script src="js/26-v480.js?v=4.3.80"></script>
 <script>window.__zsGo473&&window.__zsGo473();</script>
 <style id="v422css">
 /* ===== 4.2.2 hotfix ===== */
