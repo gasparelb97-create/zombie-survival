@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Zs" parent="android:style/Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">#0b0d12</item>
-        <item name="android:navigationBarColor">#0b0d12</item>
-        <item name="android:statusBarColor">#0b0d12</item>
+        <item name="android:windowBackground">#120818</item>
+        <item name="android:navigationBarColor">#120818</item>
+        <item name="android:statusBarColor">#120818</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>

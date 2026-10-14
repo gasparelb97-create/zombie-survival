@@ -182,7 +182,7 @@
       const LM = (wl, mat, u, y, v, sw, sh, sd) => { const p = W(wl, u, v); block(mat, p[0], y, p[1], sw, sh, sd, wl.yaw); };
       const LC = (wl, c, u, y, v, r, h, geo = cyl) => { const p = W(wl, u, v); tp(geo, c, p[0], y, p[1], r * 2, h, r * 2, wl.yaw); };
       const foot = (wl, u, v, sw, sd) => { const a = W(wl, u - sw / 2, v), b2 = W(wl, u + sw / 2, v + sd); return { x0: Math.min(a[0], b2[0]), x1: Math.max(a[0], b2[0]), z0: Math.min(a[1], b2[1]), z1: Math.max(a[1], b2[1]) }; };
-      const winHit = (wl, u0, u1) => wl.wins.some(c => u1 > c - wl.ww / 2 - .12 && u0 < c + wl.ww / 2 + .12);
+      const winHit = (wl, u0, u1) => wl.wins.some(c => u1 > c - wl.ww / 2 - .25 && u0 < c + wl.ww / 2 + .25);
       const tall = new Map(walls.map(wl => [wl, []]));
       // ---- furniture pieces (draw in wall space: u centre, v from the wall) ----
       const P = {
@@ -243,7 +243,7 @@
           const key = set[k % set.length], it = P[key];
           if (!it || u + it.w > wl.L / 2 - .25) { u += .4; k++; if (u > wl.L / 2 - .3) break; continue; }
           const uc = u + it.w / 2, r = foot(wl, uc, it.wall ? 0 : .02, it.w, Math.max(.1, it.d));
-          const tallOk = it.h <= .95 || !winHit(wl, u, u + it.w), doorOk = !(wl.door && Math.abs(uc) < gap / 2 + it.w / 2 + .7);
+          const tallOk = it.low || !winHit(wl, u, u + it.w), doorOk = !(wl.door && Math.abs(uc) < gap / 2 + it.w / 2 + .7);
           const free = it.wall ? !tall.get(wl).some(q => u + it.w > q[0] && u < q[1]) : fits(r);
           if (tallOk && doorOk && free && (it.low || it.wall || er() < .55 + .45 * QI)) {
             try { it.f(wl, uc); } catch (e) { }

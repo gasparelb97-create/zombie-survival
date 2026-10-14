@@ -6,12 +6,24 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#0b0d12">
+<meta name="theme-color" content="#120818">
 <title>Zombie Survival</title>
-<style>html,body{margin:0;height:100%;background:#0b0d12;color:#e7edf5;font:600 15px system-ui,sans-serif}body{display:flex;align-items:center;justify-content:center}</style>
+<style>html,body{margin:0;height:100%;background:#120818;color:#e7edf5;font:600 15px system-ui,sans-serif}body{display:flex;align-items:center;justify-content:center}</style>
 </head>
 <body>
-<div>Carico Zombie Survival…</div>
+<div id="boot481" aria-label="Caricamento"><style>
+#boot481{position:fixed;inset:0;z-index:2147483000;background:radial-gradient(ellipse at 50% 30%,#2a1240 0,#120818 55%,#05030a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ffd9a0;font:800 15px system-ui,sans-serif;transition:opacity .35s;overflow:hidden}
+#boot481.off{opacity:0;pointer-events:none}
+#boot481 .bm{position:absolute;top:7%;right:14%;width:min(14vmin,90px);height:min(14vmin,90px);border-radius:50%;background:radial-gradient(circle at 38% 36%,#fff6dc,#f3dfae 45%,#c99a58);box-shadow:0 0 40px 10px rgba(255,170,90,.35)}
+#boot481 .bf{position:absolute;left:0;right:0;bottom:0;height:38%;background:linear-gradient(to top,rgba(80,24,100,.6),transparent)}
+#boot481 svg{width:min(34vmin,190px);filter:drop-shadow(0 0 22px rgba(255,120,20,.55));animation:b481p 1.6s ease-in-out infinite}
+@keyframes b481p{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+#boot481 .bt{margin-top:10px;letter-spacing:.16em;font-size:clamp(20px,5.5vmin,32px);color:#fff;text-shadow:0 3px 0 #000}#boot481 .bt b{color:#ff7a1a}
+#boot481 .bb{margin-top:14px;width:min(320px,62vw);height:10px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+#boot481 .bb i{display:block;height:100%;width:6%;background:linear-gradient(90deg,#a33a06,#ff8a1a,#ffd36a);border-radius:6px;transition:width .4s}
+</style><i class="bm"></i><i class="bf"></i>
+<svg viewBox="0 0 120 110"><defs><radialGradient id="b481g" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#ffb347"/><stop offset=".55" stop-color="#f07a12"/><stop offset="1" stop-color="#8a3a06"/></radialGradient></defs><path d="M58 26c0-10 4-16 10-18l3 4c-5 3-7 8-7 14z" fill="#4a6b1e"/><ellipse cx="34" cy="64" rx="30" ry="38" fill="url(#b481g)"/><ellipse cx="86" cy="64" rx="30" ry="38" fill="url(#b481g)"/><ellipse cx="60" cy="64" rx="32" ry="42" fill="url(#b481g)"/><g fill="#ffd040"><path d="M34 54l14-12 4 16z"/><path d="M86 54l-14-12-4 16z"/><path d="M56 66l4-9 4 9z"/><path d="M32 74c8 18 48 18 56 0-4 2-8 3-10 3l-3 6-5-5-8 1-5 5-4-6-8-1z"/></g></svg>
+<div class="bt">ZOMBIE <b>SURVIVAL</b></div><div class="bb"><i id="boot481bar"></i></div></div>
 <script>
 (function(){
   var path=location.pathname.replace(/[^/]*$/,'');

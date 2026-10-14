@@ -46,7 +46,12 @@ public class MainActivity extends Activity {
 
     /** Runs before page scripts on this personal build only. */
     private static final String BOOT_JS =
-            "window.__ZS_ANDROID=1;window.__zsApk=1;window.__ZS_OWNER=1;";
+            "window.__ZS_ANDROID=1;window.__zsApk=1;window.__ZS_OWNER=1;"
+            // standalone APK: no Telegram Mini App chrome; neutralise native buttons if telegram-web-app.js loads without initData
+            + "(function(){function f(){var T=window.Telegram&&window.Telegram.WebApp;if(!T||T.initData||T.__zsNoChrome)return;T.__zsNoChrome=1;"
+            + "['BackButton','MainButton','SecondaryButton','SettingsButton','BottomButton'].forEach(function(k){var b=T[k];if(!b)return;"
+            + "try{b.hide&&b.hide()}catch(e){}['show','showProgress','enable','setText','setParams'].forEach(function(m){if(typeof b[m]==='function')b[m]=function(){return b}});"
+            + "try{b.isVisible=false}catch(e){}})}f();document.addEventListener('DOMContentLoaded',f);window.addEventListener('load',f)})();";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -65,9 +70,10 @@ public class MainActivity extends Activity {
             Log.e(TAG, "window flags", t);
         }
         root = new FrameLayout(this);
-        root.setBackgroundColor(Color.BLACK);
+        root.setBackgroundColor(0xFF120818);
         setContentView(root);
         // fullscreen only after the decor view exists (getInsetsController() before setContentView crashed 4.3.78)
+        installImmersiveWatcher();
         applyFullscreen();
         String crash = readCrash();
         try {
@@ -86,7 +92,7 @@ public class MainActivity extends Activity {
     @SuppressLint("SetJavaScriptEnabled")
     private void createWebView() {
         web = new WebView(this);
-        web.setBackgroundColor(Color.BLACK);
+        web.setBackgroundColor(0xFF120818);
         root.addView(web, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -152,12 +158,35 @@ public class MainActivity extends Activity {
                 w.setDecorFitsSystemWindows(false);
                 WindowInsetsController c = decor.getWindowInsetsController();
                 if (c != null) {
-                    c.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                    c.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                    c.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars() | WindowInsets.Type.systemBars());
                     c.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 }
             } catch (Throwable t) {
                 Log.e(TAG, "insets controller", t);
             }
+        }
+    }
+
+    // re-hide bars ~1.5s after they reappear (swipe, keyboard, dialog, toast)
+    private boolean watcherInstalled = false;
+    private void installImmersiveWatcher() {
+        if (watcherInstalled) return;
+        try {
+            final View d = getWindow().getDecorView();
+            d.setOnSystemUiVisibilityChangeListener(vis -> {
+                if ((vis & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) d.postDelayed(this::applyFullscreen, 1500);
+            });
+            if (Build.VERSION.SDK_INT >= 30) {
+                d.setOnApplyWindowInsetsListener((v, insets) -> {
+                    if (insets.isVisible(WindowInsets.Type.statusBars()) || insets.isVisible(WindowInsets.Type.navigationBars()))
+                        v.postDelayed(this::applyFullscreen, 1500);
+                    return v.onApplyWindowInsets(insets);
+                });
+            }
+            watcherInstalled = true;
+        } catch (Throwable t) {
+            Log.e(TAG, "immersive watcher", t);
         }
     }
 

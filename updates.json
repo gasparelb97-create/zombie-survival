@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-10a",
+  "rev": "2026-10-14a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,20 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.81",
+      "date": "14 ott",
+      "items": [
+        "🎃 Avvio immediato con la zucca di Halloween",
+        "🔦 Torcia che segue la mira, con alone",
+        "🔊 Suono diverso per ogni arma, niente gracchi",
+        "🛒 Negozio sistemato: nuova sezione Personaggio (con Critico), mirini attivi",
+        "🎒 Zaino senza scorrimento, crafting con anteprima",
+        "🌌 Notte stellata, tramonti più caldi",
+        "🗺️ Minimappa più bella e più in alto",
+        "🛡️ Gilde: Capo gilda, Anziano, chat, missioni e premi"
+      ]
+    },
     {
       "ver": "4.3.80",
       "date": "10 ott",
