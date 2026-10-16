@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-14a",
+  "rev": "2026-10-14d",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,38 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.85",
+      "date": "14 ott",
+      "items": [
+        "🔫 Tutte le armi da fuoco rimodellate, più realistiche",
+        "🛒 Negozio e zaino ridisegnati",
+        "🔨 Crafting a schermo fisso, senza scorrimento",
+        "🌐 Base per il gioco online"
+      ]
+    },
+    {
+      "ver": "4.3.83",
+      "date": "14 ott",
+      "items": [
+        "⚡ Meno scatti: shader preparati durante il caricamento",
+        "🎯 Mirino del fucile a pompa di nuovo trasparente",
+        "💾 Salvataggi e danni alla base più leggeri",
+        "🛡️ Diagnosi crash migliorata"
+      ]
+    },
+    {
+      "ver": "4.3.82",
+      "date": "14 ott",
+      "items": [
+        "🎨 Armi disegnate nel negozio e nel crafting",
+        "🧰 Crafting a pagine, senza scorrimento",
+        "🏠 Home compatta: Gioca + Negozio/Arena/Gilda",
+        "🛡️ Gilde con Capo/Anziano/Membro e ricerca",
+        "🪟 Finestre senza scintillii sulle tende",
+        "💡 Suggerimenti e bug dalle Impostazioni"
+      ]
+    },
     {
       "ver": "4.3.81",
       "date": "14 ott",

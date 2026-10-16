@@ -476,25 +476,7 @@ try{window.__zs481={get m(){return M481;}};}catch(e){}
         }catch(e){_pw.call(this,z,t,amp);}
       };
     }
-    // Awareness: idle/wander until see/hear — wrap updateZombie lightly
-    if(typeof updateZombie==='function'){
-      const _uz=updateZombie;updateZombie=function(z,dt,t,target,canAttack){
-        try{
-          if(M481.on&&SV&&SV.on&&z&&!z.dead&&z.alive){
-            // If AI already has awareness flags, gently decay chase when player unseen
-            if(z.aw432===0&&z.state==='chase'){z._lose481=(z._lose481||0)+dt;if(z._lose481>4){z.state='wander';z._lose481=0;}}
-            else z._lose481=Math.max(0,(z._lose481||0)-dt*.5);
-            // Hearing: gunshots already via noise systems; soft footstep hear
-            if(!z.aw432&&player&&player.pos){
-              const dx=z.g.position.x-player.pos.x,dz=z.g.position.z-player.pos.z,d2=dx*dx+dz*dz;
-              const sprint=typeof keys!=='undefined'&&(keys.ShiftLeft||keys.ShiftRight);
-              if(d2< (sprint?100:36) && Math.random()<dt*(sprint?.8:.25)){z.aw432=1;z.tgtKind='player';}
-            }
-          }
-        }catch(e){}
-        return _uz.call(this,z,dt,t,target,canAttack);
-      };
-    }
+    // 4.3.82: awareness hook removed (fought with the AI432 timers while zombies attack)
   }catch(e){e481(e,'zomb');}
 })();
 

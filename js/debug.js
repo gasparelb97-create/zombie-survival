@@ -113,7 +113,7 @@ function stats(){var n=D.fn,a=[],sum=0,cs=0,rs=0;for(var i=0;i<n;i++){var v=D.fr
   return {fps:Math.round(D.fps),avg:n?+(sum/n).toFixed(1):0,p95:n?+a[Math.floor(n*.95)].toFixed(1):0,max120:n?+a[n-1].toFixed(1):0,worst:+D.worst.toFixed(1),long50:D.long50,long100:D.long100,
     cpu:n?+(cs/n).toFixed(2):0,render:n?+(rs/n).toFixed(2):0,update:n?+((cs-rs)/n).toFixed(2):0,frames:D.total,renderFuoriFrame:D.extRender,renderFuoriFrameMs:Math.round(D.extRenderMs),longTasks:D.longTasks,longTaskMax:Math.round(D.longTaskMs)};}
 function sysObj(){var o={};SYS.forEach(function(k){o[k]=+D.sys[k].toFixed(2);});return o;}
-function report(){var m=performance.memory,s=stats();return {v:VER,app:(window.GAME_VER||''),quando:new Date().toISOString(),durata_s:Math.round((now()-D.start)/1000),perf:s,sistemi:sysOn?sysObj():'non agganciati',
+function report(){var m=performance.memory,s=stats();return {ext482:(function(){try{return window.__dbg482x?window.__dbg482x():null;}catch(e){return null;}})(),v:VER,app:(window.GAME_VER||''),quando:new Date().toISOString(),durata_s:Math.round((now()-D.start)/1000),perf:s,sistemi:sysOn?sysObj():'non agganciati',
   stato:state(),memoria:m?{usataMB:+(m.usedJSHeapSize/1048576).toFixed(1),totMB:+(m.totalJSHeapSize/1048576).toFixed(1),limiteMB:Math.round(m.jsHeapSizeLimit/1048576),trend:D.heap.slice(-30)}:'non disponibile',
   device:device(),fluidita:(function(){try{return window.__fl431?window.__fl431.rep():null;}catch(e){return null;}})(),contestoPerso:D.ctxLost,avvio:bootMarks(),fps10s:FH.hist.slice(),top3:top3(),costoDebugMs:dqCost(),musica:(function(){try{return window.__mus436?__mus436.rep():null;}catch(e){return null;}})(),crash:(function(){try{return window.__crash4310?__crash4310.rep():null;}catch(e){return null;}})(),costruzione:build434Rep(),problemi:probSorted().slice(0,80).map(function(x){return {liv:x.sev,tipo:x.k,dove:x.w,cosa:x.msg,volte:x.n,primo:new Date(x.first).toLocaleString('it-IT'),ultimo:new Date(x.last).toLocaleString('it-IT'),questaSessione:x.s===SID,dati:x.x};}),sessioni:PB.sess.slice(-8),errori:D.errors.slice(),ultimiFrame:Array.prototype.slice.call(D.frames,0,D.fn).map(function(v){return Math.round(v*10)/10;}),lettura:(function(){try{return typeof leggi==='function'?leggi():[];}catch(e){return [];}})(),extra29:(function(){try{return window.__rep29?window.__rep29():null;}catch(e){return String(e&&e.message||e);}})()};}
 function summary(){var r=report(),s=r.perf,st=r.stato||{},e=r.errori;var L=['🐞 Zombie debug '+VER+' '+new Date().toLocaleString('it-IT'),
@@ -218,7 +218,7 @@ function leggi(){var out=[],L=probSorted(),s=null;try{s=stats();}catch(e){}
   if(warn.length&&out.length<4)out.push('Avvisi: '+warn.slice(0,2).map(function(x){return x.msg;}).join(' · '));
   return out.slice(0,5);}
 function top3(){var L=PB.list.slice().sort(function(a,b){return (SW[b.sev]*Math.log2(1+b.n)+(b.s===SID?5:0))-(SW[a.sev]*Math.log2(1+a.n)+(a.s===SID?5:0));});
-  return L.slice(0,3).map(function(x,i){var c=CAUSE[x.k]||['?','?'];return {n:i+1,liv:x.sev,cosa:x.msg,dove:x.w,volte:x.n,causaProbabile:c[0],doveCorreggere:c[1]};});}
+  return L.slice(0,3).map(function(x,i){var c=CAUSE[x.k]||(x.k==='auto482'&&window.__dbg482&&__dbg482.cause?__dbg482.cause(x.msg):null)||['?','?'];return {n:i+1,liv:x.sev,cosa:x.msg,dove:x.w,volte:x.n,causaProbabile:c[0],doveCorreggere:c[1]};});}
 function probSorted(){return PB.list.slice().sort(function(a,b){return SW[b.sev]-SW[a.sev]||b.n-a.n;});}
 // ---------------- 4.3.5: debug checks time-sliced (a few entities per frame, round-robin), own cost measured ----------------
 var DQ={cost:{giocatore:0,zombie:0,drop:0,costruzione:0,ui:0},frames:0,tot:0,zi:0,pi:0,di:0,keys:{},lastMov:0,pp:null,flip:0,flipN:0,lastD:[0,0,0],ui:null,uiI:0,uiR:[],uiNext:0,uiSt:''};
@@ -290,7 +290,7 @@ var CSS='#zdbgB{position:fixed;z-index:2147483000;left:calc(var(--sal,0px) + 52p
  '#zdbgP .bd{flex:1 1 auto;min-height:0;white-space:pre-wrap;word-break:break-word;overflow:auto;-webkit-overflow-scrolling:touch;pointer-events:auto;touch-action:pan-y;user-select:text;-webkit-user-select:text}#zdbgP .ft{flex:0 0 auto}#zdbgP .er{border-top:1px solid rgba(255,255,255,.07);padding:2px 0}#zdbgP .er .k{display:block}#zdbgP .er .cp{pointer-events:auto;margin:2px 0 0;font:700 10px sans-serif;color:#fff;background:rgba(60,140,255,.55);border:0;border-radius:5px;padding:3px 8px}';
 function el(t,a,p){var e=document.createElement(t);for(var k in a)e[k]=a[k];if(p)p.appendChild(e);return e;}
 function stop(e){e.stopPropagation();}
-function build(){if(ui)return;var st=el('style',{textContent:CSS},document.head);
+function build(){if(ui||true)return;/* 4.3.88: old tabbed panel disabled; only the ladybug (49-v487) views the report */var st=el('style',{textContent:CSS},document.head);
   var b=el('button',{id:'zdbgB',textContent:'🐞',title:'Debug'},document.body);
   var p=el('div',{id:'zdbgP'},document.body);
   var tb=el('div',{className:'tb'},p);var tabs={};

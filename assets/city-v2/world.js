@@ -17,6 +17,7 @@
     const rect = (x, z, w, d) => ({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2 });
     let furnitureCount = 0;
     const lightSources = [], smokeSources = [], wrecks = [], damageSites = [];
+    function insideBuilding(px, pz, pad = 0) { for (const b of buildings) if (Math.abs(px - b.x) < b.w / 2 + pad && Math.abs(pz - b.z) < b.d / 2 + pad) return b; return null; }
     const protectedLots = env.protectedLots || [];
     const inside = (x, z, p = 0) => protectedLots.some(b => x > b.x0 - p && x < b.x1 + p && z > b.z0 - p && z < b.z1 + p);
     function texture(draw, size = 512) {
@@ -209,7 +210,7 @@
         oxygen: { w: .5, d: .4, h: 1.3, f(wl, u) { for (const s of [-.12, .12]) { LC(wl, s < 0 ? 0x3d7b34 : 0xd8d8d0, u + s, .6, .2, .1, 1.2); LC(wl, 0x707070, u + s, 1.25, .2, .03, .1); } } },
         vending: { w: .95, d: .8, h: 1.95, f(wl, u) { const c = pick([0x8a2e26, 0x2e5a8a, 0x3d6b34]); LB(wl, c, u, .97, .4, .95, 1.94, .8); LB(wl, 0x2a3036, u - .12, 1.15, .805, .6, 1.2, .01); const p = W(wl, u - .12, .81); block(m.lamp, p[0], 1.15, p[1], .5, 1.05, .004, wl.yaw); LB(wl, 0x1a1a1a, u + .32, 1.2, .81, .15, .3, .01); LB(wl, 0x1a1a1a, u - .12, .3, .81, .6, .16, .02); } },
         board: { w: 1.8, d: .06, h: 1.2, wall: 1, f(wl, u) { LB(wl, 0x2a2f2a, u, 1.65, .03, 1.8, 1.1, .04); LB(wl, 0x8a7a5a, u, 1.08, .06, 1.8, .04, .08); for (let i = 0; i < 4; i++) LB(wl, 0xd8d4c0, u - .7 + i * .38 + ea(0, .1), 1.75 - (i % 2) * .25, .055, ea(.15, .32), .015, .004); } },
-        notice: { w: 1.1, d: .05, h: 1, wall: 1, f(wl, u) { LB(wl, 0x8a6a48, u, 1.6, .025, 1.1, .8, .03); for (let i = 0; i < Math.round(7 * QI) + 1; i++) LB(wl, pick([0xe8e4da, 0xf0d070, 0xd8a8a8, 0xa8c8d8]), u + ea(-.42, .42), 1.6 + ea(-.28, .28), .045, .18, .22, .004, 0, ea(-.15, .15)); } },
+        notice: { w: 1.1, d: .05, h: 1, wall: 1, f(wl, u) { LB(wl, 0x8a6a48, u, 1.6, .025, 1.1, .8, .03); for (let i = 0, n = Math.min(8, Math.round(7 * QI) + 1); i < n; i++) LB(wl, pick([0xe8e4da, 0xf0d070, 0xd8a8a8, 0xa8c8d8]), u - .39 + (i % 4) * .26 + ea(-.02, .02), 1.76 - ((i / 4) | 0) * .32 + ea(-.02, .02), .052 + (i % 2) * .002, .18, .22, .004, 0, ea(-.06, .06)); } },
         barrels: { w: 1.4, d: .75, h: .95, f(wl, u) { for (const s of [-.35, .35]) { const c = pick([0x795542, 0x3a5a7a, 0x8a2e26, 0x4a5a3a]); LC(wl, c, u + s, .46, .36, .3, .92); LC(wl, 0x2a2a2a, u + s, .3, .36, .305, .03); LC(wl, 0x2a2a2a, u + s, .62, .36, .305, .03); } } },
         workbench: { w: 2, d: .75, h: .95, f(wl, u) { LB(wl, 0x6a5a42, u, .9, .37, 2, .08, .74); for (const s of [-1, 1]) LB(wl, 0x3a3a3a, u + s * .92, .43, .37, .07, .86, .68); LB(wl, 0x6a5a42, u, .2, .37, 1.9, .04, .66); LB(wl, 0x5a6066, u + .65, 1.0, .5, .2, .12, .14); LB(wl, 0x3a3a3a, u, 1.5, .03, 1.9, .9, .03);
           for (let i = 0; i < Math.round(6 * QI); i++) LB(wl, pick([0x8a2e26, 0x9a9a92, 0x2a2a2a]), u - .8 + i * .3, 1.5 + ea(-.2, .2), .06, .04, ea(.2, .35), .03, 0, ea(-.3, .3)); LB(wl, 0xc9a23a, u - .4, .97, .35, .3, .06, .12); } },
@@ -259,8 +260,8 @@
         const segs = wl.door ? [[-wl.L / 2 - .2, -gap / 2], [gap / 2, wl.L / 2 + .2]] : [[-wl.L / 2 - .2, wl.L / 2 + .2]];
         for (const [a, c] of segs) { const L = c - a, um = (a + c) / 2; LB(wl, paint, um, .55, .012, L, 1.02, .02); LB(wl, 0xb8b09a, um, 1.07, .025, L, .06, .04); LB(wl, 0x4a3a2a, um, .06, .02, L, .1, .03); }
         for (const c of wl.wins) {
-          LB(wl, 0xd8d2c0, c, 1.7, .02, wl.ww + .2, 1.55 + .2, .04); LB(wl, 0x4a5a5e, c, 1.7, .035, wl.ww, 1.5, .02); LB(wl, 0xd8d2c0, c, 1.7, .05, .04, 1.5, .02); LB(wl, 0xd8d2c0, c, .9, .09, wl.ww + .35, .05, .18);
-          if (er() < .5 * QI) { LB(wl, pick(FABRIC), c - wl.ww / 2 - .12, 1.75, .07, .22, 1.7, .05); LB(wl, pick(FABRIC), c + wl.ww / 2 + .12, 1.75, .07, .22, 1.7, .05); }
+          LB(wl, 0xd8d2c0, c, 1.7, .02, wl.ww + .2, 1.55 + .2, .04); LB(wl, 0x4a5a5e, c, 1.7, .047, wl.ww - .02, 1.48, .01); LB(wl, 0xd8d2c0, c, 1.7, .062, .04, 1.48, .02); LB(wl, 0xd8d2c0, c, .875, .1, wl.ww + .35, .05, .16);
+          if (er() < .5 * QI) { LB(wl, pick(FABRIC), c - wl.ww / 2 - .26, 1.82, .13, .22, 1.5, .04); LB(wl, pick(FABRIC), c + wl.ww / 2 + .26, 1.82, .13, .22, 1.5, .04); }
         }
         const pics = Math.round((wl.L / 4) * QI);
         for (let i = 0; i < pics; i++) {
@@ -418,7 +419,7 @@
       if (shattered) {
         block(m.glass, x + fx * .14, y - tall * .29, z + fz * .14, wide * .8, tall * .2, .03, yaw);
         block(m.glass, x + fx * .14, y + tall * .32, z + fz * .14, wide * .45, tall * .15, .03, yaw, 0, .13);
-      } else block(m.glass, x + fx * .14, y, z + fz * .14, wide * .84, tall * .83, .03, yaw);
+      } else block(m.glass, x + fx * .125, y, z + fz * .125, wide * .84, tall * .83, .02, yaw);
       block(m.trim, x + fx * .16, y, z + fz * .16, .045, tall, .04, yaw);
       block(m.trim, x + fx * .16, y - .1, z + fz * .16, wide, .055, .04, yaw);
       block(m.trim, x + fx * .22, y - tall / 2 - .17, z + fz * .22, wide + .45, .14, .42, yaw);
@@ -614,11 +615,15 @@
         body(m.tail, s * .7, .7, length / 2 -.16, .26, .15, .06);
         body(headlights ? m.headlight : m.trim, s * .64, .73, -length / 2 + .1, .36, .17, .075);
         if (headlights) {
-          const p = transform(s * .64, -length / 2 + .04), end = transform(s * .64, -length / 2 - 9);
-          beam(p[0], .73, p[1], end[0], .08, end[1], 1.5);
-          const pool = transform(s * .64, -length / 2 - 4.3);
-          flat(lightPool, pool[0], pool[1], 2.8, 9.6, .055, yaw);
-          lightSources.push({ x: p[0], y: .73, z: p[1], tx: end[0], ty: .08, tz: end[1], kind: 'headlight', intensity: 18, angle: .2 });
+          // 4.3.82: headlights must not reach into buildings (lights have no shadow maps) -> clip beam/pool/light at the first wall
+          const p = transform(s * .64, -length / 2 + .04);
+          let reach = 9; for (let t = 0; t <= 9; t += .5) { const q = transform(s * .64, -length / 2 + .04 - t); if (insideBuilding(q[0], q[1], .3)) { reach = Math.max(0, t - .6); break; } }
+          if (reach > 1.2) {
+            const end = transform(s * .64, -length / 2 - reach);
+            beam(p[0], .73, p[1], end[0], .08, end[1], 1.5 * reach / 9 + .2);
+            if (reach > 3) { const pool = transform(s * .64, -length / 2 - reach * .48); flat(lightPool, pool[0], pool[1], 2.8, reach * 1.07, .055, yaw); }
+            lightSources.push({ x: p[0], y: .73, z: p[1], tx: end[0], ty: .08, tz: end[1], kind: 'headlight', intensity: 18 * Math.min(1, reach / 6), angle: .2, maxD: reach + 1.5 });
+          }
         }
       }
       for (const dx of [-.89, .89]) for (const dz of [-1.35, 1.35]) {
@@ -778,7 +783,7 @@
     const smoke = new T.Points(smokeGeo, smokeMat); smoke.name = 'Fumo della catastrofe'; smoke.frustumCulled = false; root.add(smoke);
     // Keep a fixed, small light pool to avoid dozens of per-pixel lights on Android.
     const dynamicLights = [], lightLimit = env.dynamicLights === undefined ? (/Android|iPhone/i.test(navigator.userAgent) ? 2 : 4) : env.dynamicLights;
-    for (let i = 0; i < lightLimit; i++) { const light = new T.SpotLight(0xffdfaa, 0, 26, .6, .65, 2); light.castShadow = false; root.add(light, light.target); dynamicLights.push(light); }
+    for (let i = 0; i < lightLimit; i++) { const light = new T.SpotLight(0xffdfaa, 0, 26, .6, .65, 2); light.castShadow = false; (env.scene || root).add(light, light.target); dynamicLights.push(light); }
     let lastLightUpdate = -1;
     function update(time, camera, viewportHeight = innerHeight) {
       smokeMat.uniforms.uTime.value = time;
@@ -789,12 +794,13 @@
       }
       if (time - lastLightUpdate < .25 && time >= lastLightUpdate) return;
       lastLightUpdate = time;
-      const near = lightSources.map(s => ({ source: s, distance: (s.x - camera.position.x) ** 2 + (s.z - camera.position.z) ** 2 })).filter(s => s.distance < 34 ** 2 && camera.position.y < 15).sort((a, b) => a.distance - b.distance).slice(0, lightLimit);
+      const indoor = insideBuilding(camera.position.x, camera.position.z, -.2) && camera.position.y < 12;
+      const near = (indoor ? [] : lightSources).map(s => ({ source: s, distance: (s.x - camera.position.x) ** 2 + (s.z - camera.position.z) ** 2 })).filter(s => s.distance < 34 ** 2 && camera.position.y < 15).sort((a, b) => a.distance - b.distance).slice(0, lightLimit);
       for (let i = 0; i < dynamicLights.length; i++) {
         const light = dynamicLights[i], s = near[i] && near[i].source;
         if (!s) { light.intensity = 0; continue; }
         light.position.set(s.x, s.y, s.z); light.target.position.set(s.tx, s.ty, s.tz);
-        light.angle = s.angle; light.distance = s.kind === 'street' ? 16 : 15; light.intensity = s.intensity;
+        light.angle = s.angle; light.distance = s.kind === 'street' ? 16 : Math.min(15, s.maxD || 15); light.intensity = s.intensity;
       }
     }
     // Photo surfaces are optional; deterministic materials stay visible offline.
