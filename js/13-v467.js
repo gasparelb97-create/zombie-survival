@@ -63,7 +63,7 @@ function retCls467(w){if(!w||w.melee)return 'melee';if(w.pellets>1||W_(w)==='sho
   const op=$('cross').style.opacity;if(E.style.opacity!==op)E.style.opacity=op;}catch(e){e467(e,'ret');}};}
 {const _hm=hitMarker;hitMarker=function(k){_hm(k);try{const E=RET467.el;if(E){E.classList.remove('hit');void E.offsetWidth;E.classList.add('hit');clearTimeout(RET467.hitT);RET467.hitT=setTimeout(()=>E.classList.remove('hit'),110);}}catch(e){}};}
 // ---------- 4) gait variety ----------
-{const _pw=poseWalk;poseWalk=function(z,t,amp){_pw(z,t,amp);if(window.__z497||!M467.on||!z||!z.hips)return;try{let G=z.gait467;if(!G){const r=Math.random;G=z.gait467={sway:.03+r()*.07,lean:(r()-.5)*.14,limp:r()<.35?.25+r()*.4:0,side:r()<.5?1:-1,arm:r()*.35,tilt:(r()-.5)*.35,ph:r()*6};}
+{const _pw=poseWalk;poseWalk=function(z,t,amp){_pw(z,t,amp);if(!M467.on||!z||!z.hips)return;try{let G=z.gait467;if(!G){const r=Math.random;G=z.gait467={sway:.03+r()*.07,lean:(r()-.5)*.14,limp:r()<.35?.25+r()*.4:0,side:r()<.5?1:-1,arm:r()*.35,tilt:(r()-.5)*.35,ph:r()*6};}
   const ph=z.phase||0,s=Math.sin(ph),a=Math.max(0,Math.min(1,amp));
   z.hips.rotation.z+=s*G.sway*a;z.spine.rotation.z+=s*G.sway*.7*a+G.lean;z.spine.rotation.y+=Math.sin(ph+.6)*G.sway*.6*a;
   if(z.neck)z.neck.rotation.z+=G.tilt*.5+Math.sin(t*.9+G.ph)*.06;
@@ -82,7 +82,7 @@ const _bp467=new T.Vector3(),_bn467=new T.Vector3(0,1,0),_bd467=new T.Vector3();
   _bd467.set(dir.x,0,dir.z);if(_bd467.lengthSq()<1e-6)_bd467.set(0,0,1);_bd467.normalize();
   mist467(point,dir,head?2:1,head);
   const nd=q==='bassa'?1:2;for(let i=0;i<nd;i++){const dd=rand(.9,2.6);_bp467.set(point.x+_bd467.x*dd+rand(-.25,.25),.01+i*.002,point.z+_bd467.z*dd+rand(-.25,.25));addDecal(bloods,_bp467,_bn467,rand(.3,.65));}
-  if(head&&z.dead&&!window.__z497){_bp467.copy(point);emit(_bp467,_up,q==='bassa'?14:28,BLOOD,{speed:5.5,spread:1.5,life:.9,size:.07,grav:11,up:1});mist467(point,_up,3,true);_bp467.y=.012;addDecal(bloods,_bp467,_bn467,1.5);if(z.neck&&z.neck.visible){z.neck.visible=false;z.gore=z.gore||{};z.gore.head=1;try{chunk442(point,dir,goreBrain,6,.1);}catch(e){}}}
+  if(head&&z.dead){_bp467.copy(point);emit(_bp467,_up,q==='bassa'?14:28,BLOOD,{speed:5.5,spread:1.5,life:.9,size:.07,grav:11,up:1});mist467(point,_up,3,true);_bp467.y=.012;addDecal(bloods,_bp467,_bn467,1.5);if(z.neck&&z.neck.visible){z.neck.visible=false;z.gore=z.gore||{};z.gore.head=1;try{chunk442(point,dir,goreBrain,6,.1);}catch(e){}}}
   }catch(e){e467(e,'blood');}return r;};}
 // ---------- 7) ragdoll-like falls ----------
 const _ax467=new T.Vector3(1,0,0);const RJ467=['kneeL','kneeR','hipL','hipR','spine','shL','shR','elL','elR','neck'];
@@ -107,7 +107,7 @@ function updateDead467(z,dt){const R=z.rd467;z.deadT+=dt;const k=z.deadT,sc=z.V.
   if(z.sv){z.g.position.addScaledVector(z.sv,dt);z.sv.multiplyScalar(Math.exp(-(R.land?4.5:1.6)*dt));}
   collide(z.g.position,.3);
   if(k>4.8&&z.blob)z.blob.visible=false;if(k>6.4){z.alive=false;z.g.visible=false;z.rd467=null;updateHUD();}}
-{const _ud=updateDead;updateDead=function(z,dt){if(!window.__z497&&M467.on&&z&&z.rd467&&zsShow()){try{updateDead467(z,dt);return;}catch(e){e467(e,'dead');z.rd467=null;}}return _ud(z,dt);};}
+{const _ud=updateDead;updateDead=function(z,dt){if(M467.on&&z&&z.rd467&&zsShow()){try{updateDead467(z,dt);return;}catch(e){e467(e,'dead');z.rd467=null;}}return _ud(z,dt);};}
 // ---------- 9/10) ammo drops ----------
 const AM467={pistol:['9mm',0xd8b04a],smg:['9mm',0xd8b04a],burst:['9mm',0xd8b04a],revolver:['.357',0xe08a3a],fox:['5.56',0x8fbf4a],ar:['5.56',0x8fbf4a],minigun:['7.62',0x8fbf4a],shotgun:['12G',0xd0453a],dbarrel:['12G',0xd0453a],saw:['12G',0xd0453a],thunder:['12G',0xd0453a],
   sniper:['.50',0x5a8cff],hunt:['.308',0x5a8cff],crossbow:['Dardi',0x9ac85a],laser:['Cella',0x40e8f0],plasma:['Plasma',0xff8a30],glauncher:['40mm',0x9a9a50],vespa:['40mm',0x9a9a50],flamer:['Gas',0xff6020]};

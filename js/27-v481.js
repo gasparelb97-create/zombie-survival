@@ -470,7 +470,6 @@ try{window.__zs481={get m(){return M481;}};}catch(e){}
         try{
           // Speed-matched phase boost before classic pose
           if(z&&z.speed){z._gait481=(z._gait481||0)+0; }
-          if(z&&z.z497)return _pw.call(this,z,t,amp);
           _pw.call(this,z,t,amp);
           // Soften spine bob for realism
           if(z&&z.spine&&amp>.2){z.spine.rotation.x*=.92;if(z.hips)z.hips.position.y=z.hips.position.y*.4+(.94)*.6;}

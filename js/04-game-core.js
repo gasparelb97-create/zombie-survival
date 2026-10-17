@@ -48,7 +48,7 @@ function closeCraft(){$('craftScreen').classList.add('hidden');if(game.state==='
 $('craftClose').addEventListener('click',closeCraft);
 
 // ---------- shooting ----------
-const ray=new T.Raycaster();ray.layers.enable(2);const _dir=new T.Vector3(),_org=new T.Vector3(),_n=new T.Vector3(),_from=new T.Vector3(),_tmp=new T.Vector3();
+const ray=new T.Raycaster();const _dir=new T.Vector3(),_org=new T.Vector3(),_n=new T.Vector3(),_from=new T.Vector3(),_tmp=new T.Vector3();
 let targetsCache=[];function shootTargets(){targetsCache.length=0;for(const s of solids)targetsCache.push(s);for(const m of zHitMeshes){const z=m.userData.z;if(!z||!z.alive||z.dead)continue;const slot=m.userData.slot;if(z.gore&&slot&&z.gore[slot])continue;targetsCache.push(m);}return targetsCache;}
 const BLOOD=[0x8a0000,0x5a0000,0xb01010,0x6e0505];const SPARK=[0xfff2b0,0xffc040,0xff8a20];const DUST=[0x6a6058,0x857a6e,0x4a443e];
 function startReload(){const w=WEAPONS[curW];if(w.melee||fx.reload>=0||mag[w.id]>=w.mag||res[w.id]<=0)return false;fx.reload=0;fx.reloadDur=w.reload;play('reload',w.reload);$('rlBar').style.display='block';updateHUD();return true;}
@@ -188,7 +188,7 @@ function updateZombie(z,dt,t,target,canAttack){const V=z.V,sc=V.scale;
   let dy=want-z.g.rotation.y;dy=Math.atan2(Math.sin(dy),Math.cos(dy));if(d<.9*sc+.8&&Math.abs(dy)<.35&&!(z.sideT>0))dy=0;const turnG=z.ai==='chase'?9:(V.name==='runner'?6.4:5.2);z.g.rotation.y+=dy*Math.min(1,dt*turnG);z.turn439=dy;
   z.stag=Math.max(0,z.stag-dt);z.stagHead=Math.max(0,z.stagHead-dt*3);z.cool-=dt;
   if(canAttack){z.groanT-=dt;if(z.groanT<=0){z.groanT=rand(6,12);groan(z,'idle');}}
-  if(z.state==='atk'){if(z.z497&&typeof z497Attack==='function'){z497Attack(z,dt,t,d,sc,canAttack);collide(z.g.position,.35*sc);keepOut(z,target,canAttack);return;}if(z.crawl){const Wd=.46,S=.22,R=.4;z.atkT+=dt;const at=z.atkT;const bite=at>=Wd&&at<Wd+S;
+  if(z.state==='atk'){if(z.crawl){const Wd=.46,S=.22,R=.4;z.atkT+=dt;const at=z.atkT;const bite=at>=Wd&&at<Wd+S;
     z.hips.position.y=.34;z.hips.rotation.set(bite?1.15:1.38,0,(z.gore&&z.gore.legL?.08:0)-(z.gore&&z.gore.legR?.08:0));
     z.spine.rotation.set(bite?-.15:.08,0,0);
     const sh=bite?-1.5:-2.3;
