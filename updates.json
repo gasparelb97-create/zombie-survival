@@ -11,6 +11,13 @@
   ],
   "recent": [
     {
+      "ver": "4.3.95",
+      "date": "17 ott",
+      "items": [
+        "🩸 Effetto rosso a bassa vita rifatto leggero: niente più lag su GPU Adreno (solo opacità, niente box-shadow pesanti)"
+      ]
+    },
+    {
       "ver": "4.3.85",
       "date": "14 ott",
       "items": [
