@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-14d",
+  "rev": "2026-10-17a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,13 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.96",
+      "date": "17 ott",
+      "items": [
+        "🛡️ Gilda: chat che non perde e non raddoppia i messaggi, avviso dei messaggi nuovi e membri in linea"
+      ]
+    },
     {
       "ver": "4.3.95",
       "date": "17 ott",

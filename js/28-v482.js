@@ -183,54 +183,119 @@ function repSend482(){const r=$('rep482'),t=($('repTxt482').value||'').trim();if
    .catch(()=>{try{if(typeof sug29Open==='function'){r.classList.add('hidden');sug29Open();return;}}catch(e){}toast('Invio non riuscito, riprova più tardi',1800);}).finally(()=>{clearTimeout(to);b.disabled=false;});}
 try{const h=$('helpScreen'),row=h&&h.querySelector('.btnRow');if(h&&!$('repBtn482')){const b=document.createElement('button');b.type='button';b.id='repBtn482';b.innerHTML=ic482('bug')+'Suggerimenti e bug';b.addEventListener('click',e=>{e.stopPropagation();repOpen482();});if(row)row.before(b);else h.querySelector('.sheet').appendChild(b);}}catch(e){e482(e,'repBtn');}
 // ---------- Gilda v2: search/create, members + roles, requests, management; server enforces permissions ----------
-const G482={tab:'',clan:null,list:[],q:'',page:0,msgs:[],since:0,down:0,k:0,r:0,lastPts:0};
+const G482={tab:'',clan:null,list:[],q:'',page:0,msgs:[],seen:Object.create(null),pending:[],draft:'',since:0,down:0,k:0,r:0,lastPts:0,readT:0,seeded:0,sending:0,sentAt:0,pulling:null,pullAgain:0,armT:0,lastToast:0,meAt:0};
+try{const rt=localStorage.getItem('zs_gread496');if(rt!=null){G482.readT=+rt||0;G482.seeded=1;}}catch(e){}
 const RKN482={c:'Capo gilda',a:'Anziano',m:'Membro'},RKI482={c:'rkc',a:'rka',m:'rkm'};
-function gApi482(path,body){let init='';try{init=zs439Init()||'';}catch(e){}if(typeof ZS_API==='undefined'||!ZS_API)return Promise.reject(new Error('no_api'));if(body&&!init)return Promise.reject(new Error('no_tg'));
-  const c=new AbortController(),to=setTimeout(()=>{try{c.abort();}catch(e){}},4500);const o={method:body?'POST':'GET',signal:c.signal};if(body){o.headers={'content-type':'application/json'};o.body=JSON.stringify(Object.assign({initData:init},body));}
+const GON482=90000;
+function gApi482(path,body,ms){let init='';try{init=zs439Init()||'';}catch(e){}if(typeof ZS_API==='undefined'||!ZS_API)return Promise.reject(new Error('no_api'));if(body&&!init)return Promise.reject(new Error('no_tg'));
+  const c=new AbortController(),to=setTimeout(()=>{try{c.abort();}catch(e){}},ms||4500);const o={method:body?'POST':'GET',signal:c.signal};if(body){o.headers={'content-type':'application/json'};o.body=JSON.stringify(Object.assign({initData:init},body));}
   return fetch(ZS_API+path,o).then(r=>r.json()).finally(()=>clearTimeout(to));}
 function gE(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-const GERR482={perm:'Non hai i permessi',full:'Gilda piena',taken:'Nome già usato',name:'Nome troppo corto',already:'Sei già in una gilda',transfer_first:'Prima cedi il ruolo di Capo gilda',in_other:'È già in un\'altra gilda',slow:'Troppo veloce, riprova',nf:'Non trovato',no_tg:'Apri il gioco da Telegram'};
+function gSan482(s){return String(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,200);}
+function gClip(s,n){s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s;}
+function gTime482(t){try{const d=new Date(t);if(!t||isNaN(d.getTime()))return '';const p=n=>String(n).padStart(2,'0');return p(d.getHours())+':'+p(d.getMinutes());}catch(e){return '';}}
+const GERR482={perm:'Non hai i permessi',full:'Gilda piena',taken:'Nome già usato',name:'Nome troppo corto',already:'Sei già in una gilda',transfer_first:'Prima cedi il ruolo di Capo gilda',in_other:'È già in un\'altra gilda',slow:'Troppo veloce, riprova',nf:'Non trovato',no_tg:'Apri il gioco da Telegram',empty:'Messaggio vuoto'};
 function gErr482(j){toast(GERR482[(j&&j.err)||'']||'Errore',1500);}
+function gPanelOpen(){const e=$('gilda482');return !!(e&&!e.classList.contains('hidden'));}
+function gChatOpen(){return gPanelOpen()&&G482.tab==='chat';}
+function gKey482(m){return (m.t|0)+'\n'+String(m.n||'')+'\n'+String(m.m||'');}
+function gMerge482(arr){const fresh=[];if(!Array.isArray(arr))return fresh;
+  for(let i=0;i<arr.length;i++){const src=arr[i];if(!src||typeof src.m!=='string')continue;const m={n:String(src.n||''),t:src.t|0,m:src.m,me:!!src.me};if(!m.t||!m.m)continue;const k=gKey482(m);if(G482.seen[k])continue;G482.seen[k]=1;G482.msgs.push(m);fresh.push(m);}
+  if(fresh.length)G482.msgs.sort((a,b)=>a.t-b.t);
+  if(G482.msgs.length)G482.since=G482.msgs[G482.msgs.length-1].t;
+  if(G482.msgs.length>80){const drop=G482.msgs.splice(0,G482.msgs.length-80);for(let i=0;i<drop.length;i++)delete G482.seen[gKey482(drop[i])];}
+  return fresh;}
+function gAck482(fresh){if(!G482.pending.length||!fresh||!fresh.length)return;
+  for(let i=0;i<fresh.length;i++){const m=fresh[i];if(!m.me)continue;const k=G482.pending.findIndex(p=>p.m===m.m);if(k>=0)G482.pending.splice(k,1);}}
+function gUnread482(){let c=0,t=G482.readT|0;for(let i=0;i<G482.msgs.length;i++){const m=G482.msgs[i];if(!m.me&&m.t>t)c++;}return c;}
+function gMarkRead482(){let mx=G482.readT|0;for(let i=0;i<G482.msgs.length;i++)if(G482.msgs[i].t>mx)mx=G482.msgs[i].t;if(mx!==G482.readT){G482.readT=mx;try{localStorage.setItem('zs_gread496',String(mx));}catch(e){}}G482.seeded=1;gBadge482();}
+function gBadge482(){const n=gUnread482();
+  const home=$('btnGilda482');if(home){let d=home.querySelector('.gbadge');if(!n){if(d)d.remove();}else{if(!d){d=document.createElement('i');d.className='gbadge';home.appendChild(d);}d.textContent=n>9?'9+':String(n);}}
+  const tab=document.querySelector('#gTb482 button[data-t="chat"]');if(tab){let d=tab.querySelector('.gbadge');const show=n&&!gChatOpen();if(!show){if(d)d.remove();}else{if(!d){d=document.createElement('i');d.className='gbadge';tab.appendChild(d);}d.textContent=n>9?'9+':String(n);}}}
+function gNotify482(fresh){if(gChatOpen()){gMarkRead482();gAfter482();return;}
+  if(!G482.seeded){G482.seeded=1;gMarkRead482();gAfter482();return;}
+  gBadge482();const neu=(fresh||[]).filter(m=>!m.me&&m.t>(G482.readT|0));if(!neu.length){gAfter482();return;}
+  const now=Date.now();if(now-G482.lastToast>3500){G482.lastToast=now;if(neu.length===1)toast(gClip(neu[0].n,14)+': '+gClip(neu[0].m,48),2400);else toast(neu.length+' nuovi messaggi in gilda',2400);}
+  gAfter482();}
+function gIsOn482(m){if(!m)return false;if(m.me)return true;if(m.on===true)return true;if(m.seen&&Date.now()-(m.seen|0)<GON482)return true;
+  const now=Date.now();for(let i=G482.msgs.length-1;i>=0;i--){const x=G482.msgs[i];if(now-x.t>GON482)break;if(x.me){if(m.me)return true;}else if(x.n===m.n)return true;}return false;}
+function gOnlineN(){const M=(G482.clan&&G482.clan.members)||[];let n=0;for(let i=0;i<M.length;i++)if(gIsOn482(M[i]))n++;return n;}
+function gStat482(){const c=G482.clan,s=$('gS482');if(!s||!c)return;s.textContent='Lv '+(c.lv||1)+' · '+(c.members||[]).length+'/20 · '+gOnlineN()+' online';}
+function gOnlHtml(){const M=((G482.clan&&G482.clan.members)||[]).slice().sort((a,b)=>(gIsOn482(b)-gIsOn482(a))||((({c:3,a:2,m:1}[b.rk]||0)-({c:3,a:2,m:1}[a.rk]||0))));
+  return '<div class="onl" id="gOn482"><b>'+gOnlineN()+' in linea</b>'+M.map(m=>'<span class="'+(gIsOn482(m)?'on':'off')+'"><i></i>'+gE(gClip(m.n,12))+(m.me?' · tu':'')+'</span>').join('')+'</div>';}
+function gRenderOn(){const el=$('gOn482');if(!el)return;const html=gOnlHtml();if(el.dataset.h===html)return;const sc=el.scrollLeft;el.outerHTML=html;const n=$('gOn482');if(n){n.dataset.h=html;n.scrollLeft=sc;}gStat482();}
+function gRenderLog(){const log=$('gLog482');if(!log)return;const rows=G482.msgs.concat(G482.pending.map((p,i)=>({n:p.n,m:p.m,t:p.sentAt,me:true,st:p.st,i})));
+  const html=rows.length?rows.map(m=>{const st=m.st==='send'?'<i class="st">invio…</i>':m.st==='fail'?'<i class="st bad">non inviato</i> <button type="button" class="b g" data-a="retry" data-i="'+m.i+'">Riprova</button>':'';
+    return '<div class="bub'+(m.me?' me':'')+(m.st?' '+m.st:'')+'"><div class="nm">'+gE(gClip(m.n||'Tu',16))+'<span>'+gTime482(m.t)+'</span></div><div class="tx">'+gE(m.m)+st+'</div></div>';}).join(''):'<div class="mu">Nessun messaggio. Scrivi tu il primo.</div>';
+  if(log.dataset.h===html)return;const near=log.scrollHeight-log.scrollTop-log.clientHeight<36;const prev=log.scrollTop;log.dataset.h=html;log.innerHTML=html;if(near)log.scrollTop=log.scrollHeight;else log.scrollTop=prev;}
+function gAfter482(){if(!gPanelOpen())return;gStat482();if(G482.tab==='chat'){gRenderOn();gRenderLog();}else if(G482.tab==='mem')gPaint482();}
+function gSince482(){const a=G482.msgs;if(a.length<12)return 0;return Math.max(0,(a[Math.max(0,a.length-45)].t|0)-1);}
+function gPull482(){if(!G482.clan)return Promise.resolve();if(G482.pulling){G482.pullAgain=1;return G482.pulling;}
+  const p=gApi482('/clan/msgs',{since:gSince482()},8000).then(j=>{if(!j||!j.ok||!Array.isArray(j.msgs))return;const fresh=gMerge482(j.msgs);gAck482(fresh);gNotify482(fresh);}).catch(()=>{}).finally(()=>{G482.pulling=null;if(G482.pullAgain){G482.pullAgain=0;gPull482();}});
+  G482.pulling=p;return p;}
+function gArm482(){clearTimeout(G482.armT);if(!G482.clan)return;const open=gPanelOpen(),chat=open&&G482.tab==='chat';const ms=document.hidden?30000:(chat?3500:(open?10000:20000));
+  G482.armT=setTimeout(()=>{if(gPanelOpen())gRefreshClan();gPull482().then(gArm482,gArm482);},ms);}
+function gRefreshClan(){if(!gPanelOpen()||!G482.clan)return;const now=Date.now();if(now-G482.meAt<12000)return;G482.meAt=now;
+  gApi482('/clan/me',{}).then(j=>{if(!j||!j.ok)return;const had=!!G482.clan;G482.clan=j.clan;if(!G482.clan){G482.msgs=[];G482.seen=Object.create(null);G482.pending=[];gPaint482();return;}if(G482.tab==='chat'){gRenderOn();gStat482();}else if(had)gPaint482();}).catch(()=>{});}
+function gSend482(text){const m=gSan482(text);if(!m)return;if(G482.sending)return;const now=Date.now();if(now-G482.sentAt<1600){toast('Troppo veloce, riprova',1200);return;}
+  G482.sending=1;G482.sentAt=now;const me=(G482.clan&&(G482.clan.members||[]).find(x=>x.me))||{};const pend={m,n:me.n||'Tu',sentAt:now,st:'send'};G482.pending.push(pend);G482.draft='';
+  const inp=$('gM482');if(inp)inp.value='';gRenderLog();const btn=$('gSend482');if(btn)btn.disabled=true;
+  const fail=()=>{pend.st='fail';G482.sending=0;if(btn)btn.disabled=false;gRenderLog();};
+  gApi482('/clan/chat',{m},8000).then(j=>{G482.sending=0;if(btn)btn.disabled=false;if(!j||!j.ok){fail();gErr482(j||{});return;}gPull482();}).catch(()=>{fail();toast('Messaggio non inviato',1400);});}
 function gEnsure482(){let el=$('gilda482');if(el)return el;const st=document.createElement('style');st.textContent=
  '#gilda482{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.66)}#gilda482.hidden{display:none}'+
- '#gilda482 .gs{width:min(560px,97vw);height:min(calc(100vh - 10px),520px);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#1a1420,#0c0e14);border:1px solid rgba(255,190,90,.45);border-radius:14px;padding:8px 10px;color:#e8eef5;font:600 13px system-ui,sans-serif;box-sizing:border-box}'+
+ '#gilda482 .gs{width:min(560px,97vw);height:min(calc(100vh - 10px),520px);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#1a1420,#0c1016);border:1px solid rgba(255,190,90,.45);border-radius:14px;padding:8px 10px;color:#e8eef5;font:600 13px system-ui,sans-serif;box-sizing:border-box}'+
  '#gilda482 .hd{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-width:0}#gilda482 .hd .ic482{width:30px;height:30px}#gilda482 .hd h2{flex:1;min-width:0;margin:0;font-size:15px;color:#ffd27a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#gilda482 .hd small{opacity:.7;font-size:11px;white-space:nowrap}'+
  '#gilda482 .x{flex:0 0 auto;width:34px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#cfd6e0;font-weight:900}'+
- '#gilda482 .tb{display:flex;gap:4px;margin:6px 0;flex:0 0 auto}#gilda482 .tb button{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;padding:5px 2px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#cfd6e0;font-weight:700;font-size:11.5px;white-space:nowrap;overflow:hidden}#gilda482 .tb button .ic482{width:18px;height:18px}#gilda482 .tb button.on{background:rgba(255,170,60,.18);border-color:rgba(255,200,100,.55);color:#ffe2a8}'+
+ '#gilda482 .tb{display:flex;gap:4px;margin:6px 0;flex:0 0 auto}#gilda482 .tb button{position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;padding:5px 2px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#cfd6e0;font-weight:700;font-size:11.5px;white-space:nowrap;overflow:hidden}#gilda482 .tb button .ic482{width:18px;height:18px}#gilda482 .tb button.on{background:rgba(255,170,60,.18);border-color:rgba(255,200,100,.55);color:#ffe2a8}'+
  '#gilda482 .bd{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:5px}#gilda482 .ls{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:4px}'+
- '#gilda482 .it{display:flex;align-items:center;gap:6px;height:34px;padding:0 6px;border-radius:8px;background:rgba(255,255,255,.045);flex:0 0 34px;min-width:0}#gilda482 .it .ic482{width:22px;height:22px}#gilda482 .it .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#gilda482 .it .s{flex:0 1 auto;font-size:11px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40%}'+
- '#gilda482 .b{flex:0 0 auto;padding:5px 8px;border-radius:7px;border:1px solid rgba(255,210,122,.45);background:rgba(255,180,60,.15);color:#ffe2a8;font-weight:800;font-size:11px;white-space:nowrap}#gilda482 .b.r{border-color:rgba(255,110,90,.5);background:rgba(255,80,60,.12);color:#ffb0a0}#gilda482 .b.g{background:transparent;color:#cfd6e0;border-color:rgba(255,255,255,.2)}'+
+ '#gilda482 .it{display:flex;align-items:center;gap:6px;height:34px;padding:0 6px;border-radius:8px;background:rgba(255,255,255,.045);flex:0 0 34px;min-width:0}#gilda482 .it .ic482{width:22px;height:22px}#gilda482 .it .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#gilda482 .it .s{flex:0 1 auto;font-size:11px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46%}'+
+ '#gilda482 .b{flex:0 0 auto;padding:5px 8px;border-radius:7px;border:1px solid rgba(255,210,122,.45);background:rgba(255,180,60,.15);color:#ffe2a8;font-weight:800;font-size:11px;white-space:nowrap}#gilda482 .b.r{border-color:rgba(255,110,90,.5);background:rgba(255,80,60,.12);color:#ffb0a0}#gilda482 .b.g{background:transparent;color:#cfd6e0;border-color:rgba(255,255,255,.2)}#gilda482 .b:disabled{opacity:.45}'+
  '#gilda482 .rw{display:flex;gap:6px;align-items:center;flex:0 0 auto}#gilda482 input{flex:1;min-width:0;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.35);color:#fff;padding:7px;font:600 13px system-ui;user-select:text;-webkit-user-select:text}'+
  '#gilda482 .pg{display:flex;justify-content:center;gap:12px;align-items:center;flex:0 0 auto;font-size:11px;opacity:.85}#gilda482 .pg button{width:36px;height:26px;border-radius:7px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#ffe2a8;font-weight:900}'+
- '#gilda482 .mu{font-size:11.5px;opacity:.7}#gilda482 .msg{font-size:12px;line-height:1.25;padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.035);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}#gilda482 .msg.me{background:rgba(255,170,60,.12)}'+
- '#gilda482 .bar{height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}#gilda482 .bar i{display:block;height:100%;background:linear-gradient(90deg,#a33a06,#ffb347)}';
+ '#gilda482 .mu{font-size:11.5px;opacity:.7}#gilda482 .bar{height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}#gilda482 .bar i{display:block;height:100%;background:linear-gradient(90deg,#a33a06,#ffb347)}'+
+ '#gilda482 .log{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;gap:4px;padding:1px 1px 2px;touch-action:pan-y}'+
+ '#gilda482 .bub{align-self:flex-start;max-width:88%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:10px 10px 10px 3px;padding:3px 8px 4px;box-sizing:border-box}'+
+ '#gilda482 .bub.me{align-self:flex-end;background:rgba(255,170,60,.14);border-color:rgba(255,190,90,.3);border-radius:10px 10px 3px 10px}'+
+ '#gilda482 .bub .nm{display:flex;justify-content:space-between;gap:10px;font-size:10px;line-height:1.2;opacity:.62;font-weight:700}#gilda482 .bub .nm span{font-weight:600}'+
+ '#gilda482 .bub .tx{font-size:12.5px;line-height:1.28;font-weight:600;white-space:pre-wrap;word-break:break-word}'+
+ '#gilda482 .bub.send{opacity:.62}#gilda482 .bub.fail{border-color:rgba(255,110,90,.55)}#gilda482 .bub .st{font-style:normal;font-size:10px}#gilda482 .bub .st.bad{color:#ff9b8c}#gilda482 .bub .b{margin-left:4px;padding:2px 6px}'+
+ '#gilda482 .onl{flex:0 0 auto;display:flex;align-items:center;gap:4px;height:24px;min-height:24px;overflow-x:auto;overflow-y:hidden;white-space:nowrap}'+
+ '#gilda482 .onl b{font-size:10px;letter-spacing:.03em;color:#b7f0c2;flex:0 0 auto}#gilda482 .onl span{display:inline-flex;align-items:center;gap:3px;font-size:10px;line-height:16px;padding:0 6px;border-radius:99px;background:rgba(255,255,255,.05);color:#d5dbe3;flex:0 0 auto}'+
+ '#gilda482 .onl span.off{opacity:.42}#gilda482 .onl i,#gilda482 .dot{width:7px;height:7px;border-radius:50%;background:#5c6570;display:inline-block;flex:0 0 auto;box-shadow:none}'+
+ '#gilda482 .onl span.on i,#gilda482 .dot.on{background:#3dd68c;box-shadow:0 0 0 2px rgba(61,214,140,.18)}#gilda482 .it .dot{margin:0}'+
+ '#btnGilda482{position:relative}#btnGilda482 .gbadge,#gilda482 .tb .gbadge{position:absolute;top:3px;right:4px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#e23b2f;color:#fff;font:800 9px/15px system-ui;text-align:center;pointer-events:none;z-index:2}'+
+ '@media (max-height:420px){#gilda482 .gs{height:calc(100vh - 8px);max-height:calc(100vh - 8px);padding:5px 8px}#gilda482 .tb{margin:3px 0}#gilda482 .hd h2{font-size:14px}#gilda482 .hd .ic482{width:24px;height:24px}}';
  document.head.appendChild(st);el=document.createElement('div');el.id='gilda482';el.className='hidden';el.innerHTML='<div class="gs"><div class="hd">'+ic482('shield')+'<h2 id="gT482">Gilda</h2><small id="gS482"></small><button type="button" class="x" id="gX482">✕</button></div><div class="tb" id="gTb482"></div><div class="bd" id="gB482"></div></div>';
  document.body.appendChild(el);$('gX482').onclick=()=>el.classList.add('hidden');
- $('gTb482').onclick=e=>{const b=e.target.closest('button[data-t]');if(!b)return;G482.tab=b.dataset.t;G482.page=0;gPaint482();};
- $('gB482').addEventListener('click',gClick482);return el;}
+ $('gTb482').onclick=e=>{const b=e.target.closest('button[data-t]');if(!b)return;G482.tab=b.dataset.t;G482.page=0;gPaint482();if(G482.tab==='chat'){gMarkRead482();gPull482();}};
+ $('gB482').addEventListener('click',gClick482);
+ $('gB482').addEventListener('input',e=>{if(e.target&&e.target.id==='gM482')G482.draft=e.target.value;});
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='gM482'){e.preventDefault();gSend482(e.target.value);}});
+ return el;}
 function gOpen482(){const el=gEnsure482();el.classList.remove('hidden');G482.down=0;G482.tab='';G482.page=0;gPaint482();
-  gApi482('/clan/me',{}).then(j=>{if(!j||!j.ok)throw 0;G482.clan=j.clan;gPaint482();if(!G482.clan)gSearch482();}).catch(()=>{G482.down=1;gPaint482();});}
+  gApi482('/clan/me',{}).then(j=>{if(!j||!j.ok)throw 0;G482.clan=j.clan;gPaint482();if(!G482.clan)gSearch482();else{gPull482();gArm482();}}).catch(()=>{G482.down=1;gPaint482();});}
 function gSearch482(){gApi482('/clan/list'+(G482.q?'?q='+encodeURIComponent(G482.q):'')).then(j=>{G482.list=(j&&j.clans)||[];G482.page=0;if(G482.tab==='find')gPaint482();}).catch(()=>{});}
-function gPer482(){const b=$('gB482');return Math.max(3,Math.floor(((b&&b.clientHeight)||300)-80)/38|0);}
+function gPer482(reserve){const b=$('gB482');return Math.max(2,Math.floor((((b&&b.clientHeight)||300)-80-(reserve||0))/38)|0);}
 function gPager482(n,per){const pages=Math.max(1,Math.ceil(n/per));if(G482.page>=pages)G482.page=pages-1;return pages>1?'<div class="pg"><button type="button" data-a="pg" data-v="-1">‹</button><span>'+(G482.page+1)+' / '+pages+'</span><button type="button" data-a="pg" data-v="1">›</button></div>':'';}
-function gTabs482(list){if(!list.some(t=>t[0]===G482.tab))G482.tab=list[0][0];$('gTb482').innerHTML=list.map(t=>'<button type="button" data-t="'+t[0]+'" class="'+(t[0]===G482.tab?'on':'')+'">'+ic482(t[1])+t[2]+'</button>').join('');}
+function gTabs482(list){if(!list.some(t=>t[0]===G482.tab))G482.tab=list[0][0];$('gTb482').innerHTML=list.map(t=>'<button type="button" data-t="'+t[0]+'" class="'+(t[0]===G482.tab?'on':'')+'">'+ic482(t[1])+t[2]+'</button>').join('');gBadge482();}
 function gPaint482(){const B=$('gB482');if(!B)return;const c=G482.clan;
-  if(G482.down){$('gT482').textContent='Gilda';$('gS482').textContent='';$('gTb482').innerHTML='';B.innerHTML='<div class="mu" style="margin:auto;text-align:center">Presto disponibile<br>Il server della gilda non risponde, riprova più tardi.</div>';return;}
+  if(G482.down){$('gT482').textContent='Gilda';$('gS482').textContent='';$('gTb482').innerHTML='';B.innerHTML='<div class="mu" style="margin:auto;text-align:center">Presto disponibile<br>Il server della gilda non risponde, riprova più tardi.</div>';gBadge482();return;}
   if(!c){$('gT482').textContent='Gilda';$('gS482').textContent='';gTabs482([['find','search','Cerca'],['new','create','Crea']]);
     if(G482.tab==='new'){B.innerHTML='<div class="mu">Fonda la tua gilda: diventi Capo gilda.</div><div class="rw"><input id="gN482" maxlength="18" placeholder="Nome (3-18)"><input id="gG482" maxlength="4" placeholder="Sigla" style="flex:0 0 70px"></div>'+
       '<div class="rw"><label class="mu" style="flex:1"><input type="checkbox" id="gO482" checked style="flex:0 0 auto;width:auto"> Aperta a tutti (se no, servono richieste)</label><button type="button" class="b" data-a="create">Crea gilda</button></div>';return;}
     const per=gPer482(),L=G482.list,pg=L.slice(G482.page*per,(G482.page+1)*per);
     B.innerHTML='<div class="rw"><input id="gQ482" maxlength="20" placeholder="Cerca per nome o sigla" value="'+gE(G482.q)+'"><button type="button" class="b" data-a="search">'+ic482('search')+'</button></div><div class="ls">'+
       (pg.length?pg.map(x=>'<div class="it">'+ic482('shield')+'<span class="n">'+gE(x.name)+(x.tag?' ['+gE(x.tag)+']':'')+'</span><span class="s">'+ic482('members')+(x.n|0)+'/20 · '+gE(x.leader||'')+'</span><button type="button" class="b" data-a="join" data-id="'+gE(x.id)+'">'+(x.open===false?'Richiedi':'Entra')+'</button></div>').join(''):'<div class="mu">Nessuna gilda trovata</div>')+'</div>'+gPager482(L.length,per);return;}
-  const my=c.my||'m',lvl=c.lv||1;$('gT482').textContent=c.name+(c.tag?' ['+c.tag+']':'');$('gS482').innerHTML='Lv '+lvl+' · '+(c.members||[]).length+'/20';
+  const my=c.my||'m',lvl=c.lv||1;$('gT482').textContent=c.name+(c.tag?' ['+c.tag+']':'');gStat482();
   const tabs=[['mem','members','Membri'],['chat','chat','Chat'],['mis','scroll','Missioni']];if(my!=='m')tabs.push(['adm','gear','Gestione'+((c.req||[]).length?' ('+c.req.length+')':'')]);gTabs482(tabs);
-  if(G482.tab==='mem'){const per=gPer482(),M=(c.members||[]).slice().sort((a,b)=>({c:3,a:2,m:1}[b.rk]-{c:3,a:2,m:1}[a.rk])||b.pts-a.pts),pg=M.slice(G482.page*per,(G482.page+1)*per);
-    B.innerHTML='<div class="ls">'+pg.map(m=>{let act='';if(!m.me){if(my==='c'){act+=m.rk==='a'?'<button type="button" class="b g" data-a="demote" data-id="'+gE(m.id)+'">Membro</button>':'<button type="button" class="b g" data-a="promo" data-id="'+gE(m.id)+'">Anziano</button>';act+='<button type="button" class="b r" data-a="kick" data-id="'+gE(m.id)+'">Espelli</button>';}
+  if(G482.tab==='mem'){const per=gPer482(28),M=(c.members||[]).slice().sort((a,b)=>(gIsOn482(b)-gIsOn482(a))||(({c:3,a:2,m:1}[b.rk]||0)-({c:3,a:2,m:1}[a.rk]||0))||(b.pts-a.pts)),pg=M.slice(G482.page*per,(G482.page+1)*per);
+    B.innerHTML=gOnlHtml()+'<div class="ls">'+pg.map(m=>{let act='';if(!m.me){if(my==='c'){act+=m.rk==='a'?'<button type="button" class="b g" data-a="demote" data-id="'+gE(m.id)+'">Membro</button>':'<button type="button" class="b g" data-a="promo" data-id="'+gE(m.id)+'">Anziano</button>';act+='<button type="button" class="b r" data-a="kick" data-id="'+gE(m.id)+'">Espelli</button>';}
       else if(my==='a'&&m.rk==='m')act+='<button type="button" class="b r" data-a="kick" data-id="'+gE(m.id)+'">Espelli</button>';}
-      return '<div class="it">'+ic482(RKI482[m.rk]||'rkm')+'<span class="n">'+gE(m.n)+(m.me?' (tu)':'')+'</span><span class="s">'+RKN482[m.rk]+' · '+(m.pts|0)+' pt</span>'+act+'</div>';}).join('')+'</div>'+gPager482(M.length,per)+
+      const on=gIsOn482(m);return '<div class="it"><i class="dot'+(on?' on':'')+'"></i>'+ic482(RKI482[m.rk]||'rkm')+'<span class="n">'+gE(m.n)+(m.me?' (tu)':'')+'</span><span class="s">'+RKN482[m.rk]+' · '+(m.pts|0)+' pt'+(on?' · online':'')+'</span>'+act+'</div>';}).join('')+'</div>'+gPager482(M.length,per)+
       '<div class="rw" style="justify-content:flex-end"><button type="button" class="b r" data-a="leave">Esci dalla gilda</button></div>';return;}
-  if(G482.tab==='chat'){const n=Math.max(3,Math.floor((((B.clientHeight)||300)-50)/22)),ms=(G482.msgs||[]).slice(-n);
-    B.innerHTML='<div class="ls">'+(ms.length?ms.map(m=>'<div class="msg'+(m.me?' me':'')+'"><b>'+gE(String(m.n).slice(0,12))+':</b> '+gE(m.m)+'</div>').join(''):'<div class="mu">Nessun messaggio</div>')+'</div><div class="rw"><input id="gM482" maxlength="200" placeholder="Scrivi un messaggio"><button type="button" class="b" data-a="send">Invia</button></div>';gChat482();return;}
+  if(G482.tab==='chat'){if(!$('gLog482')){B.innerHTML='<div class="onl" id="gOn482"></div><div class="log" id="gLog482"></div><div class="rw"><input id="gM482" maxlength="200" placeholder="Scrivi alla gilda" autocomplete="off" enterkeyhint="send"><button type="button" class="b" data-a="send" id="gSend482">Invia</button></div>';const inp=$('gM482');if(inp)inp.value=G482.draft||'';}
+    gRenderOn();gRenderLog();gMarkRead482();return;}
   if(G482.tab==='mis'){const s=c.mis||{},pk=Math.min(100,(s.kills|0)/Math.max(1,s.gk|0)*100),pr=Math.min(100,(s.res|0)/Math.max(1,s.gr|0)*100);
     B.innerHTML='<div class="it">'+ic482('star')+'<span class="n">Livello gilda '+lvl+'</span><span class="s">'+(c.pts|0)+' punti</span></div><div class="mu">Missioni della settimana (tutta la gilda):</div>'+
       '<div class="it">'+ic482('arena')+'<span class="n">Uccisioni '+(s.kills|0)+' / '+(s.gk|0)+'</span></div><div class="bar"><i style="width:'+pk+'%"></i></div>'+
@@ -239,13 +304,15 @@ function gPaint482(){const B=$('gB482');if(!B)return;const c=G482.clan;
     if(my==='c'){const others=(c.members||[]).filter(m=>!m.me);h+='<div class="rw"><input id="gEN482" maxlength="18" value="'+gE(c.name)+'"><button type="button" class="b" data-a="edit">Rinomina</button><button type="button" class="b g" data-a="open">'+(c.open?'Aperta':'Su richiesta')+'</button></div>'+
       '<div class="rw"><select id="gTr482" style="flex:1;min-width:0;border-radius:8px;background:#0c0e14;color:#fff;border:1px solid rgba(255,255,255,.15);padding:6px">'+others.map(m=>'<option value="'+gE(m.id)+'">'+gE(m.n)+'</option>').join('')+'</select><button type="button" class="b g" data-a="transfer"'+(others.length?'':' disabled')+'>Cedi Capo gilda</button><button type="button" class="b r" data-a="disband">Sciogli</button></div>';}
     B.innerHTML=h;return;}}
-function gDo482(path,body,after){gApi482(path,body).then(j=>{if(!j||!j.ok){gErr482(j);return;}if(j.pending){toast('Richiesta inviata al Capo gilda',1600);return;}if('clan' in j)G482.clan=j.clan;else if(after==='none')G482.clan=null;gPaint482();if(!G482.clan)gSearch482();}).catch(()=>toast('Server non raggiungibile',1400));}
+function gClearClan482(){G482.msgs=[];G482.seen=Object.create(null);G482.pending=[];G482.since=0;G482.draft='';}
+function gDo482(path,body,after){gApi482(path,body).then(j=>{if(!j||!j.ok){gErr482(j);return;}if(j.pending){toast('Richiesta inviata al Capo gilda',1600);return;}if('clan' in j)G482.clan=j.clan;else if(after==='none')G482.clan=null;if(!G482.clan)gClearClan482();gPaint482();if(!G482.clan)gSearch482();else gArm482();}).catch(()=>toast('Server non raggiungibile',1400));}
 function gClick482(e){const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,id=b.dataset.id;
   if(a==='pg'){G482.page=Math.max(0,G482.page+(+b.dataset.v));gPaint482();return;}
   if(a==='search'){G482.q=($('gQ482').value||'').trim();gSearch482();return;}
   if(a==='create'){gDo482('/clan/create',{name:$('gN482').value,tag:$('gG482').value,open:!!$('gO482').checked});return;}
   if(a==='join'){gDo482('/clan/join',{id});return;}
-  if(a==='send'){const m=($('gM482').value||'').trim();if(!m)return;gApi482('/clan/chat',{m}).then(()=>{$('gM482').value='';gChat482();}).catch(()=>{});return;}
+  if(a==='send'){gSend482(($('gM482')&&$('gM482').value)||'');return;}
+  if(a==='retry'){const i=+b.dataset.i;const p=G482.pending[i];if(!p)return;const txt=p.m;G482.pending.splice(i,1);G482.sending=0;G482.sentAt=0;gSend482(txt);return;}
   const conf=(t,f)=>{try{dialog(t,'',[{label:'Conferma',fn:f},{label:'Annulla',ghost:1}]);}catch(x){f();}};
   if(a==='kick')conf('Espellere questo giocatore?',()=>gDo482('/clan/kick',{id}));
   if(a==='promo')gDo482('/clan/promo',{id,rank:'anziano'});if(a==='demote')gDo482('/clan/promo',{id,rank:'membro'});
@@ -254,13 +321,14 @@ function gClick482(e){const b=e.target.closest('[data-a]');if(!b)return;const a=
   if(a==='transfer'){const t=$('gTr482').value;if(t)conf('Cedere il ruolo di Capo gilda?',()=>gDo482('/clan/transfer',{id:t}));}
   if(a==='disband')conf('Sciogliere la gilda? Non si può annullare.',()=>gDo482('/clan/disband',{},'none'));
   if(a==='leave')conf('Uscire dalla gilda?',()=>gDo482('/clan/leave',{},'none'));}
-function gChat482(){gApi482('/clan/msgs',{since:G482.since}).then(j=>{if(!j||!j.ok)return;const add=j.msgs||[];if(!add.length)return;G482.msgs=(G482.msgs||[]).concat(add).slice(-40);G482.since=G482.msgs[G482.msgs.length-1].t;if(G482.tab==='chat'&&!$('gilda482').classList.contains('hidden')){const v=$('gM482')?$('gM482').value:'';gPaint482();if($('gM482'))$('gM482').value=v;}}).catch(()=>{});}
+function gChat482(){return gPull482();}
+try{document.addEventListener('visibilitychange',()=>{if(!document.hidden&&G482.clan){gPull482();gArm482();}});}catch(e){}
 // clan points from kills / resources (server caps + rate limit)
 try{const _k=killZombie;killZombie=function(){const r=_k.apply(this,arguments);try{if(G482.clan)G482.k++;}catch(e){}return r;};}catch(e){}
 try{const _a=addRes;addRes=function(){const got=_a.apply(this,arguments);try{if(G482.clan&&got>0)G482.r+=got;}catch(e){}return got;};}catch(e){}
 setInterval(()=>{try{if(!G482.clan||(!G482.k&&!G482.r)||performance.now()-G482.lastPts<600000)return;const k=G482.k,r=G482.r;G482.k=0;G482.r=0;G482.lastPts=performance.now();gApi482('/clan/pts',{k,r}).then(j=>{if(j&&j.clan)G482.clan=j.clan;}).catch(()=>{});}catch(e){}},20000);
 // know the clan at startup (for points) without blocking anything
-setTimeout(()=>{gApi482('/clan/me',{}).then(j=>{if(j&&j.ok)G482.clan=j.clan;}).catch(()=>{});},6000);
+setTimeout(()=>{gApi482('/clan/me',{}).then(j=>{if(j&&j.ok){G482.clan=j.clan;if(G482.clan){gPull482();gArm482();}}}).catch(()=>{});},6000);
 try{window.__zs482={art:wArt482,craft:craftLayout482,gilda:gOpen482,report:repOpen482};}catch(e){}
 // Override 4.3.81 gilda button/openers so only the new UI is used
 try{if(window.__gilda481){__gilda481.open=gOpen482;__gilda481.close=()=>{const e=$('gilda482');if(e)e.classList.add('hidden');};}}catch(e){}
