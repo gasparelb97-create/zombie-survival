@@ -6,7 +6,7 @@ const _m471=new T.Matrix4(),_n471=new T.Matrix3(),_v471=new T.Vector3();
 function bonesInj471(sh,z){sh.uniforms.uB471={value:z.B471};sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nattribute float bI471;uniform mat4 uB471[12];')
   .replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\n{mat4 bm471=uB471[int(bI471+.5)];objectNormal=mat3(bm471)*objectNormal;}')
   .replace('#include <begin_vertex>','#include <begin_vertex>\n{mat4 bm471=uB471[int(bI471+.5)];transformed=(bm471*vec4(transformed,1.)).xyz;}');}
-function skin471(z){try{if(z.sk471||!z.g)return;const parts=[],bones=[];z.g.updateMatrixWorld(true);const gInv=new T.Matrix4().copy(z.g.matrixWorld).invert();
+function skin471(z){if(window.__z497)return;try{if(z.sk471||!z.g)return;const parts=[],bones=[];z.g.updateMatrixWorld(true);const gInv=new T.Matrix4().copy(z.g.matrixWorld).invert();
   z.g.traverse(o=>{if(o.isMesh&&o.material===z.mat&&o.geometry&&o.geometry.attributes.color)parts.push(o);});if(parts.length<4)return;
   let n=0;for(const m of parts)n+=m.geometry.attributes.position.count;
   const pos=new Float32Array(n*3),nor=new Float32Array(n*3),col=new Float32Array(n*3),bi=new Float32Array(n);let o=0;

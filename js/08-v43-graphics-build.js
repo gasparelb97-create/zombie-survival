@@ -523,7 +523,7 @@ const _emit43=emit;emit=function(pos,dir,n,color,o){_emit43(pos,dir,n,color,o);i
 // ---- zombies (Media/Alta): extra detail meshes + smoothed, layered animation ----
 const ZD43={wound:new T.Color(0x4a0806),blood:new T.Color(0x6a0a08),bone:new T.Color(0xcfc6a8),hair:new T.Color(0x1c1814),dirt:new T.Color(0x3a3228),belt:new T.Color(0x24180e),buckle:new T.Color(0x9a9a8a)};
 const ZJ43=['hipL','hipR','kneeL','kneeR','spine','shL','shR','elL','elR','neck','jaw'];
-function zDetail43(z){if(z.d43)return;const W=z.V.width||1,r=rng43((z.seed*1000)|0),L=[];const hip=[],sp=[],nk=[],arm=[];
+function zDetail43(z){if(window.__z497){z.d43=z.d43||[];return;}if(z.d43)return;const W=z.V.width||1,r=rng43((z.seed*1000)|0),L=[];const hip=[],sp=[],nk=[],arm=[];
   sp.push([ZG.belly,ZD43.wound,[(r()-.5)*.3*W,.1+r()*.35,.146],0,0,r()*.6,.5+r()*.5,.7+r()*.6,1]);sp.push([ZG.rib,ZD43.bone,[(r()-.5)*.2*W,.25+r()*.2,.152],0,0,(r()-.5)*.6,.8,1,1]);
   sp.push([ZG.belly,ZD43.dirt,[0,-.22,.145],0,0,0,1.5*W,.6,1]);sp.push([ZG.belly,ZD43.blood,[(r()-.5)*.25,.48,.146],0,0,(r()-.5),.4,.4,1]);
   sp.push([ZG.brow,ZD43.dirt,[0,.6,0],0,0,0,1.25*W,1.2,4.4]);// collar
@@ -534,7 +534,7 @@ function zDetail43(z){if(z.d43)return;const W=z.V.width||1,r=rng43((z.seed*1000)
   const mk=(par,list)=>{const m=new T.Mesh(mergePieces(list),z.mat);m.castShadow=true;par.add(m);return m;};
   z.d43=[mk(z.spine,sp),mk(z.hips,hip),mk(z.neck,nk),mk(r()<.5?z.shL:z.shR,arm)];z.f43={};for(const k of ZJ43)z.f43[k]=z[k].rotation.clone();z.fy43=z.hips.position.y;}
 function zMode43(hi){for(const z of zombies){zDetail43(z);for(let i=0;i<z.d43.length;i++)z.d43[i].visible=!!hi||i===2;}}
-const _uz43=updateZombie;updateZombie=function(z,dt,t,target,canAttack){_uz43(z,dt,t,target,canAttack);if(!z.f43||!z.alive)return;
+const _uz43=updateZombie;updateZombie=function(z,dt,t,target,canAttack){_uz43(z,dt,t,target,canAttack);if(window.__z497||!z.f43||!z.alive)return;
   if(z.dead){for(const k of ZJ43)z.f43[k].copy(z[k].rotation);return;}
   // layered secondary motion: lurch roll, asymmetric reach, head jitter, breathing
   const ph=z.phase||0,sd=z.seed,run=z.V.name==='runner';

@@ -10,12 +10,12 @@ for(const z of zombies)homeLimb442(z);
 const _rp442=resetPose;resetPose=function(z){try{restore442(z);}catch(e){}return _rp442(z);};
 const GIB442=[];const goreBrain=new T.MeshLambertMaterial({color:0xc48a98}),goreOrgan=new T.MeshLambertMaterial({color:0x8a1c2c});
 const goreBit=new T.SphereGeometry(1,14,12);
-function chunk442(pos,dir,mat,n,sc){for(let i=0;i<n&&GIB442.length<56;i++){const m=new T.Mesh(goreBit,mat);m.castShadow=false;const s1=sc*(0.62+Math.random()*0.7);m.scale.setScalar(s1);m.position.copy(pos);m.position.x+=(Math.random()-0.5)*0.05;m.position.y+=(Math.random()-0.5)*0.05;m.position.z+=(Math.random()-0.5)*0.05;scene.add(m);
+function chunk442(pos,dir,mat,n,sc){if(window.__z497)return;for(let i=0;i<n&&GIB442.length<56;i++){const m=new T.Mesh(goreBit,mat);m.castShadow=false;const s1=sc*(0.62+Math.random()*0.7);m.scale.setScalar(s1);m.position.copy(pos);m.position.x+=(Math.random()-0.5)*0.05;m.position.y+=(Math.random()-0.5)*0.05;m.position.z+=(Math.random()-0.5)*0.05;scene.add(m);
   const sp=1.5+Math.random()*2.4;GIB442.push({o:m,chunk:1,age:0,v:new T.Vector3((dir?dir.x:0)*sp+(Math.random()-0.5)*1.1,0.9+Math.random()*2.3,(dir?dir.z:0)*sp+(Math.random()-0.5)*1.1)});}}
 function sever442(z,slot,dir){z.gore=z.gore||{};if(z.gore[slot])return;const map={armL:z.shL,armR:z.shR,legL:z.hipL,legR:z.hipR};const piv=map[slot];if(!piv)return;z.gore[slot]=1;piv.updateWorldMatrix(true,true);const p=new T.Vector3(),q=new T.Quaternion(),s=new T.Vector3();piv.matrixWorld.decompose(p,q,s);if(piv.parent)piv.parent.remove(piv);scene.add(piv);piv.position.copy(p);piv.quaternion.copy(q);piv.scale.copy(s);piv.visible=true;
   GIB442.push({o:piv,chunk:0,z:z,age:0,v:new T.Vector3((dir?dir.x:0)*1.8+(Math.random()-0.5),1.4+Math.random()*1.2,(dir?dir.z:0)*1.8+(Math.random()-0.5))});
   if(slot==='legL'||slot==='legR'){z.crawl=1;z.limp=1;z.legGone=(z.legGone|0)+1;z.speed=z.legGone>=2?.26:.4;}}
-function gore442(z,part,slot,point,dir,gun){if(!z)return;const dead=!!z.dead,pt=(point&&point.x!==undefined)?point:z.g.position;
+function gore442(z,part,slot,point,dir,gun){if(window.__z497)return;if(!z)return;const dead=!!z.dead,pt=(point&&point.x!==undefined)?point:z.g.position;
   const nBits=4+((Math.abs(Math.sin((pt.x||0)*13.1+(pt.y||0)*7.7+(pt.z||0)*9.4+(z.seed||1)))*5)|0);
   chunk442(pt,dir,part==='head'?goreBrain:goreOrgan,nBits,part==='head'?0.09:0.072);
   emit(pt,dir||_up,dead?26:16,BLOOD,{speed:dead?5.2:4.2,spread:1.1,life:0.7,size:0.085,grav:12,up:0.4});
@@ -23,7 +23,7 @@ function gore442(z,part,slot,point,dir,gun){if(!z)return;const dead=!!z.dead,pt=
   if(part==='head'&&dead){if(!z.gore||!z.gore.head){z.gore=z.gore||{};z.gore.head=1;if(z.neck)z.neck.visible=false;chunk442(pt,dir,goreBrain,6,0.11);chunk442(pt,dir,goreOrgan,3,0.08);}return;}
   if(slot&&slot!=='head'&&(part==='limb'||slot==='armL'||slot==='armR'||slot==='legL'||slot==='legR'))sever442(z,slot,dir);}
 const _dz442=damageZombie;damageZombie=function(z,dmg,part,point,dir,slot){if(!z||z.dead)return _dz442(z,dmg,part,point,dir,slot);const w=WEAPONS[curW];const gun=!!(w&&!w.melee&&!w.tool);const r=_dz442(z,dmg,part,point,dir,slot);try{gore442(z,part,slot,point,dir,gun);}catch(e){}return r;};
-poseWalk=function(z,t,amp){const V=z.V,ph=z.phase,g=z.gore||{},s=Math.sin(ph),c=Math.cos(ph),limp=Math.min(1,z.limp||0),run=V.name==='runner',big=!!V.heavy,lean=(z.turn439||0)*(run?0.28:0.18),a=Math.max(0,Math.min(1,amp));
+poseWalk=function(z,t,amp){if(z&&z.z497&&typeof z497Pose==='function'){z497Pose(z,t,amp);return;}const V=z.V,ph=z.phase,g=z.gore||{},s=Math.sin(ph),c=Math.cos(ph),limp=Math.min(1,z.limp||0),run=V.name==='runner',big=!!V.heavy,lean=(z.turn439||0)*(run?0.28:0.18),a=Math.max(0,Math.min(1,amp));
   if(z.crawl){const pull=Math.sin(ph),reach=Math.max(0,Math.cos(ph));
     z.hips.position.y=.34+Math.abs(pull)*.04;z.hips.rotation.set(1.22+reach*.1,pull*.08,(g.legL?0.08:0)-(g.legR?0.08:0));
     z.spine.rotation.set(.22+reach*.12,-pull*.12,pull*.04+lean);

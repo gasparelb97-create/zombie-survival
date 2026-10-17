@@ -59,7 +59,7 @@ const _sv29=svTarget433;svTarget433=function(z){const tg=_sv29(z);try{if(!z.aliv
   const P=z.g.position;
   let sx=0,sz=0;for(let i=0;i<zombies.length;i++){const o=zombies[i];if(o===z||!o.alive||o.dead)continue;const ax=P.x-o.g.position.x,az=P.z-o.g.position.z,dd=ax*ax+az*az;if(dd<2.2&&dd>1e-4){const m=Math.sqrt(dd);sx+=ax/m;sz+=az/m;}}
   return _v433.set(tg.x+sx*.4,0,tg.z+sz*.4);}catch(e){dbg29('err','zombie',e&&e.message||e);return tg;}};
-function zLook29(z){if(z.look29||!z.spine||!z.mat)return;z.look29=1;const r=rng43(((z.seed*997)|0)+29),W=z.V.width||1;
+function zLook29(z){if(window.__z497){z.look29=1;z.d43=z.d43||[];return;}if(z.look29||!z.spine||!z.mat)return;z.look29=1;const r=rng43(((z.seed*997)|0)+29),W=z.V.width||1;
   const list=[[ZG.brow,new T.Color(0x1a1614),[0,.58,.02],0,0,0,1.35*W,1.05,3.1],[ZG.belly,new T.Color(0x6a100c),[(r()-.5)*.22,.24,.15],0,0,(r()-.5)*.5,.5,.65,1],[ZG.belly,new T.Color(0x2a2118),[0,.02,.132],0,0,0,1.5*W,.4,1],[ZG.eye,new T.Color(0xcfc6a8),[(r()<.5?-.08:.08),.2,.17],0,0,0,.65,.45,1]];
   const m=new T.Mesh(mergePieces(list),z.mat);m.userData.look29=1;m.castShadow=false;z.spine.add(m);if(!z.d43)z.d43=[];z.d43.push(m);}
 const _zm29=zMode43;zMode43=function(hi){_zm29(hi);for(const z of zombies){try{zLook29(z);}catch(e){dbg29('err','zombie',e&&e.message||e);}if(!z.d43)continue;for(let i=0;i<z.d43.length;i++){const m=z.d43[i];m.visible=!!hi||!!(m.userData&&m.userData.look29)||i===2;}}};
@@ -123,7 +123,7 @@ function updateDead439(z,dt){z.deadT+=dt;const k=z.deadT,dir=z.fdir||1,fl=z.flop
   collide(z.g.position,.3);
   if(!z.landed&&pitch>.9){z.landed=true;_tmp.set(z.g.position.x+Math.sin(z.g.rotation.y)*dir*.75*z.V.scale,.02,z.g.position.z+Math.cos(z.g.rotation.y)*dir*.75*z.V.scale);emit(_tmp,_up,8,DUST,{speed:1.2,spread:.75,life:.55,size:.1,grav:.8});_n.set(0,1,0);addDecal(bloods,_tmp,_n,.9*z.V.scale);}
   if(k>4.8&&z.blob)z.blob.visible=false;if(k>6.4){z.alive=false;z.g.visible=false;updateHUD();}}
-const _dead439=updateDead;updateDead=function(z,dt){if(!zsShow()||(z.V&&z.V.name==='bloater'))return _dead439(z,dt);updateDead439(z,dt);};
+const _dead439=updateDead;updateDead=function(z,dt){if(window.__z497||!zsShow()||(z.V&&z.V.name==='bloater'))return _dead439(z,dt);updateDead439(z,dt);};
 // 4.3.58 — connected districts; no movement of existing harvest nodes or loot IDs.
 function map458Build(){
   if(!zsShow())return;
