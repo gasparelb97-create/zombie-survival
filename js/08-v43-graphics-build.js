@@ -543,8 +543,8 @@ const _uz43=updateZombie;updateZombie=function(z,dt,t,target,canAttack){_uz43(z,
     z.neck.rotation.z+=Math.sin(t*2.3+sd*3)*.07+(zsShow()?Math.sin(t*1.7+sd)*.04:(Math.sin(t*9+sd)>.96?.25:0));z.neck.rotation.y+=Math.sin(t*.9+sd)*(zsShow()?.1:.18);z.jaw.rotation.x=Math.max(z.jaw.rotation.x,.12+Math.sin(t*3+sd)*.1);}
   // low-pass the joints: removes pose snaps between walk / attack / stagger
   const k=1-Math.exp(-dt*(z.state==='atk'?(zsShow()?12:26):(zsShow()?7:16)));
-  for(const j of ZJ43){const r=z[j].rotation,f=z.f43[j];f.x+=(r.x-f.x)*k;f.y+=(r.y-f.y)*k;f.z+=(r.z-f.z)*k;r.set(f.x,f.y,f.z);}
-  z.fy43+=(z.hips.position.y-z.fy43)*k;z.hips.position.y=z.fy43;};
+  const lg=z.leg102;z.leg102=0;for(const j of ZJ43){const r=z[j].rotation,f=z.f43[j];if(lg&&(j[0]==='h'||j[0]==='k')){f.copy(r);continue;}f.x+=(r.x-f.x)*k;f.y+=(r.y-f.y)*k;f.z+=(r.z-f.z)*k;r.set(f.x,f.y,f.z);}
+  if(lg)z.fy43=z.hips.position.y;else{z.fy43+=(z.hips.position.y-z.fy43)*k;z.hips.position.y=z.fy43;}};
 gfxOn43(q=>zMode43(q!=='bassa'));
 // ---- per-frame hook (every rendered frame) ----
 const _ue43=updateEnv;updateEnv=function(dt,t){_ue43(dt,t);try{shadowTick43();lights43(dt);snow2Tick(dt,t);feet43(dt);}catch(e){if(!window.__w43e){window.__w43e=1;console.error(e);}}};

@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-21a",
+  "rev": "2026-10-21b",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,14 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.102",
+      "date": "21 ott",
+      "items": [
+        "🧟 Zombie più dettagliati (vestiti strappati, mani con artigli, facce da teschio) e camminata con ginocchia e piedi a terra",
+        "🐞 Un solo pannello debug"
+      ]
+    },
     {
       "ver": "4.3.101",
       "date": "21 ott",

@@ -33,15 +33,16 @@ let musWas=false;function audioChk(){const AU=G('AU'),MUS=G('MUS'),SET=G('SET'),
   if((AU.v433|0)>=20){audioChk.sat=(audioChk.sat|0)+1;if(audioChk.sat===3)rep('AUDIO','Limite voci audio (20) saturo da 3s: suoni tagliati','warn');}else audioChk.sat=0;}
 // ---- frame / FPS ----
 let lastF=0,hid=0;document.addEventListener('visibilitychange',()=>{hid=now();lastF=0;});
+function slowOk(){try{const gm=G('game');if(!gm||gm.state!=='play')return false;return R&&R.info.render.calls>=10;}catch(e){return false;}}
 function snap(){const o={};try{o.calls=R.info.render.calls;o.tris=R.info.render.triangles;}catch(e){}try{const z=G('zombies');o.zombie=z?z.filter(q=>q.alive&&!q.dead).length:0;}catch(e){}try{o.stato=G('game').state;}catch(e){}return o;}
-(function tick(t){requestAnimationFrame(tick);if(document.hidden)return;if(lastF&&now()-hid>1000){const d=t-lastF;S.frames++;if(d>S.worst)S.worst=d;if(d>50){S.slow++;if(d>100)rep('FPS','Frame lento >'+(d>500?500:d>250?250:100)+'ms',d>500?'err':'warn',Object.assign({ms:Math.round(d)},snap()));}}lastF=t;})(0);
-try{if(window.PerformanceObserver&&(PerformanceObserver.supportedEntryTypes||[]).includes('longtask'))new PerformanceObserver(l=>{for(const e of l.getEntries())if(e.duration>=150&&now()-hid>2000)rep('FPS','Long task JS >150ms (blocca il thread)','warn',{ms:Math.round(e.duration)});}).observe({entryTypes:['longtask']});}catch(e){}
+(function tick(t){requestAnimationFrame(tick);if(document.hidden)return;if(lastF&&now()-hid>1000){const d=t-lastF;S.frames++;if(d>S.worst)S.worst=d;if(d>50){S.slow++;if(d>100&&slowOk())rep('FPS','Frame lento >'+(d>500?500:d>250?250:100)+'ms',d>500?'err':'warn',Object.assign({ms:Math.round(d)},snap()));}}lastF=t;})(0);
+try{if(window.PerformanceObserver&&(PerformanceObserver.supportedEntryTypes||[]).includes('longtask'))new PerformanceObserver(l=>{for(const e of l.getEntries())if(e.duration>=150&&now()-hid>2000&&slowOk())rep('FPS','Long task JS >150ms (blocca il thread)','warn',{ms:Math.round(e.duration)});}).observe({entryTypes:['longtask']});}catch(e){}
 let lowRun=0;function fpsChk(){S.fps=S.frames;const sl=S.slow;S.frames=0;S.slow=0;const gm=G('game');S.lastWorst=S.worst;S.worst=0;if(!gm||gm.state!=='play'){lowRun=0;return;}
   if(S.fps>0&&S.fps<25){lowRun++;if(lowRun===5)rep('FPS','FPS sotto 25 per 5s di fila',S.fps<15?'err':'warn',Object.assign({fps:S.fps,frameLenti:sl},snap()));}else lowRun=0;}
 // ---- memoria (crescita costante = probabile leak) ----
-const MH=[];function memChk(){try{const m={geo:R.info.memory.geometries,tex:R.info.memory.textures,prog:(R.info.programs||[]).length,obj:0,heap:0};if(SC){let c=0;SC.traverse(()=>c++);m.obj=c;}if(performance.memory)m.heap=Math.round(performance.memory.usedJSHeapSize/1048576);
-  S.mem=m;MH.push(m);if(MH.length>61)MH.shift();if(MH.length<61)return;const a=MH[0];
-  for(const [k,lab,min] of [['geo','geometrie',40],['tex','texture',15],['prog','programmi shader',8],['obj','oggetti scena',300],['heap','heap JS MB',60]]){let up=0;for(let i=1;i<MH.length;i+=6)if(MH[i][k]>=MH[i-1][k])up++;if(m[k]-a[k]>=min&&up>=9)rep('MEMORIA','Possibile memory leak: '+lab+' in crescita costante (+'+(m[k]-a[k])+' in 60s)','warn',{da:a[k],a:m[k]});}
+const MH=[];let play0=0;function memChk(){try{{const gm=G('game');if(!gm||gm.state!=='play'){play0=0;MH.length=0;}else if(!play0)play0=now();}const m={geo:R.info.memory.geometries,tex:R.info.memory.textures,prog:(R.info.programs||[]).length,obj:0,heap:0};if(SC){let c=0;SC.traverse(()=>c++);m.obj=c;}if(performance.memory)m.heap=Math.round(performance.memory.usedJSHeapSize/1048576);
+  S.mem=m;if(!play0||now()-play0<90000)return;MH.push(m);if(MH.length>61)MH.shift();if(MH.length<61)return;const a=MH[0];
+  for(const [k,lab,min] of [['geo','geometrie',40],['tex','texture',15],['prog','programmi shader',8],['obj','oggetti scena',300],['heap','heap JS MB',60]]){let up=0;for(let i=1;i<MH.length;i+=6)if(MH[i][k]>=MH[i-1][k])up++;const h=MH[30];if(m[k]-a[k]>=min&&up>=9&&h[k]-a[k]>=min/2&&m[k]-h[k]>=min/2)rep('MEMORIA','Possibile memory leak: '+lab+' in crescita costante (+'+(m[k]-a[k])+' in 60s)','warn',{da:a[k],a:m[k]});}
   if(performance.memory&&performance.memory.jsHeapSizeLimit&&performance.memory.usedJSHeapSize>performance.memory.jsHeapSizeLimit*.85)rep('MEMORIA','Heap JS oltre l\'85% del limite','err');}catch(e){}}
 // ---- mesh (scansione a rate limitato: max 400 oggetti per secondo) ----
 let mq=[],mi=0;function meshChk(){if(!SC)return;if(mi>=mq.length){mq=[];SC.traverse(o=>{if(o.isMesh||o.isSkinnedMesh||o.isInstancedMesh)mq.push(o);});mi=0;}
@@ -60,32 +61,19 @@ const stuck=new WeakMap();function physChk(){const P=G('player'),Z=G('zombies'),
   let ov=0;for(let i=0;i<A.length&&i<40;i++)for(let j=i+1;j<A.length&&j<40;j++){const a=A[i].g.position,b=A[j].g.position;if(Math.abs(a.x-b.x)<.12&&Math.abs(a.z-b.z)<.12)ov++;}
   if(ov)rep('SOVRAPP','Zombie compenetrati nello stesso punto ('+ov+' coppie)','warn');}
 // ---- loop periodico ~1s ----
-setInterval(()=>{if(document.hidden)return;const t=now();for(const f of [fpsChk,audioChk,memChk,meshChk,physChk]){try{f();}catch(e){}}S.cost=+(now()-t).toFixed(2);if(S.cost>8)rep('FPS','Il debug stesso ha impiegato '+S.cost+'ms','info');if(UI.open)draw();else badge();},1000);
+setInterval(()=>{if(document.hidden)return;const t=now();for(const f of [fpsChk,audioChk,memChk,meshChk,physChk]){try{f();}catch(e){}}S.cost=+(now()-t).toFixed(2);if(S.cost>8)rep('FPS','Il debug stesso ha impiegato '+S.cost+'ms','info');},1000);
 // ---- UI ----
-const UI={open:false,cat:'ALL'};let btn,pan;
+const UI={cat:'ALL'};
 function esc(s){return String(s).replace(/[<&>]/g,c=>({'<':'&lt;','&':'&amp;','>':'&gt;'})[c]);}
 function list(){return S.order.map(k=>S.items[k]).filter(i=>UI.cat==='ALL'||i.cat===UI.cat).sort((a,b)=>b.last-a.last);}
-function badge(){if(!btn)return;const e=S.order.filter(k=>S.items[k].sev==='err').length;btn.textContent='🐞'+(S.order.length?S.order.length:'');btn.style.background=e?'rgba(170,20,20,.85)':S.order.length?'rgba(170,110,0,.8)':'rgba(0,0,0,.45)';}
 function text(){const m=S.mem||{};return 'Zombie Survival debug '+(window.GAME_VER||'')+' · sessione '+fmt(now())+' · fps '+S.fps+' · geo '+m.geo+' tex '+m.tex+' prog '+m.prog+' obj '+m.obj+(m.heap?' heap '+m.heap+'MB':'')+'\n'+navigator.userAgent+'\n\n'+
   S.order.map(k=>S.items[k]).map(i=>'['+i.cat+'/'+i.sev+'] ×'+i.n+' ('+fmt(i.first)+'→'+fmt(i.last)+') '+i.msg+(i.x?' '+JSON.stringify(i.x):'')).join('\n');}
-function draw(){badge();if(!pan||!UI.open||!S.dirty&&draw.c===UI.cat)return;S.dirty=0;draw.c=UI.cat;const m=S.mem||{};const cnt={};S.order.forEach(k=>{const c=S.items[k].cat;cnt[c]=(cnt[c]||0)+1;});
-  pan.querySelector('.dp-st').textContent='FPS '+S.fps+' · peggior frame '+Math.round(S.lastWorst||0)+'ms · geo '+(m.geo|0)+' · tex '+(m.tex|0)+' · shader '+(m.prog|0)+' · oggetti '+(m.obj|0)+(m.heap?' · heap '+m.heap+'MB':'')+' · costo debug '+(S.cost||0)+'ms';
-  pan.querySelector('.dp-cat').innerHTML=['ALL'].concat(Object.keys(CAT)).map(c=>'<button data-c="'+c+'" class="'+(UI.cat===c?'on':'')+'">'+(c==='ALL'?'Tutti ('+S.order.length+')':CAT[c]+' ('+(cnt[c]|0)+')')+'</button>').join('');
-  const L=list().slice(0,150);pan.querySelector('.dp-l').innerHTML=L.length?L.map(i=>'<li class="'+i.sev+'"><b>×'+i.n+'</b> '+esc(i.msg)+'<small>'+esc(CAT[i.cat]||i.cat)+' · prima '+fmt(i.first)+' · ultima '+fmt(i.last)+'</small></li>').join(''):'<li class="info">Nessun problema in questa sessione ✔</li>';}
-function build(){const st=document.createElement('style');st.textContent='#dpBtn{position:fixed;right:6px;bottom:calc(6px + env(safe-area-inset-bottom));z-index:2147483000;font:12px sans-serif;color:#fff;border:1px solid #fff5;border-radius:14px;padding:3px 7px;opacity:.75;touch-action:manipulation}'+
-  '#dpPan{position:fixed;right:6px;bottom:40px;width:min(460px,94vw);max-height:60vh;z-index:2147483000;background:rgba(12,10,18,.94);color:#ddd;font:11px/1.35 monospace;border:1px solid #ff9a2a;border-radius:10px;display:none;flex-direction:column}'+
-  '#dpPan .dp-h{display:flex;gap:4px;padding:5px;align-items:center}#dpPan .dp-h b{flex:1;color:#ff9a2a}#dpPan button{font:11px sans-serif;background:#2a2433;color:#eee;border:1px solid #555;border-radius:6px;padding:2px 6px}#dpPan button.on{background:#ff9a2a;color:#000}'+
-  '#dpPan .dp-st{padding:0 6px 4px;color:#9cf}#dpPan .dp-cat{display:flex;flex-wrap:wrap;gap:3px;padding:0 5px 4px}#dpPan .dp-l{list-style:none;margin:0;padding:0 6px 6px;overflow:auto;flex:1}#dpPan li{border-left:3px solid #888;padding:2px 5px;margin:2px 0;word-break:break-word}#dpPan li.err{border-color:#f44}#dpPan li.warn{border-color:#fb0}#dpPan small{display:block;color:#888}';
-  document.head.appendChild(st);btn=document.createElement('button');btn.id='dpBtn';btn.type='button';pan=document.createElement('div');pan.id='dpPan';
-  pan.innerHTML='<div class="dp-h"><b>DEBUG · sessione attuale</b><button data-a="copy">Copia</button><button data-a="exp">Esporta</button><button data-a="clr">Svuota</button><button data-a="x">✕</button></div><div class="dp-st"></div><div class="dp-cat"></div><ul class="dp-l"></ul>';
-  ['pointerdown','touchstart','mousedown','click'].forEach(ev=>{btn.addEventListener(ev,e=>e.stopPropagation(),{passive:true});pan.addEventListener(ev,e=>e.stopPropagation(),{passive:true});});
-  btn.addEventListener('click',()=>{UI.open=!UI.open;pan.style.display=UI.open?'flex':'none';S.dirty=1;draw();});
-  pan.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.c){UI.cat=b.dataset.c;S.dirty=1;draw();return;}const a=b.dataset.a;
-    if(a==='x'){UI.open=false;pan.style.display='none';}else if(a==='clr'){S.items={};S.order=[];S.dirty=1;draw();}
-    else if(a==='copy'){const s=text();(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(s):Promise.reject()).then(()=>{b.textContent='Copiato ✔';},()=>{const ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');b.textContent='Copiato ✔';}catch(x){}ta.remove();});setTimeout(()=>b.textContent='Copia',1500);}
-    else if(a==='exp'){try{const N=window.ZSNative;const s=text();if(N&&N.share)N.share(s);else{const u=URL.createObjectURL(new Blob([s],{type:'text/plain'}));const l=document.createElement('a');l.href=u;l.download='zs-debug-'+Date.now()+'.txt';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);}}catch(x){}}});
-  document.body.appendChild(pan);document.body.appendChild(btn);badge();}
-if(document.body)build();else addEventListener('DOMContentLoaded',build);
-window.__DBGPRO={report:rep,text,state:S,open:()=>{if(btn)btn.click();}};
+/* owner gate: same check as debug.js (Telegram id 7780175131 via WebApp initData or URL hash/search, or APK flag window.__ZS_OWNER) */
+const OWNER=7780175131;function numId(v){const n=+v;return n>0&&n<1e16?n:null;}
+function idIn(s){if(!s)return null;let q=String(s);for(let i=0;i<4;i++){const m=/"id"\s*:\s*"?(\d+)/.exec(q);if(m)return numId(m[1]);try{const d=decodeURIComponent(q);if(d===q)break;q=d;}catch(e){break;}}return null;}
+function tgUser(){try{const W=window.Telegram&&window.Telegram.WebApp;if(!W)return null;const u=W.initDataUnsafe&&W.initDataUnsafe.user;const n=u&&numId(u.id);if(n)return n;return idIn(W.initData);}catch(e){return null;}}
+function hashUser(){try{return idIn(location.hash)||idIn(location.search);}catch(e){return null;}}
+function ownerNow(){if(window.__ZS_OWNER===1||window.__ZS_OWNER==='1')return true;const a=tgUser();if(a!==null)return a===OWNER;const h=hashUser();return h===null?null:h===OWNER;}
+window.__DBGPRO={report:rep,text,state:S,cats:CAT,list:function(cat){UI.cat=cat||'ALL';return list();},clear:function(){S.items={};S.order=[];S.dirty=1;},isOwner:ownerNow};
 rep('CONSOLE','Debug avviato (sessione pulita)','info');
 })();

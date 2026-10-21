@@ -10,7 +10,8 @@ for(const z of zombies)homeLimb442(z);
 const _rp442=resetPose;resetPose=function(z){try{restore442(z);}catch(e){}return _rp442(z);};
 const GIB442=[];const goreBrain=new T.MeshLambertMaterial({color:0xc48a98}),goreOrgan=new T.MeshLambertMaterial({color:0x8a1c2c});
 const goreBit=new T.SphereGeometry(1,14,12);
-function chunk442(pos,dir,mat,n,sc){for(let i=0;i<n&&GIB442.length<56;i++){const m=new T.Mesh(goreBit,mat);m.castShadow=false;const s1=sc*(0.62+Math.random()*0.7);m.scale.setScalar(s1);m.position.copy(pos);m.position.x+=(Math.random()-0.5)*0.05;m.position.y+=(Math.random()-0.5)*0.05;m.position.z+=(Math.random()-0.5)*0.05;scene.add(m);
+const GPOOL442=[];for(let i=0;i<56;i++){const m=new T.Mesh(goreBit,goreOrgan);m.castShadow=false;m.visible=false;m.frustumCulled=true;scene.add(m);GPOOL442.push(m);}
+function chunk442(pos,dir,mat,n,sc){for(let i=0;i<n&&GIB442.length<56;i++){const m=GPOOL442.find(q=>!q.visible);if(!m)break;m.material=mat;m.visible=true;m.rotation.set(0,0,0);const s1=sc*(0.62+Math.random()*0.7);m.scale.setScalar(s1);m.position.copy(pos);m.position.x+=(Math.random()-0.5)*0.05;m.position.y+=(Math.random()-0.5)*0.05;m.position.z+=(Math.random()-0.5)*0.05;
   const sp=1.5+Math.random()*2.4;GIB442.push({o:m,chunk:1,age:0,v:new T.Vector3((dir?dir.x:0)*sp+(Math.random()-0.5)*1.1,0.9+Math.random()*2.3,(dir?dir.z:0)*sp+(Math.random()-0.5)*1.1)});}}
 function sever442(z,slot,dir){z.gore=z.gore||{};if(z.gore[slot])return;const map={armL:z.shL,armR:z.shR,legL:z.hipL,legR:z.hipR};const piv=map[slot];if(!piv)return;z.gore[slot]=1;piv.updateWorldMatrix(true,true);const p=new T.Vector3(),q=new T.Quaternion(),s=new T.Vector3();piv.matrixWorld.decompose(p,q,s);if(piv.parent)piv.parent.remove(piv);scene.add(piv);piv.position.copy(p);piv.quaternion.copy(q);piv.scale.copy(s);piv.visible=true;
   GIB442.push({o:piv,chunk:0,z:z,age:0,v:new T.Vector3((dir?dir.x:0)*1.8+(Math.random()-0.5),1.4+Math.random()*1.2,(dir?dir.z:0)*1.8+(Math.random()-0.5))});
@@ -68,7 +69,7 @@ updateDead439=function(z,dt){z.deadT+=dt;const k=z.deadT,dir=z.fdir||1,g=z.gore|
   if(k>6.2){z.alive=false;z.g.visible=false;}};
 TICK42.push(function(dt){for(let i=GIB442.length-1;i>=0;i--){const g=GIB442[i];g.age+=dt;g.v.y-=11*dt;g.o.position.addScaledVector(g.v,dt);g.o.rotation.x+=dt*4;g.o.rotation.z+=dt*2.2;
   if(g.o.position.y<0.03){g.o.position.y=0.03;g.v.y*=-0.22;g.v.x*=0.6;g.v.z*=0.6;}
-  if(g.age>3.2){if(g.chunk)scene.remove(g.o);else g.o.visible=false;GIB442.splice(i,1);}}});
+  if(g.age>3.2){g.o.visible=false;GIB442.splice(i,1);}}});
 (function(){const add=function(k,mat,n){if(POOL[k])return;const m=new T.InstancedMesh(G.box,mat,n);m.count=0;m.castShadow=true;m.receiveShadow=true;m.frustumCulled=false;m.instanceColor=new T.InstancedBufferAttribute(new Float32Array(n*3).fill(1),3);scene.add(m);solids.push(m);POOL[k]={m:m,free:[],n:0,max:n,owner:[]};};
   let s=44317;const rnd=function(){s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
   const doorTex=canvasTex(256,512,function(g,w,h){g.fillStyle='#4a301c';g.fillRect(0,0,w,h);g.fillStyle='#6b4630';g.fillRect(18,16,w-36,h-32);

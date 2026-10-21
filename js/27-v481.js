@@ -473,6 +473,7 @@ try{window.__zs481={get m(){return M481;}};}catch(e){}
           _pw.call(this,z,t,amp);
           // Soften spine bob for realism
           if(z&&z.spine&&amp>.2){z.spine.rotation.x*=.92;if(z.hips)z.hips.position.y=z.hips.position.y*.4+(.94)*.6;}
+          if(z&&z.nz100)gait102(z,t,amp);
         }catch(e){_pw.call(this,z,t,amp);}
       };
     }
@@ -480,6 +481,24 @@ try{window.__zs481={get m(){return M481;}};}catch(e){}
   }catch(e){e481(e,'zomb');}
 })();
 
+
+// 4.3.102: planted-foot walk/run cycle for the new zombies (2-bone IK per leg: knee bends opposite to thigh, foot lifts in swing,
+// stays on the ground in stance, hip drops/sways; per-zombie limp). Never lets a foot go below ground.
+function gait102(z,t,amp){try{if(!z.hips||z.crawl||z.dead)return;const V=z.V,g=z.gore||{},a=Math.max(0,Math.min(1,amp));if(a<.05)return;
+  const run=V.name==='runner',big=!!V.heavy,G=z.g102||(z.g102={limp:Math.random()<.4?.25+Math.random()*.45:0,side:Math.random()<.5?1:-1,sway:.03+Math.random()*.04,stag:Math.random()*.6});
+  const L1=.46,L2=.5,LM=(L1+L2)*.985,S=(run?.36:big?.2:.24)*a,LIFT=(run?.2:big?.09:.12)*a,ph=z.phase||0;
+  let base=Math.min(.95,Math.sqrt(LM*LM-S*S)+.06)-(run?.05:.02)*a;const legs=[[z.hipL,z.kneeL,ph,-1,g.legL],[z.hipR,z.kneeR,ph+Math.PI,1,g.legR]];
+  let drop=0;const res=[];
+  for(const [hip,knee,p,sd,gone] of legs){let u=(p/6.2832)%1;if(u<0)u+=1;const lame=G.limp&&sd===G.side?G.limp:0;const st=run?.45:.6;
+    let fz,fy;if(u<st){fz=S*(1-lame*.5)*(1-2*u/st);fy=0;}else{const w=(u-st)/(1-st),e=w*w*(3-2*w);fz=S*(1-lame*.5)*(-1+2*e);fy=LIFT*(1-lame*.7)*Math.sin(Math.PI*w);}
+    if(u<st)drop=Math.max(drop,lame*.05*Math.sin(Math.PI*u/st));res.push([hip,knee,fz,fy,gone]);}
+  z.hips.position.y=base-drop+Math.abs(Math.sin(ph*2))*(run?.03:.015)*a;
+  const Hh=z.hips.position.y-.06;
+  for(const [hip,knee,fz,fy,gone] of res){if(gone)continue;const dy=Hh-fy;let d=Math.hypot(fz,dy);if(d>LM)d=LM;if(d<.3)d=.3;
+    const a0=Math.atan2(fz,dy),a1=Math.acos(Math.max(-1,Math.min(1,(L1*L1+d*d-L2*L2)/(2*L1*d)))),kk=Math.acos(Math.max(-1,Math.min(1,(L1*L1+L2*L2-d*d)/(2*L1*L2))));
+    hip.rotation.x=-(a0+a1);knee.rotation.x=Math.PI-kk;}
+  const s=Math.sin(ph);z.hips.rotation.z=s*G.sway*a+(G.limp?G.side*drop*1.6:0);z.hips.rotation.y=s*(run?.14:.09)*a;
+  if(!run&&G.stag)z.spine.rotation.z+=Math.sin(ph*.5+z.seed)*G.stag*.08*a;z.leg102=1;}catch(e){}}
 // ---- 12) Minimap: better look, higher above joystick ----
 (function(){
   try{
