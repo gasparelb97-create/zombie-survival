@@ -37,7 +37,7 @@ function mergePieces(list){let n=0;const geos=list.map(it=>{const g=it[0].index?
 function P(parent,x,y,z){const g=new T.Group();g.position.set(x,y,z);parent.add(g);return g;}
 const CW=new T.Color(0x4a0808),CB=new T.Color(0xcfc6a8),CM=new T.Color(0x120404),CD=new T.Color(0x151215),CF=new T.Color(0x18181a);
 function z432Mat(m){m.onBeforeCompile=sh=>{sh.uniforms.uZ432=Z432.u;sh.fragmentShader='uniform vec4 uZ432;\n'+sh.fragmentShader.replace('#include <fog_fragment>','{vec3 vd432=normalize(vViewPosition);float fr432=1.-clamp(abs(dot(normalize(normal),vd432)),0.,1.);fr432*=fr432;gl_FragColor.rgb*=1.-uZ432.x*fr432;gl_FragColor.rgb+=vec3(.55,.68,1.)*(uZ432.y*fr432*fr432);}\n'+T.ShaderChunk.fog_fragment.replace(/fogColor,\s*fogFactor\s*\)/,'fogColor, fogFactor*uZ432.z )'));};m.customProgramCacheKey=()=>'z432';return m;}
-// v4.3.100: new original low-poly zombies (rounded lathe/sphere shapes, flat colours, hunched back, drooping shoulders, longer arms).
+// v4.3.101: new original low-poly zombies (rounded lathe/sphere shapes, flat colours, hunched back, drooping shoulders, longer arms).
 // Same joint groups as before (hips/spine/neck/jaw/hipL.../elR), so animation, ragdoll, sever442, headshots and the 1-draw skin (17-v471) keep working.
 const NZ=(()=>{const flat=g=>{const n=g.index?g.toNonIndexed():g;if(n!==g)g.dispose();n.deleteAttribute('uv');n.computeVertexNormals();return n;};
   const lathe=(pts,seg)=>flat(new T.LatheGeometry(pts.map(p=>new T.Vector2(p[0],p[1])),seg||7));
