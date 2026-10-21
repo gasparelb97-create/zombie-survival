@@ -44,7 +44,7 @@ renderer.outputColorSpace=T.SRGBColorSpace;renderer.autoClear=false;
 const scene=new T.Scene();
 const FOG=0x939dac;
 scene.fog=new T.Fog(FOG,9,56);
-const camera=new T.PerspectiveCamera(75,VW()/VH(),0.05,140);camera.rotation.order='YXZ';scene.add(camera);
+const camera=new T.PerspectiveCamera(75,VW()/VH(),0.05,60);camera.rotation.order='YXZ';scene.add(camera);
 // viewmodel scene (drawn on top, never clips into walls)
 const vmScene=new T.Scene();const vmCam=new T.PerspectiveCamera(60,VW()/VH(),0.01,5);
 vmScene.add(new T.HemisphereLight(0x9aa0d0,0x302018,1.1));const vmSun=new T.DirectionalLight(0xffb070,1.6);vmSun.position.set(-1,1.2,.6);vmScene.add(vmSun);
@@ -88,8 +88,8 @@ const bloodTex=canvasTex(64,64,(g)=>{g.fillStyle='rgba(90,0,0,.9)';for(let i=0;i
 const skyTex=canvasTex(4,256,(g,w,h)=>{const gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,'#2c3442');gr.addColorStop(.28,'#58647a');gr.addColorStop(.43,'#8d98aa');gr.addColorStop(.5,'#a3adbb');gr.addColorStop(.56,'#929cab');gr.addColorStop(1,'#7e8796');g.fillStyle=gr;g.fillRect(0,0,w,h);});
 
 // ---------- lights & sky ----------
-const sky=new T.Mesh(new T.SphereGeometry(120,24,12),new T.MeshBasicMaterial({map:skyTex,side:T.BackSide,fog:false,depthWrite:false}));scene.add(sky);
-const sunDisc=new T.Sprite(new T.SpriteMaterial({map:glowTex,color:0x9aa6ba,fog:false,depthWrite:false,blending:T.AdditiveBlending,transparent:true,opacity:.5}));sunDisc.scale.set(30,30,1);sunDisc.position.set(-95,8,-60);scene.add(sunDisc);
+const sky=new T.Mesh(new T.SphereGeometry(54,24,12),new T.MeshBasicMaterial({map:skyTex,side:T.BackSide,fog:false,depthWrite:false}));scene.add(sky);
+const sunDisc=new T.Sprite(new T.SpriteMaterial({map:glowTex,color:0x9aa6ba,fog:false,depthWrite:false,blending:T.AdditiveBlending,transparent:true,opacity:.5}));sunDisc.scale.set(13.5,13.5,1);sunDisc.position.set(-95,8,-60);scene.add(sunDisc);
 scene.add(new T.HemisphereLight(0xc4d0e8,0x4c505c,1.0));
 const sun=new T.DirectionalLight(0xe6edff,1.15);sun.position.set(-60,30,-42);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
 {const sc=sun.shadow.camera;sc.left=-100;sc.right=100;sc.top=100;sc.bottom=-100;sc.near=1;sc.far=240;}sun.shadow.bias=-0.0008;sun.shadow.normalBias=.03;scene.add(sun);

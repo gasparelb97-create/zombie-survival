@@ -321,7 +321,7 @@ Promise.all([
   info.ready=1;try{bakeShadows();}catch(e){}
 }).catch(e=>{info.err=String(e&&e.message||e);console.warn('cc0',info.err);});}}
 
-window.GAME_VER='4.3.96';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v'+window.GAME_VER);}catch(e){}
+window.GAME_VER='4.3.100';try{document.querySelectorAll('.ver422').forEach(e=>e.textContent='Zombie Survival v'+window.GAME_VER);}catch(e){}
 window.__zs424={snowCovered,chestCap,setChest(n){P42.cu.chest=n|0;return chestCap();},tick(dt){const t=performance.now()/1000;updateSnow(dt||.016,t);snow2Tick(dt||.016,t);},get snowOn(){return snow.visible},get snow2On(){return snow2.visible},CSHOP,PORDER};
 // apply the preset once all v4.3 modules are installed (the menu warm-up timer compiles it in idle time)
 gfxApply43();_gfxReady43=true;
@@ -1059,7 +1059,7 @@ function loop0(now){FL431.c0=performance.now();if(FL431.skip(now))return;if(BAG4
     for(const p of pickups)p.item.rotation.y+=dt;}
   updateEnv(dt,performance.now()/1000);updateParticles(dt);updateTracers(dt);updateNums(dt);
   if(NEXT_CITY&&window.__cityV2&&!(ARENA454.preview||ARENA454.on))window.__cityV2.update(now/1000,camera,renderer.domElement.height);
-  if(_pPR){_pPR=0;const pr432=SH432.canvasPR(curPR);if(Math.abs(renderer.getPixelRatio()-pr432)>.004){renderer.setPixelRatio(pr432);renderer.setSize(VW(),VH(),false);}}sky.position.set(camera.position.x,0,camera.position.z);sunDisc.position.set(camera.position.x-95,8,camera.position.z-60);z432Tick();SH432.begin();renderer.setClearColor(scene.fog.color,1);renderer.clear();FL431.cullPre();renderer.render(scene,camera);FL431.cullPost();
+  if(_pPR){_pPR=0;const pr432=SH432.canvasPR(curPR);if(Math.abs(renderer.getPixelRatio()-pr432)>.004){renderer.setPixelRatio(pr432);renderer.setSize(VW(),VH(),false);}}sky.position.set(camera.position.x,0,camera.position.z);if(scene.fog&&scene.fog.far>56){scene.fog.far=56;if(scene.fog.near>50)scene.fog.near=50;}sunDisc.position.set(camera.position.x-43,3.6,camera.position.z-27);z432Tick();SH432.begin();renderer.setClearColor(scene.fog.color,1);renderer.clear();FL431.cullPre();renderer.render(scene,camera);FL431.cullPost();
   if(game.state==='play'||game.state==='craft'){renderer.clearDepth();renderer.render(vmScene,vmCam);}SH432.end();FL431.cpuMs=(FL431.cpuMs||0)*.9+(performance.now()-(FL431.c0||performance.now()))*.1;
   game.frames++;
   // 4.3.1: resolution / frame cap driven by missed vsyncs (FL431)

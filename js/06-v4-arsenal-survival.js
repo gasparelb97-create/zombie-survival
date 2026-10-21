@@ -315,8 +315,8 @@ function updateFires(dt,t){fireTk-=dt;let near=null,nd=1e9;for(const f of fireLi
 const hemiL=scene.children.find(o=>o.isHemisphereLight);
 // v4.1: torch = plain PointLight just ahead of the camera (the SpotLight cone rendered as a black half-disc on some mobile GPUs)
 const flash=new T.PointLight(0xfff0d8,0,17,1.2);flash.position.set(0,.25,-.8);camera.add(flash);
-const LDAY={hemi:1.0,sun:1.15,fog:new T.Color(0x939dac),near:12,far:98,sky:new T.Color(0xffffff),hc:new T.Color(0xc4d0e8),disc:.5},
- LDUSK={hemi:.6,sun:.7,fog:new T.Color(0x8a7078),near:8,far:72,sky:new T.Color(0xd0a0a0),hc:new T.Color(0xe0b0a0),disc:.7},
+const LDAY={hemi:1.0,sun:1.15,fog:new T.Color(0x939dac),near:10,far:56,sky:new T.Color(0xffffff),hc:new T.Color(0xc4d0e8),disc:.5},
+ LDUSK={hemi:.6,sun:.7,fog:new T.Color(0x8a7078),near:7,far:56,sky:new T.Color(0xd0a0a0),hc:new T.Color(0xe0b0a0),disc:.7},
  LNIGHT={hemi:.2,sun:.08,fog:new T.Color(0x0c1220),near:4,far:33,sky:new T.Color(0x1c2436),hc:new T.Color(0x6a7cb0),disc:.12};
 const _lc=new T.Color();
 function mixL(a,b,k){scene.fog.color.copy(a.fog).lerp(b.fog,k);scene.fog.near=lerp(a.near,b.near,k);scene.fog.far=lerp(a.far,b.far,k);sky.material.color.copy(a.sky).lerp(b.sky,k);

@@ -12,8 +12,8 @@ android {
         applicationId "com.gaspare.zombiesurvival"
         minSdk 24
         targetSdk 34
-        versionCode 481
-        versionName "4.3.81"
+        versionCode 501
+        versionName "4.3.100"
     }
 
     signingConfigs {

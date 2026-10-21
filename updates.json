@@ -1,5 +1,5 @@
 {
-  "rev": "2026-10-17a",
+  "rev": "2026-10-21a",
   "upcoming": [
     {
       "icon": "🆕",
@@ -10,6 +10,13 @@
     }
   ],
   "recent": [
+    {
+      "ver": "4.3.100",
+      "date": "21 ott",
+      "items": [
+        "🧟 Zombie nuovi: forme arrotondate, schiena curva, braccia lunghe e colori pieni (versione di prova)"
+      ]
+    },
     {
       "ver": "4.3.99",
       "date": "17 ott",

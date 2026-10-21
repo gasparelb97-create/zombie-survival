@@ -48,7 +48,7 @@ const TOR470={k:TOR468.on?1:0,t:0};
 // the button lived inside #hud (z 5) under #controls/#lookZone: taps went to the camera-look zone. Lift it above.
 try{const b=TOR468.el;if(b){document.body.appendChild(b);b.style.zIndex='40';}}catch(e){e470(e,'tz');}
 // ---------- 4) zombie detail: per-triangle grime / blood stains baked into vertex colours (no extra draw calls) ----------
-function zGrime470(z){try{z.g.traverse(m=>{if(!m.isMesh||m.material!==z.mat||m.__g470)return;m.__g470=1;const c=m.geometry.attributes.color;if(!c)return;const a=c.array,n=c.count;
+function zGrime470(z){if(z.nz100)return;try{z.g.traverse(m=>{if(!m.isMesh||m.material!==z.mat||m.__g470)return;m.__g470=1;const c=m.geometry.attributes.color;if(!c)return;const a=c.array,n=c.count;
   for(let i=0;i+2<n;i+=3){const r=Math.random();let f=.8+Math.random()*.24,br=0;if(r<.05)br=.75;else if(r<.09)br=.4;else if(r<.14)f*=.62;
     for(let j=0;j<3;j++){const o=(i+j)*3;let R=a[o]*f,G=a[o+1]*f,B=a[o+2]*f;if(br){R=R*(1-br)+.32*br;G=G*(1-br)+.04*br;B=B*(1-br)+.035*br;}a[o]=R;a[o+1]=G;a[o+2]=B;}}c.needsUpdate=true;});}catch(e){e470(e,'gr');}}
 try{for(const z of zombies)zGrime470(z);}catch(e){e470(e,'gr0');}

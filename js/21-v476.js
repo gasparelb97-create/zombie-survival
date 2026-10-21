@@ -106,7 +106,7 @@ function moonBuild476(){const ph=moonPhase476(new Date());MOON476.ph=ph;MOON476.
   const h2=new T.Sprite(new T.SpriteMaterial({map:glowTex,color:0xa01810,blending:T.AdditiveBlending,transparent:true,depthWrite:false,fog:false,opacity:0}));h2.scale.set(120,120,1);h2.renderOrder=-4;h2.frustumCulled=false;
   const g=new T.Group();g.name='moon476';g.add(h2,h1,spr);scene.add(g);MOON476.g=g;MOON476.spr=spr;MOON476.halo=h1;MOON476.halo2=h2;}
 function moonTick476(){const M=MOON476;if(!M.g)return;const nf=svPlay476()||game.state==='menu'?nightF():0,ph=M.ph||{illum:1};
-  const v=nf>.02;if(M.g.visible!==v)M.g.visible=v;if(!v)return;const D=150;M.g.position.set(camera.position.x+M.dir.x*D,camera.position.y+M.dir.y*D,camera.position.z+M.dir.z*D);
+  const v=nf>.02;if(M.g.visible!==v)M.g.visible=v;if(!v)return;const D=52;M.g.scale.setScalar(52/150);M.g.position.set(camera.position.x+M.dir.x*D,camera.position.y+M.dir.y*D,camera.position.z+M.dir.z*D);
   const fl=.92+.08*Math.sin(performance.now()*.0007);M.spr.material.opacity=nf;M.halo.material.opacity=nf*(.1+.22*ph.illum)*fl;M.halo2.material.opacity=nf*(.05+.1*ph.illum);}
 const _moonCol476=new T.Color(0xa8bccc);
 {const _al=applyLight;applyLight=function(){_al();try{if(!M476.on||!SV.on)return;const nf=nightF();if(nf<=0)return;const ph=MOON476.ph;if(!ph)return;const k=.5+.75*ph.illum;sun.intensity*=1+nf*(k-1);sun.color.lerp(_moonCol476,nf*.35);}catch(e){e476(e,'light');}};}

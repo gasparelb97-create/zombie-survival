@@ -532,7 +532,7 @@ function zDetail43(z){if(z.d43)return;const W=z.V.width||1,r=rng43((z.seed*1000)
   nk.push([ZG.eye,ZD43.blood,[(r()-.5)*.16,.03,.168],0,0,0,1.6,1.2,1],[ZG.belly,ZD43.wound,[.12,.2,.14],0,0,.3,.25,.5,1]);
   arm.push([ZG.rag,ZD43.dirt,[0,-.12,.07],0,0,(r()-.5)*.6,.65,.9,1],[ZG.belly,ZD43.wound,[0,-.25,.06],0,0,0,.3,.35,1]);
   const mk=(par,list)=>{const m=new T.Mesh(mergePieces(list),z.mat);m.castShadow=true;par.add(m);return m;};
-  z.d43=[mk(z.spine,sp),mk(z.hips,hip),mk(z.neck,nk),mk(r()<.5?z.shL:z.shR,arm)];z.f43={};for(const k of ZJ43)z.f43[k]=z[k].rotation.clone();z.fy43=z.hips.position.y;}
+  z.d43=z.nz100?[]:[mk(z.spine,sp),mk(z.hips,hip),mk(z.neck,nk),mk(r()<.5?z.shL:z.shR,arm)];z.f43={};for(const k of ZJ43)z.f43[k]=z[k].rotation.clone();z.fy43=z.hips.position.y;}
 function zMode43(hi){for(const z of zombies){zDetail43(z);for(let i=0;i<z.d43.length;i++)z.d43[i].visible=!!hi||i===2;}}
 const _uz43=updateZombie;updateZombie=function(z,dt,t,target,canAttack){_uz43(z,dt,t,target,canAttack);if(!z.f43||!z.alive)return;
   if(z.dead){for(const k of ZJ43)z.f43[k].copy(z[k].rotation);return;}
