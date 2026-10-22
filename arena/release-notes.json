@@ -1,9 +1,9 @@
 {
-  "version": 477,
-  "game_version": "4.3.77",
+  "version": 4123,
+  "game_version": "4.3.81",
   "changes": [
-    "Si vedono gli spari degli altri giocatori (lampo, traccia e suono) e i colpi si fermano sui ripari",
-    "Classifica di fine partita con uccisioni, morti e danni di ogni giocatore",
-    "Correzione automatica della posizione se il server rifiuta un movimento"
+    "Server Arena aggiornato: 25 aggiornamenti al secondo e conferma dei colpi più precisa",
+    "Nuova arena Rovine del Mercato per l'APK 4.3.123 (le versioni precedenti restano sulla mappa attuale)",
+    "Spawn lontani dai nemici sulla nuova mappa"
   ]
 }

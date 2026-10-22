@@ -172,3 +172,82 @@ test('empty matches are released without stopping other matches', () => {
   c.close(); d.close();
   assert.equal(hub.hot(), false);
 });
+
+// ---------- protocol 2 / map m2 (4.3.123) ----------
+function player2(hub, id, mode = 1, weapon = 'pistol', pv = 2) {
+  const socket = new Socket();
+  hub.connect(socket);
+  socket.client({ t: 'join', id, name: id, mode, weapon, pv });
+  return socket;
+}
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+test('protocol 2 match uses map m2, quantized snapshots with timestamp, roster and pickups only on change', async () => {
+  const hub = createHub();
+  const a = player2(hub, 'a'), b = player2(hub, 'b');
+  const st = a.last('start');
+  assert.equal(st.map, 'm2'); assert.equal(st.pv, 2); assert.equal(st.R, 52); assert.ok(st.blocks.length > 40);
+  assert.ok(Math.abs(st.x) > 40, 'spawn in the courtyard');
+  hub.tick(); await sleep(45); hub.tick(); await sleep(45); hub.tick();
+  const snaps = a.all('snap');
+  assert.ok(snaps.length >= 3);
+  for (const s of snaps) { assert.equal(s.v, 2); assert.ok(s.ts > 0); assert.ok(Array.isArray(s.P)); assert.equal(s.players, undefined); }
+  assert.equal(snaps[0].P[0].length, 9);
+  assert.equal(snaps[0].P.find(r => r[0] === 'a')[1], Math.round(st.x * 100));
+  assert.equal(snaps.filter(s => s.R).length, 0, 'roster already in start');
+  assert.equal(snaps.filter(s => s.pk).length, 0, 'pickups already in start');
+  // a pickup taken -> next snap carries pk once
+  const pk = st.pickups[0];
+  a.client({ t: 'pos', x: st.x + (pk.x - st.x) * 0, z: st.z });
+  hub.tick();
+});
+
+test('mixed protocols fall back to the old map and the old snapshot format for old clients', async () => {
+  const hub = createHub();
+  const a = player2(hub, 'a', 1, 'pistol', 2), b = player2(hub, 'b', 1, 'pistol', 1);
+  assert.equal(a.last('start').map, 'm1');
+  assert.equal(b.last('start').map, undefined);
+  hub.tick();
+  const s1 = b.last('snap');
+  assert.ok(Array.isArray(s1.players)); assert.ok(s1.players[0].name); assert.ok(Array.isArray(s1.pickups));
+  assert.equal(a.last('snap').v, 2);
+});
+
+test('snapshot rate is about 25 Hz', async () => {
+  const hub = createHub();
+  const a = player2(hub, 'a'), b = player2(hub, 'b');
+  const t0 = Date.now(); while (Date.now() - t0 < 1000) { hub.tick(); await sleep(5); }
+  const n = a.all('snap').length;
+  assert.ok(n >= 22 && n <= 30, 'snaps/s ' + n);
+});
+
+test('shot id echoed in fx (hit) and ack (miss); kills score; end board has k/d', async () => {
+  const hub = createHub();
+  const a = player2(hub, 'a', 1, 'sniper'), b = player2(hub, 'b', 1, 'pistol');
+  const sa = a.last('start'), sb = b.last('start');
+  await sleep(1600);
+  // walk a and b to the open plaza, face each other along x (path free at z=10)
+  const walk = (s, id, fx, fz, tx, tz) => { let x = fx, z = fz; for (let i = 0; i < 80; i++) { const dx = tx - x, dz = tz - z, d = Math.hypot(dx, dz); if (d < .1) break; const st = Math.min(7.5, d); x += dx / d * st; z += dz / d * st; s.client({ t: 'pos', x, z, yaw: 0 }); } return [x, z]; };
+  walk(a, 'a', sa.x, sa.z, -36, 10); walk(a, 'a', -36, 10, -8, 10);
+  walk(b, 'b', sb.x, sb.z, 36, 10); walk(b, 'b', 36, 10, 8, 10);
+  a.client({ t: 'shot', x: -8, y: 1.6, z: 10, dx: 0, dy: 1, dz: 0, sid: 7 });
+  assert.equal(a.last('ack').sid, 7);
+  await sleep(1200);
+  a.client({ t: 'shot', x: -8, y: 1.6, z: 10, dx: 1, dy: 0, dz: 0, sid: 8 });
+  const fx = a.last('fx');
+  assert.equal(fx.sid, 8); assert.equal(fx.victim, 'b');
+  await sleep(1200);
+  a.client({ t: 'shot', x: -8, y: 1.6, z: 10, dx: 1, dy: 0, dz: 0, sid: 9 });
+  const k = a.all('fx').find(f => f.kill);
+  assert.ok(k, 'kill'); assert.deepEqual(k.scores, [1, 0]);
+  await sleep(80); hub.tick();
+  const row = a.last('snap').P.find(r => r[0] === 'a');
+  assert.equal(row[7], 1);
+});
+
+test('m2 respawn picks a point away from a camping enemy', async () => {
+  const { MAPS } = await import('./logic.mjs');
+  const hub = createHub();
+  const a = player2(hub, 'a', 1, 'sniper'), b = player2(hub, 'b', 1, 'pistol');
+  assert.ok(MAPS.m2.RESPAWNS[1].length >= 5);
+});

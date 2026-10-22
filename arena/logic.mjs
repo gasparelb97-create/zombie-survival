@@ -1,6 +1,13 @@
 // Arena 1v1 and 3v3 — authoritative room. Shared by the Node server and the Cloudflare Durable Object.
 // Map blockers must stay in sync with the client list in game.html (arena454).
 
+import { MAP2_ID, MAP2_R, MAP2_BLOCKS, MAP2_COVERS, MAP2_SPAWNS, MAP2_RESPAWNS, MAP2_SPOTS } from './map2.mjs';
+
+// protocol 2 (4.3.123): 25 Hz snapshots with server timestamp, positions quantized (cm / mrad), roster and pickups only on change,
+// shot id echoed in 'fx'/'ack', map m2. Clients that do not send pv:2 keep protocol 1 and the old map (a match uses m2 only when
+// every player speaks protocol 2).
+export const PROTO = 2;
+export const SNAP_MS = 40;
 export const MATCH_MS = 180000;
 export const NEED = 6;
 export const NEED_DUEL = 2;
@@ -87,10 +94,20 @@ function blocks() {
   return out;
 }
 const BLOCKS = blocks();
+const MAPS = {
+  m1: { id: 'm1', R: ARENA_R, BLOCKS: BLOCKS, SPAWNS: SPAWNS, RESPAWNS: null, SPOTS: SPOTS },
+  m2: { id: MAP2_ID, R: MAP2_R, BLOCKS: MAP2_BLOCKS, SPAWNS: MAP2_SPAWNS, RESPAWNS: MAP2_RESPAWNS, SPOTS: MAP2_SPOTS, COVERS: MAP2_COVERS }
+};
+export { MAPS };
 
 function send(ws, obj) {
   try { ws.send(JSON.stringify(obj)); } catch (e) {}
 }
+function sendRaw(ws, text) {
+  try { ws.send(text); } catch (e) {}
+}
+const q2 = (v) => Math.round(v * 100);
+const q3 = (v) => Math.round(v * 1000);
 
 function cleanName(s) {
   const t = String(s || 'Giocatore').replace(/[\u0000-\u001f<>]/g, '').trim();
@@ -155,7 +172,7 @@ export function createHub() {
     hot,
     connect
   };
-  const timer = setInterval(tick, 33);
+  const timer = setInterval(tick, 20);
   if (timer.unref) timer.unref();
   return hub;
 
@@ -270,6 +287,7 @@ export function createHub() {
       const p = match.players.get(conn.id);
       if (p.ws === ws) {
         match.players.delete(conn.id);
+        match.rv++;
         if (match.players.size === 0) matches.delete(match);
       }
     }
@@ -313,7 +331,7 @@ export function createHub() {
     const match = matchOf(id);
     if (match) {
       const old = match.players.get(id);
-      if (old.ws !== ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); if (!match.players.size) matches.delete(match); }
+      if (old.ws !== ws) { send(old.ws, { t: 'kick', m: 'Connessione sostituita' }); try { old.ws.close(); } catch (e) {} match.players.delete(id); match.rv++; if (!match.players.size) matches.delete(match); }
     }
   }
 
@@ -355,7 +373,8 @@ export function createHub() {
       hp: 100, alive: false, ammo: 0, magSize: 0,
       buffs: { dmg: 0, spd: 0, arm: 0 },
       lastShot: 0, respawnAt: 0, invuln: 0, tp: 0, slot: 0,
-      joined: keptJoined || Date.now()
+      joined: keptJoined || Date.now(),
+      pv: Number(msg.pv) >= 2 ? 2 : 1, rv: -1, kv: -1
     };
     queueOf(mode).set(id, p);
     tellLobby();
@@ -394,14 +413,16 @@ export function createHub() {
       pickups: [],
       nextSpawn: now + 7000,
       seq: 1,
-      teams: [0, 0]
+      teams: [0, 0],
+      map: picked.every((p) => p.pv >= 2) ? MAPS.m2 : MAPS.m1,
+      rv: 1, kv: 1, cursor: 0
     };
     matches.add(match);
     picked.forEach((p, i) => {
       const team = mode === 1 ? i : (i % 2);
       p.team = team;
       p.slot = mode === 1 ? 0 : match.teams[team]++;
-      const sp = SPAWNS[team][mode === 1 ? 1 : (p.slot % 3)];
+      const sp = match.map.SPAWNS[team][mode === 1 ? 1 : (p.slot % 3)];
       p.x = sp[0];
       p.z = sp[1];
       p.yaw = team === 0 ? -Math.PI / 2 : Math.PI / 2;
@@ -421,7 +442,8 @@ export function createHub() {
     });
     for (let n = 0; n < 6; n++) spawnPickup(match, true);
     for (const p of match.players.values()) {
-      send(p.ws, {
+      const extra = p.pv >= 2 ? { pv: PROTO, map: match.map.id, R: match.map.R, blocks: match.map.COVERS || null, snapMs: SNAP_MS, ts: now } : {};
+      send(p.ws, Object.assign({
         t: 'start',
         mode: mode,
         team: p.team,
@@ -435,7 +457,8 @@ export function createHub() {
         ammo: p.ammo,
         players: roster(match),
         pickups: pickupList(match)
-      });
+      }, extra));
+      p.rv = match.rv; p.kv = match.kv;
       p.tp = 0;
     }
     tellLobby();
@@ -454,17 +477,21 @@ export function createHub() {
   function spawnPickup(m, force) {
     if (!force && m.pickups.length >= 10) { m.nextSpawn = Date.now() + 4000; return; }
     let guard = 0;
-    let spot = SPOTS[spotCursor % SPOTS.length];
-    spotCursor++;
-    while (guard < SPOTS.length && m.pickups.some((q) => Math.hypot(q.x - spot[0], q.z - spot[1]) < 3)) {
-      spot = SPOTS[spotCursor % SPOTS.length];
-      spotCursor++;
+    const SP = m.map.SPOTS;
+    if (m.map.id === 'm1') m.cursor = spotCursor;
+    let spot = SP[m.cursor % SP.length];
+    m.cursor++;
+    while (guard < SP.length && m.pickups.some((q) => Math.hypot(q.x - spot[0], q.z - spot[1]) < 3)) {
+      spot = SP[m.cursor % SP.length];
+      m.cursor++;
       guard++;
     }
-    const k = KIND_CYCLE[(m.seq + spotCursor) % KIND_CYCLE.length];
+    if (m.map.id === 'm1') spotCursor = m.cursor;
+    const k = KIND_CYCLE[(m.seq + m.cursor) % KIND_CYCLE.length];
     const item = { id: m.seq++, k: k, x: spot[0], z: spot[1] };
     m.pickups.push(item);
     m.nextSpawn = Date.now() + 8000;
+    m.kv++;
     if (!force) {
       for (const p of m.players.values()) send(p.ws, { t: 'spawn', pickup: item });
     }
@@ -478,10 +505,10 @@ export function createHub() {
     const dx = x - p.x, dz = z - p.z;
     // v4.3.77 reconciliation: a rejected jump tells the client where the server keeps it
     if (dx * dx + dz * dz > 64) { if (!p.tp) p.tp = 2; return; }
-    const d = Math.hypot(x, z);
-    if (d > ARENA_R) {
-      p.x = x * (ARENA_R / d);
-      p.z = z * (ARENA_R / d);
+    const d = Math.hypot(x, z), AR = match.map.R;
+    if (d > AR) {
+      p.x = x * (AR / d);
+      p.z = z * (AR / d);
     } else {
       p.x = x;
       p.z = z;
@@ -538,7 +565,7 @@ export function createHub() {
     }
     if (best) {
       let blocked = false;
-      for (const b of BLOCKS) {
+      for (const b of match.map.BLOCKS) {
         const t = rayAabb(ox, oy, oz, dx, dy, dz, b, best.along);
         if (t != null && t < best.along - 0.35) { blocked = true; break; }
       }
@@ -547,14 +574,15 @@ export function createHub() {
     // v4.3.77: the other players see this shot (muzzle flash, tracer, sound); length stops at the first cover
     if (best) reach = best.along;
     else {
-      for (const b of BLOCKS) {
+      for (const b of match.map.BLOCKS) {
         const t = rayAabb(ox, oy, oz, dx, dy, dz, b, reach);
         if (t != null && t < reach) reach = t;
       }
     }
     const sh = { t: 'sh', id: p.id, x: +ox.toFixed(2), y: +oy.toFixed(2), z: +oz.toFixed(2), dx: +dx.toFixed(3), dy: +dy.toFixed(3), dz: +dz.toFixed(3), l: +Math.min(reach, 80).toFixed(1) };
     for (const o of match.players.values()) if (o.id !== p.id) send(o.ws, sh);
-    if (!best) return;
+    const sid = Number.isFinite(+msg.sid) ? (+msg.sid | 0) : null;
+    if (!best) { if (p.pv >= 2 && sid != null) send(p.ws, { t: 'ack', sid: sid, hit: 0, l: sh.l }); return; }
     const victim = match.players.get(bestId);
     let dmg = g.dmg;
     if (g.pellets > 1) dmg *= Math.min(g.pellets, 6);
@@ -566,6 +594,7 @@ export function createHub() {
     victim.hp -= dmg;
     p.dmg = (p.dmg | 0) + Math.min(dmg, Math.max(0, victim.hp + dmg));
     const fx = { t: 'fx', by: p.id, victim: victim.id, part: best.part, dmg: dmg, hp: Math.max(0, victim.hp) };
+    if (sid != null) fx.sid = sid;
     if (victim.hp <= 0) {
       victim.hp = 0;
       victim.alive = false;
@@ -599,6 +628,7 @@ export function createHub() {
     if (item.k === 'med') p.hp = Math.min(100, p.hp + 45);
     if (item.k === 'dmg' || item.k === 'spd' || item.k === 'arm') p.buffs[item.k] = now + BUFF_MS[item.k];
     match.pickups.splice(ix, 1);
+    match.kv++;
     for (const o of match.players.values()) send(o.ws, { t: 'taken', id: id, by: p.id, k: item.k });
   }
 
@@ -610,7 +640,7 @@ export function createHub() {
   function tickMatch(match, now) {
     for (const p of match.players.values()) {
       if (!p.alive && p.respawnAt && now >= p.respawnAt) {
-        const sp = SPAWNS[p.team][match.mode === 1 ? 1 : (p.slot % 3)];
+        const sp = match.map.RESPAWNS ? safeSpawn(match, p) : match.map.SPAWNS[p.team][match.mode === 1 ? 1 : (p.slot % 3)];
         p.x = sp[0];
         p.z = sp[1];
         p.yaw = p.team === 0 ? -Math.PI / 2 : Math.PI / 2;
@@ -624,19 +654,12 @@ export function createHub() {
     }
     if (now >= match.nextSpawn) spawnPickup(match, false);
     if (now >= match.ends) { endMatch(match); return; }
-    if (match.lastSnap && now - match.lastSnap < 62) return;
+    if (match.lastSnap && now - match.lastSnap < SNAP_MS - 5) return;
     match.lastSnap = now;
-    const basePlayers = [];
-    for (const p of match.players.values()) {
-      basePlayers.push({
-        id: p.id, name: p.name, team: p.team, weapon: p.weapon,
-        x: +p.x.toFixed(2), z: +p.z.toFixed(2), yaw: +p.yaw.toFixed(3), pitch: +p.pitch.toFixed(3),
-        hp: p.hp | 0, alive: p.alive ? 1 : 0, k: p.k | 0, d: p.d | 0
-      });
-    }
+    // serialized once per snapshot (not once per player); only 'you' (and, for protocol 2, roster/pickups when they changed) differ
     const left = Math.max(0, match.ends - now);
-    const scores = match.scores.slice();
-    const picks = pickupList(match);
+    const scoresJ = JSON.stringify(match.scores);
+    let v1 = null, v2 = null, rosterJ = null, picksJ = null;
     for (const p of match.players.values()) {
       const you = {
         hp: p.hp | 0,
@@ -653,9 +676,60 @@ export function createHub() {
         z: +p.z.toFixed(2),
         yaw: +p.yaw.toFixed(3)
       };
-      send(p.ws, { t: 'snap', players: basePlayers, scores: scores, left: left, you: you, pickups: picks });
+      const youJ = JSON.stringify(you);
+      if (p.pv >= 2) {
+        if (v2 === null) {
+          const P = [];
+          for (const o of match.players.values()) P.push([o.id, q2(o.x), q2(o.z), q3(o.yaw), q3(o.pitch), o.hp | 0, o.alive ? 1 : 0, o.k | 0, o.d | 0]);
+          v2 = '{"t":"snap","v":2,"ts":' + now + ',"P":' + JSON.stringify(P) + ',"sc":' + scoresJ + ',"left":' + left;
+        }
+        let msg = v2;
+        if (p.rv !== match.rv) { if (rosterJ === null) rosterJ = JSON.stringify(roster(match)); msg += ',"R":' + rosterJ + ',"rv":' + match.rv; p.rv = match.rv; }
+        if (p.kv !== match.kv) { if (picksJ === null) picksJ = JSON.stringify(pickupList(match)); msg += ',"pk":' + picksJ + ',"kv":' + match.kv; p.kv = match.kv; }
+        sendRaw(p.ws, msg + ',"you":' + youJ + '}');
+      } else {
+        if (v1 === null) {
+          const base = [];
+          for (const o of match.players.values()) {
+            base.push({
+              id: o.id, name: o.name, team: o.team, weapon: o.weapon,
+              x: +o.x.toFixed(2), z: +o.z.toFixed(2), yaw: +o.yaw.toFixed(3), pitch: +o.pitch.toFixed(3),
+              hp: o.hp | 0, alive: o.alive ? 1 : 0, k: o.k | 0, d: o.d | 0
+            });
+          }
+          if (picksJ === null) picksJ = JSON.stringify(pickupList(match));
+          v1 = '{"t":"snap","players":' + JSON.stringify(base) + ',"scores":' + scoresJ + ',"left":' + left + ',"pickups":' + picksJ;
+        }
+        sendRaw(p.ws, v1 + ',"you":' + youJ + '}');
+      }
       p.tp = 0;
     }
+  }
+
+  // respawn point with the most distance from living enemies; a point an enemy can see (eye height, tall blocks only) costs 25 m
+  function safeSpawn(match, p) {
+    const list = match.map.RESPAWNS[p.team];
+    let best = list[0], bestS = -1e9;
+    for (const sp of list) {
+      let near = 1e9;
+      for (const o of match.players.values()) {
+        if (o.team === p.team || !o.alive) continue;
+        let d = Math.hypot(o.x - sp[0], o.z - sp[1]);
+        if (sees(match.map.BLOCKS, o.x, o.z, sp[0], sp[1])) d -= 25;
+        if (d < near) near = d;
+      }
+      let mate = 0;
+      for (const o of match.players.values()) if (o !== p && o.team === p.team && o.alive && Math.hypot(o.x - sp[0], o.z - sp[1]) < 1.2) mate = 6;
+      const score = near - mate;
+      if (score > bestS) { bestS = score; best = sp; }
+    }
+    return best;
+  }
+
+  function sees(B, ax, az, bx, bz) {
+    const dx = bx - ax, dz = bz - az, len = Math.hypot(dx, dz) || 1;
+    for (const b of B) { if (b.h < 1.6) continue; const t = rayAabb(ax, 1.6, az, dx / len, 0, dz / len, b, len); if (t != null && t < len) return false; }
+    return true;
   }
 
   function endMatch(m) {

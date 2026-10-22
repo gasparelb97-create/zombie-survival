@@ -95,7 +95,7 @@ function attach(socket) {
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'content-type': 'application/json', 'access-control-allow-origin': '*' });
-  res.end(JSON.stringify({ ok: true, arena: true }));
+  res.end(JSON.stringify({ ok: true, arena: true, v: 4123, proto: 2, maps: ['m1', 'm2'] }));
 });
 
 server.on('upgrade', (req, socket) => {
